@@ -1,5 +1,7 @@
 # 🎓 BERT Sentiment Lab & Research Benchmark Dashboard
 
+[![Railway](https://img.shields.io/badge/Railway-Live_Backend-0B0D0E?style=flat-square&logo=railway)](https://nurturing-creation-production-4414.up.railway.app/api/health)
+[![Vercel](https://img.shields.io/badge/Vercel-Live_Frontend-000000?style=flat-square&logo=vercel)](https://vercel.com/)
 [![FastAPI](https://img.shields.io/badge/FastAPI-0.110.0-009688?style=flat-square&logo=fastapi)](https://fastapi.tiangolo.com/)
 [![PyTorch](https://img.shields.io/badge/PyTorch-2.0%2B-EE4C2C?style=flat-square&logo=pytorch)](https://pytorch.org/)
 [![React](https://img.shields.io/badge/React-18.0-61DAFB?style=flat-square&logo=react)](https://reactjs.org/)
@@ -8,6 +10,8 @@
 
 **Laboratorium Penelitian Komparatif Sentiment Analysis Berbasis Deep Learning Transformer (BERT)**  
 *Fakultas Ilmu Komputer dan Teknologi Informasi (FIKTI), Universitas Muhammadiyah Sumatera Utara (UMSU)*
+
+🌐 **Live Backend API**: [`https://nurturing-creation-production-4414.up.railway.app`](https://nurturing-creation-production-4414.up.railway.app/api/health)
 
 ---
 
@@ -49,16 +53,16 @@ graph TD
     classDef database fill:#020617,stroke:#10b981,stroke-width:2px,color:#f8fafc;
     classDef model fill:#1e1b4b,stroke:#818cf8,stroke-width:1.5px,color:#f8fafc;
 
-    subgraph ClientLayer [" 💻 Client-Side Presentation Layer "]
+    subgraph ClientLayer [" 💻 Client-Side Presentation (Vercel CDN) "]
         FE["📱 Frontend SPA (React 18 + Vite + Tailwind CSS)<br/>• Real-Time Dual Model Sentiment Comparator<br/>• Statistical Benchmark Analytics Dashboard<br/>• Progressive Web App (PWA) & Glassmorphism UI"]:::frontend
     end
 
-    subgraph APIBridge [" 🌐 Communication Bridge "]
-        HTTP["📡 REST API (JSON Payload / Async HTTP)"]
+    subgraph APIBridge [" 🌐 Secure Communication Bridge "]
+        HTTP["📡 REST API Proxy (Vercel Rewrite Rules / HTTPS)"]
     end
 
-    subgraph ServerLayer [" ⚡ Server-Side Engine Layer (FastAPI) "]
-        BE["🐍 FastAPI Framework & Uvicorn ASGI Server"]:::backend
+    subgraph ServerLayer [" ⚡ Server-Side Engine Layer (Railway Cloud) "]
+        BE["🐍 FastAPI Framework & Uvicorn ASGI Server<br/>(nurturing-creation-production-4414.up.railway.app)"]:::backend
         
         subgraph DeepLearningEngine [" 🧠 PyTorch BERT Inference Engine "]
             MA["🧊 Model A: BERT Feature Extraction<br/>(Frozen Transformer Encoder Backbone)"]:::model
@@ -74,7 +78,7 @@ graph TD
 
     %% Workflow Connectors
     FE -->|"1. User Input Text / API Requests"| HTTP
-    HTTP -->|"2. Route Request to Controllers"| BE
+    HTTP -->|"2. Route Request to Railway Backend"| BE
     
     BE -->|"3a. Execute Parallel Inference"| MA
     BE -->|"3b. Execute Parallel Inference"| MB
@@ -83,13 +87,13 @@ graph TD
     BE <-->|"5. Read / Write Log Records via SQLAlchemy ORM"| DB
 ```
 
-### **1. Backend Engine (`Python 3.10+`)**
+### **1. Backend Engine (`Python 3.10+` - Live di Railway)**
 - **Framework**: `FastAPI` 0.110+ & `Uvicorn` ASGI Server.
 - **Deep Learning**: `PyTorch` 2.0+ & Hugging Face `transformers`.
 - **Database**: `SQLAlchemy` ORM & `SQLite3`.
-- **Statistik & Sains Data**: `SciPy`, `NumPy`, `Scikit-Learn`.
+- **Deployment**: Railway Cloud Environment (Nixpacks Engine).
 
-### **2. Frontend Dashboard (`Node.js 18+`)**
+### **2. Frontend Dashboard (`Node.js 18+` - Live di Vercel)**
 - **Framework**: `React` 18 & `Vite` Build Tool.
 - **Styling**: `Tailwind CSS` v3 dengan custom *Academic Glassmorphism UI tokens*.
 - **Animasi & Transisi**: `Framer Motion`.
@@ -104,19 +108,21 @@ graph TD
 BERT-Sentiment-Lab/
 ├── README.md                    # Dokumentasi Akademik Resmi
 ├── requirements.txt             # Dependencies Python Backend
+├── Procfile                     # Deployment Script Railway
+├── nixpacks.toml                # Configuration Build Railway Nixpacks
+├── vercel.json                  # Proxy Rewrite Config Vercel
 ├── app.db                       # Database SQLite Log Riwayat
 ├── Experiment_Notebook.ipynb    # Notebook Eksperimen (6 Random Seeds)
 │
 ├── backend/                     # Python FastAPI Backend Engine
 │   ├── requirements.txt
-│   ├── app/
-│   │   ├── database.py          # Session & Engine Connection
-│   │   ├── engine.py            # PyTorch Model Execution Engine
-│   │   ├── init_db.py           # Database Seeding & Initialization
-│   │   ├── main.py              # REST API Route Definitions
-│   │   ├── models.py            # SQLAlchemy Database Models
-│   │   └── schemas.py           # Pydantic Input/Output Schemas
-│   └── models/                  # Direktori Bobot PyTorch Models
+│   └── app/
+│       ├── database.py          # Session & Engine Connection
+│       ├── engine.py            # PyTorch Model Execution Engine
+│       ├── init_db.py           # Database Seeding & Initialization
+│       ├── main.py              # REST API Route Definitions
+│       ├── models.py            # SQLAlchemy Database Models
+│       └── schemas.py           # Pydantic Input/Output Schemas
 │
 └── frontend/                    # React Vite Web Application
     ├── package.json             # NPM Dependencies & Scripts
