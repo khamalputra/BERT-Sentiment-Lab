@@ -39,16 +39,48 @@ Berdasarkan pengujian eksperimental pada dataset validasi independen:
 
 ## 🏛️ Arsitektur Sistem & Spesifikasi Teknologi
 
-Sistem dibangun menggunakan standar arsitektur decoupled *Micro-service REST API* modern:
+Sistem dibangun menggunakan arsitektur decoupled *Micro-service REST API* modern dengan diagram alir (*flowchart*) sebagai berikut:
 
-```
-[ Frontend: React 18 + Vite + Tailwind ] 
-         │ (HTTP REST API / JSON)
-         ▼
-[ Backend Engine: FastAPI + PyTorch + Transformers ]
-         │ (SQLAlchemy ORM)
-         ▼
-[ Database: SQLite Persistent Log Storage ]
+```mermaid
+graph TD
+    %% Node Style Definitions
+    classDef frontend fill:#0f172a,stroke:#38bdf8,stroke-width:2px,color:#f8fafc;
+    classDef backend fill:#040814,stroke:#f59e0b,stroke-width:2px,color:#f8fafc;
+    classDef database fill:#020617,stroke:#10b981,stroke-width:2px,color:#f8fafc;
+    classDef model fill:#1e1b4b,stroke:#818cf8,stroke-width:1.5px,color:#f8fafc;
+
+    subgraph ClientLayer [" 💻 Client-Side Presentation Layer "]
+        FE["📱 Frontend SPA (React 18 + Vite + Tailwind CSS)<br/>• Real-Time Dual Model Sentiment Comparator<br/>• Statistical Benchmark Analytics Dashboard<br/>• Progressive Web App (PWA) & Glassmorphism UI"]:::frontend
+    end
+
+    subgraph APIBridge [" 🌐 Communication Bridge "]
+        HTTP["📡 REST API (JSON Payload / Async HTTP)"]
+    end
+
+    subgraph ServerLayer [" ⚡ Server-Side Engine Layer (FastAPI) "]
+        BE["🐍 FastAPI Framework & Uvicorn ASGI Server"]:::backend
+        
+        subgraph DeepLearningEngine [" 🧠 PyTorch BERT Inference Engine "]
+            MA["🧊 Model A: BERT Feature Extraction<br/>(Frozen Transformer Encoder Backbone)"]:::model
+            MB["🔥 Model B: BERT Fine-Tuned Model<br/>(End-to-End Parameter Optimization)"]:::model
+        end
+        
+        STAT["📐 Statistical Inference Module<br/>(McNemar, Wilcoxon, Bootstrap 95% CI, Cohen's d)"]:::backend
+    end
+
+    subgraph StorageLayer [" 🗄️ Data Persistence Layer "]
+        DB[("💾 SQLite Database (app.db)<br/>• Prediction Logs History<br/>• Benchmark Metrics & Statistical Summary")]:::database
+    end
+
+    %% Workflow Connectors
+    FE -->|"1. User Input Text / API Requests"| HTTP
+    HTTP -->|"2. Route Request to Controllers"| BE
+    
+    BE -->|"3a. Execute Parallel Inference"| MA
+    BE -->|"3b. Execute Parallel Inference"| MB
+    BE -->|"4. Compute Inferential Hypotheses"| STAT
+    
+    BE <-->|"5. Read / Write Log Records via SQLAlchemy ORM"| DB
 ```
 
 ### **1. Backend Engine (`Python 3.10+`)**
