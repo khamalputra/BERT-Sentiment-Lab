@@ -1,0 +1,224 @@
+@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --color-bg-canvas: #040814;
+  --color-bg-surface: rgba(11, 19, 43, 0.6);
+  --color-bg-elevated: #0f172a;
+  --color-bg-slate-950: #020617;
+  --color-bg-slate-900: #0f172a;
+  --color-border: rgba(30, 58, 170, 0.3);
+  --color-text-100: #f8fafc;
+  --color-text-200: #e2e8f0;
+  --color-text-300: #cbd5e1;
+  --color-text-400: #94a3b8;
+  --color-text-500: #64748b;
+  --shadow-card: 0 20px 25px -5px rgba(0, 0, 0, 0.45), 0 8px 10px -6px rgba(0, 0, 0, 0.45);
+}
+
+.light {
+  --color-bg-canvas: #f0f4f8; 
+  --color-bg-surface: #ffffff; 
+  --color-bg-elevated: #ffffff;
+  --color-bg-slate-950: #e2e8f0; 
+  --color-bg-slate-900: #f1f5f9;
+  --color-border: rgba(15, 23, 42, 0.12); 
+  --color-text-100: #020617; 
+  --color-text-200: #0f172a;
+  --color-text-300: #1e293b;
+  --color-text-400: #334155; 
+  --color-text-500: #475569;
+  --shadow-card: 0 10px 20px -3px rgba(15, 23, 42, 0.12), 0 4px 6px -2px rgba(15, 23, 42, 0.08); 
+}
+
+@layer base {
+  body {
+    @apply bg-umsu-canvas text-slate-100 font-sans antialiased min-h-screen selection:bg-umsu-gold/30 selection:text-umsu-gold transition-colors duration-300;
+  }
+}
+
+/* Glassmorphism card utility */
+.glass-card {
+  @apply bg-umsu-surface backdrop-blur-md border border-umsu-border rounded-2xl transition-all duration-300;
+  box-shadow: var(--shadow-card);
+}
+
+.glass-card-hover {
+  @apply hover:border-umsu-gold/30 hover:shadow-umsu-gold/5 hover:translate-y-[-2px];
+}
+
+/* Glowing text */
+.text-glow-gold {
+  text-shadow: 0 0 12px rgba(250, 204, 21, 0.4);
+}
+
+.text-glow-blue {
+  text-shadow: 0 0 12px rgba(59, 130, 246, 0.4);
+}
+
+/* Custom scrollbar */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+::-webkit-scrollbar-track {
+  @apply bg-umsu-canvas;
+}
+
+::-webkit-scrollbar-thumb {
+  @apply bg-blue-950 rounded-full hover:bg-blue-900;
+}
+.light ::-webkit-scrollbar-thumb {
+  @apply bg-slate-300 rounded-full hover:bg-slate-400; /* fallback to basic grays in light mode */
+}
+
+/* ==========================================
+   HIGH CONTRAST LIGHT MODE DIRECT OVERRIDES
+   ========================================== */
+.light body {
+  background-color: #f0f4f8 !important;
+  color: #020617 !important;
+}
+
+/* Text Colors */
+.light .text-slate-100 { color: #020617 !important; }
+.light .text-slate-200 { color: #0f172a !important; }
+.light .text-slate-300 { color: #1e293b !important; }
+.light .text-slate-400 { color: #334155 !important; }
+.light .text-slate-500 { color: #475569 !important; }
+.light .text-slate-600 { color: #475569 !important; }
+.light .text-slate-700 { color: #334155 !important; }
+.light .text-slate-800 { color: #1e293b !important; }
+.light .text-slate-900 { color: #0f172a !important; }
+
+/* Hover Text Colors */
+.light .hover\:text-slate-200:hover { color: #0f172a !important; }
+.light .hover\:text-slate-300:hover { color: #1e293b !important; }
+
+/* Backgrounds */
+.light .bg-slate-950 { background-color: #e2e8f0 !important; }
+.light .bg-slate-950\/40 { background-color: rgba(226, 232, 240, 0.4) !important; }
+.light .bg-slate-950\/60 { background-color: rgba(226, 232, 240, 0.6) !important; }
+.light .bg-slate-950\/80 { background-color: rgba(226, 232, 240, 0.8) !important; }
+.light .bg-slate-900 { background-color: #f1f5f9 !important; }
+.light .bg-slate-900\/60 { background-color: rgba(241, 245, 249, 0.6) !important; }
+.light .bg-slate-900\/80 { background-color: rgba(241, 245, 249, 0.8) !important; }
+
+/* Hover Backgrounds */
+.light .hover\:bg-slate-800:hover { background-color: #e2e8f0 !important; }
+.light .hover\:bg-slate-900:hover { background-color: #f1f5f9 !important; }
+.light .hover\:bg-slate-900\/40:hover { background-color: rgba(241, 245, 249, 0.4) !important; }
+.light .hover\:bg-slate-800\/40:hover { background-color: rgba(226, 232, 240, 0.4) !important; }
+
+/* Borders & Dividers */
+.light .border-blue-900\/30 { border-color: rgba(15, 23, 42, 0.12) !important; }
+.light .border-blue-900\/20 { border-color: rgba(15, 23, 42, 0.08) !important; }
+.light .border-blue-900\/40 { border-color: rgba(15, 23, 42, 0.15) !important; }
+.light .border-blue-950 { border-color: rgba(15, 23, 42, 0.12) !important; }
+.light .divide-blue-950\/40 > * + * { border-color: rgba(15, 23, 42, 0.08) !important; }
+
+/* Cards Overrides */
+.light .glass-card {
+  background-color: #ffffff !important;
+  border-color: rgba(15, 23, 42, 0.12) !important;
+  box-shadow: 0 10px 20px -3px rgba(15, 23, 42, 0.12), 0 4px 6px -2px rgba(15, 23, 42, 0.08) !important;
+}
+
+.light .glass-card:hover {
+  border-color: rgba(15, 23, 42, 0.2) !important;
+}
+
+/* Accessibility & Readability Overrides for Light Mode Accents (WCAG 2.1 AA) */
+.light .text-umsu-gold { color: #b45309 !important; } /* Dark Gold/Amber 700: 5.6:1 contrast on white */
+.light .text-umsu-orange { color: #c2410c !important; } /* Orange 700: 5.8:1 contrast on white */
+.light .text-umsu-emerald { color: #047857 !important; } /* Emerald 700: 4.8:1 contrast on white */
+.light .text-umsu-rose { color: #be123c !important; } /* Rose 700: 5.3:1 contrast on white */
+
+/* Tailwind equivalent colors overrides */
+.light .text-emerald-500 { color: #047857 !important; }
+.light .text-rose-500 { color: #be123c !important; }
+.light .text-yellow-500 { color: #b45309 !important; }
+.light .text-amber-500 { color: #b45309 !important; }
+.light .text-orange-500 { color: #c2410c !important; }
+
+/* Adjust badge backgrounds in light mode for better contrast */
+.light .bg-umsu-emerald\/10 { background-color: rgba(4, 120, 87, 0.1) !important; }
+.light .bg-umsu-rose\/10 { background-color: rgba(190, 18, 60, 0.1) !important; }
+.light .bg-umsu-gold\/15 { background-color: rgba(180, 83, 9, 0.12) !important; }
+.light .bg-umsu-royal\/20 { background-color: rgba(29, 78, 216, 0.12) !important; color: #1d4ed8 !important; }
+
+/* Layout Background overrides to bypass Tailwind v3 opacity bugs with HEX CSS variables */
+.light header {
+  background-color: rgba(240, 244, 248, 0.8) !important;
+  border-color: rgba(15, 23, 42, 0.12) !important;
+}
+
+.light nav {
+  border-color: rgba(15, 23, 42, 0.12) !important;
+}
+
+.light nav.sm\:hidden {
+  background-color: rgba(240, 244, 248, 0.9) !important;
+  border-color: rgba(15, 23, 42, 0.12) !important;
+}
+
+/* Force body and wrapper background */
+.light div.min-h-screen {
+  background-color: #f0f4f8 !important;
+}
+
+/* ==========================================
+   COMPARATOR PAGE SPECIFIC ACCESSIBILITY OVERRIDES
+   ========================================== */
+
+/* Universal Input Placeholders */
+.light ::placeholder, 
+.light textarea::placeholder, 
+.light input::placeholder {
+  color: #576574 !important; /* Darker Slate Gray for high contrast placeholder */
+  opacity: 1 !important;
+}
+
+/* Quick Preset Chips */
+.light .text-umsu-gold\/80 { 
+  color: #b45309 !important; /* Amber-700 instead of bright yellow text */
+}
+.light .focus-within\:border-umsu-gold\/50:focus-within {
+  border-color: #b45309 !important; /* Defined active border when typing */
+}
+
+/* Disabled/Default Borders */
+.light .border-slate-800 {
+  border-color: rgba(15, 23, 42, 0.15) !important;
+}
+
+/* Loading Skeletons */
+.light .bg-slate-800 {
+  background-color: #e2e8f0 !important;
+}
+
+/* Latency Badge Overrides in Results & History */
+.light .bg-yellow-500\/10 { 
+  background-color: rgba(180, 83, 9, 0.08) !important; 
+}
+.light .border-yellow-500\/30 { 
+  border-color: rgba(180, 83, 9, 0.25) !important; 
+}
+.light .border-umsu-emerald\/30 { 
+  border-color: rgba(4, 120, 87, 0.25) !important; 
+}
+.light .border-umsu-rose\/30 { 
+  border-color: rgba(190, 18, 60, 0.25) !important; 
+}
+
+/* Active result winners border highlighting */
+.light .border-umsu-gold\/60 {
+  border-color: rgba(180, 83, 9, 0.6) !important;
+}
+.light .ring-umsu-gold\/30 {
+  --tw-ring-color: rgba(180, 83, 9, 0.3) !important;
+}

@@ -1,0 +1,75 @@
+from pydantic import BaseModel, Field
+from typing import List, Dict, Any
+from datetime import datetime
+
+# Input payload for /api/predict
+class PredictRequest(BaseModel):
+    text: str = Field(..., max_length=500, description="Input text to analyze for sentiment")
+
+# Model result details in response
+class ModelResultDetails(BaseModel):
+    name: str
+    label: str
+    confidence: float
+    latency_ms: float
+
+# Inner data for prediction response
+class PredictResponseData(BaseModel):
+    input_text: str
+    model_a: ModelResultDetails
+    model_b: ModelResultDetails
+    timestamp: datetime
+
+# Final prediction response payload
+class PredictResponse(BaseModel):
+    status: str = "success"
+    data: PredictResponseData
+
+# Log database schema response
+class PredictionLogResponse(BaseModel):
+    id: int
+    input_text: str
+    model_a_label: str
+    model_a_confidence: float
+    model_a_latency_ms: float
+    model_b_label: str
+    model_b_confidence: float
+    model_b_latency_ms: float
+    created_at: datetime
+
+    class Config:
+        from_attributes = True
+
+# Model summary stats structure for benchmark
+class ModelSummaryStats(BaseModel):
+    accuracy_mean: float
+    accuracy_std: float
+    f1_mean: float
+    f1_std: float
+    avg_latency_ms: float
+    peak_vram_mb: float
+
+# Statistical test metrics in benchmark stats API
+class StatisticalTestDetails(BaseModel):
+    mcnemar_p_value: float
+    wilcoxon_p_value: float
+    bootstrap_95_ci: List[float]
+    cohens_d: float
+    effect_size_interpretation: str
+
+# Final benchmark response payload
+class BenchmarkStatsResponse(BaseModel):
+    status: str
+    summary: Dict[str, ModelSummaryStats]
+    statistical_tests: StatisticalTestDetails
+
+# Authentication schemas for Dosen & Peneliti RBAC
+class LoginRequest(BaseModel):
+    username: str
+    password: str
+
+class LoginResponse(BaseModel):
+    status: str
+    token: str
+    role: str
+    user_name: str
