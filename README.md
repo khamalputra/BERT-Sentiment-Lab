@@ -182,18 +182,6 @@ npm run dev
 
 ---
 
-## 🔑 Kredensial Resmi Login Peneliti & Dosen (*Role-Based Access Control*)
-
-Untuk mengakses halaman **Benchmark Analytics**, gunakan salah satu akun resmi berikut:
-
-| Username | Password | Otoritas & Peran | Display Name |
-| :--- | :---: | :--- | :--- |
-| `dosenpembimbing` | `123456` | Reviewer Utama | **Dosen Pembimbing (UMSU)** |
-| `dosenpenguji` | `123456` | Penguji Akademik | **Dosen Penguji (UMSU)** |
-| `syafiqmhd` | `123456` | Peneliti Utama | **Syafiq Hasan (Peneliti)** |
-
----
-
 ## 📄 Hak Cipta & Sitasi Akademik
 
 Jika Anda menggunakan repositori ini atau data eksperimen dalam penelitian Anda, silakan berikan sitasi sebagai berikut:
