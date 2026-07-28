@@ -1,6 +1,7 @@
 import os
 import zipfile
 import sys
+import shutil
 
 # Safe import for gdown
 try:
@@ -41,23 +42,38 @@ def setup_models():
         print("Model A (model_a.pt) is already present.")
 
     # 2. Check and download Model B (Fine-Tuned BertForSequenceClassification folder or zip)
-    if not os.path.exists(model_b_dir):
-        print("\n--- Downloading Model B (Fine-Tuned BERT) ---")
+    if not os.path.exists(model_b_dir) or not any(f.endswith(('.safetensors', '.bin')) for root, _, files in os.walk(model_b_dir) for f in files):
+        print("\n--- Downloading Model B (Fine-Tuned BERT Archive) ---")
         if not os.path.exists(model_b_zip_path):
             download_from_gdrive(MODEL_B_FILE_ID, model_b_zip_path)
         
-        # Check if the downloaded file is a ZIP or direct file
+        # Comprehensive ZIP handling
         if zipfile.is_zipfile(model_b_zip_path):
             print("Extracting Model B archive...")
+            os.makedirs(model_b_dir, exist_ok=True)
             with zipfile.ZipFile(model_b_zip_path, 'r') as zip_ref:
-                zip_ref.extractall(MODELS_DIR)
+                file_list = zip_ref.namelist()
+                # If zip contains a top-level 'model_b/' folder
+                if any(name.startswith('model_b/') for name in file_list):
+                    zip_ref.extractall(MODELS_DIR)
+                else:
+                    # If zip contains files directly without 'model_b/' wrapper
+                    zip_ref.extractall(model_b_dir)
+            
+            # Clean up zip archive after extraction
             if os.path.exists(model_b_zip_path):
                 os.remove(model_b_zip_path)
-            print("Model B extracted successfully.")
+            print("Model B extracted successfully to 'backend/models/model_b/'!")
         else:
-            print("Downloaded Model B file directly.")
+            # Fallback if downloaded file is direct weight file
+            if not os.path.exists(model_b_dir):
+                os.makedirs(model_b_dir, exist_ok=True)
+            target_file = os.path.join(model_b_dir, "model.safetensors")
+            if os.path.exists(model_b_zip_path):
+                shutil.move(model_b_zip_path, target_file)
+            print("Moved Model B weight file directly to 'backend/models/model_b/model.safetensors'.")
     else:
-        print("Model B directory (model_b/) is already present.")
+        print("Model B directory (model_b/) and weights are already present.")
 
     print("\n[SUCCESS] Model verification and setup complete!")
 
