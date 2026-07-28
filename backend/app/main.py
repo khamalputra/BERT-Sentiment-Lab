@@ -31,11 +31,13 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-# Content-Security-Policy Security Middleware
+# Content-Security-Policy & Security Headers Middleware
 @app.middleware("http")
 async def add_security_headers(request, call_next):
     response = await call_next(request)
     response.headers["Content-Security-Policy"] = "default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline';"
+    response.headers["X-Frame-Options"] = "DENY"
+    response.headers["X-Content-Type-Options"] = "nosniff"
     return response
 
 # Global model engine instance
