@@ -24,11 +24,11 @@ def download_from_gdrive(file_id: str, output_path: str):
     """Downloads a file from Google Drive using gdown with robust fallback options."""
     print(f"Downloading File ID [{file_id}] to '{output_path}'...")
     try:
-        gdown.download(id=file_id, output=output_path, quiet=False, fuzzy=True)
+        gdown.download(id=file_id, output=output_path, quiet=False)
     except Exception as e1:
         print(f"Primary gdown attempt with id failed ({e1}), trying URL fallback...")
         url = f"https://drive.google.com/uc?id={file_id}&export=download"
-        gdown.download(url=url, output=output_path, quiet=False, fuzzy=True)
+        gdown.download(url=url, output=output_path, quiet=False)
 
 def setup_models():
     """Ensures model_a.pt and model_b directory are downloaded and extracted."""
