@@ -1,4 +1,5 @@
 import React from 'react'
+import { motion } from 'framer-motion'
 import { 
   Sparkles, 
   GitCompare, 
@@ -14,14 +15,42 @@ export default function Home({ theme, onNavigate }) {
   const isLight = theme === 'light'
   const notebookSeeds = ['42', '123', '777', '999', '1234', '2024']
 
+  const containerVariants = {
+    hidden: { opacity: 0 },
+    visible: {
+      opacity: 1,
+      transition: {
+        staggerChildren: 0.12,
+        delayChildren: 0.05
+      }
+    }
+  }
+
+  const itemVariants = {
+    hidden: { opacity: 0, y: 20 },
+    visible: {
+      opacity: 1,
+      y: 0,
+      transition: { duration: 0.5, ease: "easeOut" }
+    }
+  }
+
   return (
-    <div className="space-y-8 sm:space-y-10 py-2">
+    <motion.div 
+      variants={containerVariants}
+      initial="hidden"
+      animate="visible"
+      className="space-y-8 sm:space-y-10 py-2"
+    >
       {/* HERO SECTION - UMSU Academic Design System */}
-      <section className={`relative overflow-hidden rounded-3xl border p-6 sm:p-10 md:p-12 transition-all backdrop-blur-xl ${
-        isLight
-          ? 'bg-white/95 border-slate-200 shadow-xl text-slate-900'
-          : 'bg-[#0a1128]/95 border-blue-900/40 shadow-2xl text-slate-100'
-      }`}>
+      <motion.section 
+        variants={itemVariants}
+        className={`relative overflow-hidden rounded-3xl border p-6 sm:p-10 md:p-12 transition-all backdrop-blur-xl ${
+          isLight
+            ? 'bg-white/95 border-slate-200 shadow-xl text-slate-900'
+            : 'bg-[#0a1128]/95 border-blue-900/40 shadow-2xl text-slate-100'
+        }`}
+      >
         {/* Glow Spheres Background - UMSU Gold & Royal Blue */}
         <div className="absolute -top-32 -left-32 w-80 h-80 bg-umsu-gold/10 rounded-full blur-3xl pointer-events-none" />
         <div className="absolute -bottom-32 -right-32 w-80 h-80 bg-umsu-royal/15 rounded-full blur-3xl pointer-events-none" />
@@ -90,10 +119,10 @@ export default function Home({ theme, onNavigate }) {
             </button>
           </div>
         </div>
-      </section>
+      </motion.section>
 
       {/* TWO MODEL COMPARISON CARDS */}
-      <section className="space-y-4">
+      <motion.section variants={itemVariants} className="space-y-4">
         <div className="text-left sm:text-center space-y-1">
           <h2 className={`text-lg sm:text-xl font-bold ${isLight ? 'text-slate-900' : 'text-slate-100'}`}>
             Arsitektur Model yang Dibandingkan
@@ -105,11 +134,15 @@ export default function Home({ theme, onNavigate }) {
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-5 sm:gap-6">
           {/* Model A Card */}
-          <div className={`p-5 sm:p-6 rounded-2xl border transition-all flex flex-col justify-between space-y-4 ${
-            isLight
-              ? 'bg-white border-slate-200 shadow-sm hover:border-sky-300'
-              : 'bg-[#0a1128]/80 border-blue-900/40 hover:border-sky-500/40'
-          }`}>
+          <motion.div 
+            whileHover={{ y: -4 }}
+            transition={{ duration: 0.2 }}
+            className={`p-5 sm:p-6 rounded-2xl border transition-all flex flex-col justify-between space-y-4 ${
+              isLight
+                ? 'bg-white border-slate-200 shadow-sm hover:border-sky-300'
+                : 'bg-[#0a1128]/80 border-blue-900/40 hover:border-sky-500/40'
+            }`}
+          >
             <div className="space-y-4">
               <div className="flex items-center justify-between">
                 <div className="flex items-center space-x-3">
@@ -149,14 +182,18 @@ export default function Home({ theme, onNavigate }) {
                 <div className={`text-xs font-extrabold ${isLight ? 'text-emerald-700' : 'text-emerald-400'}`}>~7.60 ms</div>
               </div>
             </div>
-          </div>
+          </motion.div>
 
           {/* Model B Card */}
-          <div className={`p-5 sm:p-6 rounded-2xl border transition-all flex flex-col justify-between space-y-4 ${
-            isLight
-              ? 'bg-white border-slate-200 shadow-sm hover:border-purple-300'
-              : 'bg-[#0a1128]/80 border-purple-900/40 hover:border-purple-500/40'
-          }`}>
+          <motion.div 
+            whileHover={{ y: -4 }}
+            transition={{ duration: 0.2 }}
+            className={`p-5 sm:p-6 rounded-2xl border transition-all flex flex-col justify-between space-y-4 ${
+              isLight
+                ? 'bg-white border-slate-200 shadow-sm hover:border-purple-300'
+                : 'bg-[#0a1128]/80 border-purple-900/40 hover:border-purple-500/40'
+            }`}
+          >
             <div className="space-y-4">
               <div className="flex items-center justify-between">
                 <div className="flex items-center space-x-3">
@@ -196,14 +233,17 @@ export default function Home({ theme, onNavigate }) {
                 <div className={`text-xs font-extrabold ${isLight ? 'text-emerald-700' : 'text-emerald-400'}`}>~7.71 ms</div>
               </div>
             </div>
-          </div>
+          </motion.div>
         </div>
-      </section>
+      </motion.section>
 
       {/* STATISTICAL RESEARCH HIGHLIGHTS */}
-      <section className={`p-5 sm:p-8 rounded-3xl border transition-all ${
-        isLight ? 'bg-white border-slate-200 shadow-sm' : 'bg-slate-950/60 border-blue-900/30'
-      }`}>
+      <motion.section 
+        variants={itemVariants}
+        className={`p-5 sm:p-8 rounded-3xl border transition-all ${
+          isLight ? 'bg-white border-slate-200 shadow-sm' : 'bg-slate-950/60 border-blue-900/30'
+        }`}
+      >
         {/* Header with Award Icon Inline with Title */}
         <div className="space-y-2 mb-6 text-left">
           <div className="flex items-center space-x-3">
@@ -265,7 +305,7 @@ export default function Home({ theme, onNavigate }) {
             <div className={`text-[10px] ${isLight ? 'text-slate-500' : 'text-slate-400'}`}>Extremely Large Effect</div>
           </div>
         </div>
-      </section>
-    </div>
+      </motion.section>
+    </motion.div>
   )
 }
