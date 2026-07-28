@@ -222,7 +222,7 @@ export default function Home({ theme, onNavigate }) {
             <div className="flex flex-wrap items-center gap-1.5 pt-0.5">
               {notebookSeeds.map((seed) => (
                 <code key={seed} className={`px-2 py-0.5 rounded-md border font-mono text-[11px] font-semibold ${
-                  isLight ? 'bg-slate-100 border-slate-300 text-teal-700' : 'bg-slate-900 border-slate-700/80 text-teal-300'
+                  isLight ? 'bg-slate-100/90 border-slate-200 text-slate-800 font-bold' : 'bg-slate-900 border-slate-700/80 text-teal-300'
                 }`}>
                   {seed}
                 </code>
@@ -233,7 +233,7 @@ export default function Home({ theme, onNavigate }) {
 
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3.5 sm:gap-4">
           <div className={`p-4 rounded-2xl border text-center space-y-1 ${
-            isLight ? 'bg-slate-50 border-slate-200' : 'bg-slate-900/80 border-blue-900/30'
+            isLight ? 'bg-emerald-50/50 border-emerald-100' : 'bg-slate-900/80 border-blue-900/30'
           }`}>
             <div className={`text-xs font-medium ${isLight ? 'text-slate-600' : 'text-slate-400'}`}>Delta Akurasi Rata-rata</div>
             <div className="text-xl font-black text-emerald-600 dark:text-emerald-400">+6.46%</div>
@@ -241,7 +241,7 @@ export default function Home({ theme, onNavigate }) {
           </div>
 
           <div className={`p-4 rounded-2xl border text-center space-y-1 ${
-            isLight ? 'bg-slate-50 border-slate-200' : 'bg-slate-900/80 border-blue-900/30'
+            isLight ? 'bg-sky-50/50 border-sky-100' : 'bg-slate-900/80 border-blue-900/30'
           }`}>
             <div className={`text-xs font-medium ${isLight ? 'text-slate-600' : 'text-slate-400'}`}>Uji Wilcoxon Signed-Rank</div>
             <div className="text-xl font-black text-sky-600 dark:text-sky-400">p = 0.01562</div>
@@ -249,7 +249,7 @@ export default function Home({ theme, onNavigate }) {
           </div>
 
           <div className={`p-4 rounded-2xl border text-center space-y-1 ${
-            isLight ? 'bg-slate-50 border-slate-200' : 'bg-slate-900/80 border-blue-900/30'
+            isLight ? 'bg-purple-50/50 border-purple-100' : 'bg-slate-900/80 border-blue-900/30'
           }`}>
             <div className={`text-xs font-medium ${isLight ? 'text-slate-600' : 'text-slate-400'}`}>Uji Disagreement McNemar</div>
             <div className="text-xl font-black text-purple-600 dark:text-purple-400">p = 1.48e-8</div>
@@ -257,7 +257,7 @@ export default function Home({ theme, onNavigate }) {
           </div>
 
           <div className={`p-4 rounded-2xl border text-center space-y-1 ${
-            isLight ? 'bg-slate-50 border-slate-200' : 'bg-slate-900/80 border-blue-900/30'
+            isLight ? 'bg-amber-50/50 border-amber-100' : 'bg-slate-900/80 border-blue-900/30'
           }`}>
             <div className={`text-xs font-medium ${isLight ? 'text-slate-600' : 'text-slate-400'}`}>Ukuran Efek (Cohen's d)</div>
             <div className="text-xl font-black text-amber-600 dark:text-amber-400">d = 14.45</div>
