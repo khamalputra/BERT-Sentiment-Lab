@@ -21,10 +21,14 @@ MODEL_A_FILE_ID = "10Rdz9ZIWX6VqZ5mHuzsWe3OVFu70CtAR"
 MODEL_B_FILE_ID = "1TVR2g4I3QnwcTUX5N9DKXQduSfBca0C7"
 
 def download_from_gdrive(file_id: str, output_path: str):
-    """Downloads a file from Google Drive using gdown."""
-    url = f"https://drive.google.com/uc?id={file_id}"
+    """Downloads a file from Google Drive using gdown with robust fallback options."""
     print(f"Downloading File ID [{file_id}] to '{output_path}'...")
-    gdown.download(url, output_path, quiet=False)
+    try:
+        gdown.download(id=file_id, output=output_path, quiet=False, fuzzy=True)
+    except Exception as e1:
+        print(f"Primary gdown attempt with id failed ({e1}), trying URL fallback...")
+        url = f"https://drive.google.com/uc?id={file_id}&export=download"
+        gdown.download(url=url, output=output_path, quiet=False, fuzzy=True)
 
 def setup_models():
     """Ensures model_a.pt and model_b directory are downloaded and extracted."""
