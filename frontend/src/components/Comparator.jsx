@@ -2,7 +2,7 @@ import React, { useState, useEffect, useRef } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { Send, Trash2, Clipboard, Sparkles, CheckCircle, Clock, Zap, AlertCircle, Search, HelpCircle, History, Award, X, GitCompare, Cpu } from 'lucide-react'
 
-function Comparator({ theme }) {
+function Comparator({ theme, userUsername = 'public' }) {
   const isLight = theme === 'light'
   const [text, setText] = useState('')
   const [loading, setLoading] = useState(false)
@@ -37,10 +37,11 @@ function Comparator({ theme }) {
     },
   ]
 
-  // Load history from API on mount
+  // Load history from API for current isolated user account
   const fetchHistory = async () => {
     try {
-      const res = await fetch('/api/history?limit=10')
+      const activeUser = userUsername || 'public'
+      const res = await fetch(`/api/history?username=${encodeURIComponent(activeUser)}&limit=10`)
       if (res.ok) {
         const data = await res.json()
         setHistory(data)
@@ -62,12 +63,13 @@ function Comparator({ theme }) {
     }
   }
 
-  // Clear all prediction history via custom Web App Modal
+  // Clear all prediction history for current isolated user account
   const handleConfirmClearAll = async (e) => {
     if (e && e.stopPropagation) e.stopPropagation()
     setShowConfirmModal(false)
     try {
-      const res = await fetch('/api/history', { method: 'DELETE' })
+      const activeUser = userUsername || 'public'
+      const res = await fetch(`/api/history?username=${encodeURIComponent(activeUser)}`, { method: 'DELETE' })
       if (res.ok) {
         setHistory([])
         await fetchHistory()
@@ -79,7 +81,7 @@ function Comparator({ theme }) {
 
   useEffect(() => {
     fetchHistory()
-  }, [])
+  }, [userUsername])
 
   // Handle Ctrl+Enter to submit
   const handleKeyDown = (e) => {
@@ -89,7 +91,7 @@ function Comparator({ theme }) {
     }
   }
 
-  // Submit prediction request
+  // Submit prediction request with account username isolation
   const handleSubmit = async () => {
     if (!text.trim() || loading) return
     setLoading(true)
@@ -101,10 +103,11 @@ function Comparator({ theme }) {
     }
 
     try {
+      const activeUser = userUsername || 'public'
       const res = await fetch('/api/predict', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ text })
+        body: JSON.stringify({ text, username: activeUser })
       })
 
       if (res.ok) {

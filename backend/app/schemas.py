@@ -5,6 +5,7 @@ from datetime import datetime
 # Input payload for /api/predict
 class PredictRequest(BaseModel):
     text: str = Field(..., max_length=500, description="Input text to analyze for sentiment")
+    username: str = Field("public", description="Username associated with prediction for isolated history")
 
 # Model result details in response
 class ModelResultDetails(BaseModel):
@@ -28,6 +29,7 @@ class PredictResponse(BaseModel):
 # Log database schema response
 class PredictionLogResponse(BaseModel):
     id: int
+    username: str = "public"
     input_text: str
     model_a_label: str
     model_a_confidence: float
@@ -73,3 +75,4 @@ class LoginResponse(BaseModel):
     token: str
     role: str
     user_name: str
+    user_username: str

@@ -32,6 +32,7 @@ function App() {
   // RBAC State Management (Public vs Peneliti / Dosen)
   const [userRole, setUserRole] = useState(() => localStorage.getItem('user_role') || 'public')
   const [userName, setUserName] = useState(() => localStorage.getItem('user_name') || 'Mahasiswa / Public')
+  const [userUsername, setUserUsername] = useState(() => localStorage.getItem('user_username') || 'public')
   const [showLoginModal, setShowLoginModal] = useState(false)
   const [loginUsername, setLoginUsername] = useState('')
   const [loginPassword, setLoginPassword] = useState('')
@@ -136,8 +137,10 @@ function App() {
       if (res.ok && data.status === 'success') {
         localStorage.setItem('user_role', data.role)
         localStorage.setItem('user_name', data.user_name)
+        localStorage.setItem('user_username', data.user_username)
         setUserRole(data.role)
         setUserName(data.user_name)
+        setUserUsername(data.user_username)
         setShowLoginModal(false)
         setLoginUsername('')
         setLoginPassword('')
@@ -156,8 +159,10 @@ function App() {
   const handleLogout = () => {
     localStorage.removeItem('user_role')
     localStorage.removeItem('user_name')
+    localStorage.removeItem('user_username')
     setUserRole('public')
     setUserName('Mahasiswa / Public')
+    setUserUsername('public')
     setActiveTab('comparator')
   }
 
@@ -400,7 +405,7 @@ function App() {
                 exit={{ opacity: 0, y: -15 }}
                 transition={{ duration: 0.2 }}
               >
-                <Comparator theme={theme} />
+                <Comparator theme={theme} userUsername={userUsername} />
               </motion.div>
             ) : isDosenOrPeneliti ? (
               <motion.div

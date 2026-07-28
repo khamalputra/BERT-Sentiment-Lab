@@ -6,6 +6,7 @@ class PredictionLog(Base):
     __tablename__ = "prediction_logs"
 
     id = Column(Integer, primary_key=True, index=True)
+    username = Column(String(50), nullable=True, index=True, default="public")
     input_text = Column(Text, nullable=False)
     model_a_label = Column(String(20), nullable=False)
     model_a_confidence = Column(Float, nullable=False)

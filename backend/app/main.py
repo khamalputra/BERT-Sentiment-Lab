@@ -57,9 +57,11 @@ def predict_sentiment(payload: PredictRequest, db: Session = Depends(get_db)):
     try:
         # Run prediction
         predictions = model_engine.predict(payload.text)
+        user_clean = payload.username.strip().lower() if payload.username else "public"
         
-        # Save to database prediction log
+        # Save to database prediction log with account isolation
         log_entry = PredictionLog(
+            username=user_clean,
             input_text=payload.text,
             model_a_label=predictions["model_a"]["label"],
             model_a_confidence=predictions["model_a"]["confidence"],
@@ -182,17 +184,24 @@ def get_benchmark_stats(db: Session = Depends(get_db)):
         raise HTTPException(status_code=500, detail=f"Database retrieval error: {str(e)}")
 
 @app.get("/api/history", response_model=List[PredictionLogResponse])
-def get_prediction_history(limit: int = Query(10, ge=1, le=50), db: Session = Depends(get_db)):
+def get_prediction_history(username: str = Query(None), limit: int = Query(10, ge=1, le=50), db: Session = Depends(get_db)):
     try:
-        logs = db.query(PredictionLog).order_by(PredictionLog.created_at.desc()).limit(limit).all()
+        query = db.query(PredictionLog)
+        if username:
+            query = query.filter(PredictionLog.username == username.strip().lower())
+        logs = query.order_by(PredictionLog.created_at.desc()).limit(limit).all()
         return logs
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"Database retrieval error: {str(e)}")
 
 @app.delete("/api/history")
-def clear_prediction_history(db: Session = Depends(get_db)):
+def clear_prediction_history(username: str = Query(None), db: Session = Depends(get_db)):
     try:
-        db.query(PredictionLog).delete()
+        query = db.query(PredictionLog)
+        if username:
+            query.filter(PredictionLog.username == username.strip().lower()).delete()
+        else:
+            query.delete()
         db.commit()
         return {"status": "success", "message": "Prediction history cleared."}
     except Exception as e:
@@ -235,7 +244,8 @@ def login_user(req: LoginRequest):
             status="success",
             token="umsu_jwt_researcher_token_2026",
             role="dosen",
-            user_name=display_names.get(username_clean, f"{req.username.strip().capitalize()} (UMSU)")
+            user_name=display_names.get(username_clean, f"{req.username.strip().capitalize()} (UMSU)"),
+            user_username=username_clean
         )
     
     raise HTTPException(status_code=401, detail="Username atau Password salah. Silakan periksa kembali kredensial Anda.")
