@@ -132,16 +132,16 @@ export default function Home({ theme, onNavigate }) {
               Seluruh 12 lapisan <em>transformer encoder</em> dibekukan (<em>frozen</em>). Hanya lapisan <em>linear head</em> atas yang dilatih. Memiliki kecepatan ekstraksi cepat namun terbatas pada konteks kalimat negasi kompleks.
             </p>
 
-            <div className={`grid grid-cols-3 gap-2 pt-2 text-center border-t ${isLight ? 'border-slate-200' : 'border-slate-800/40'}`}>
-              <div className={`p-2.5 rounded-xl border ${isLight ? 'bg-slate-50 border-slate-200' : 'bg-slate-900/50 border-transparent'}`}>
+            <div className={`grid grid-cols-3 gap-2 pt-2 text-center border-t ${isLight ? 'border-sky-100' : 'border-slate-800/40'}`}>
+              <div className={`p-2.5 rounded-xl border ${isLight ? 'bg-sky-50/60 border-sky-100' : 'bg-slate-900/50 border-transparent'}`}>
                 <div className={`text-[11px] font-medium ${isLight ? 'text-slate-600' : 'text-slate-400'}`}>Akurasi</div>
                 <div className={`text-xs font-extrabold ${isLight ? 'text-sky-700' : 'text-sky-400'}`}>85.15%</div>
               </div>
-              <div className={`p-2.5 rounded-xl border ${isLight ? 'bg-slate-50 border-slate-200' : 'bg-slate-900/50 border-transparent'}`}>
+              <div className={`p-2.5 rounded-xl border ${isLight ? 'bg-sky-50/60 border-sky-100' : 'bg-slate-900/50 border-transparent'}`}>
                 <div className={`text-[11px] font-medium ${isLight ? 'text-slate-600' : 'text-slate-400'}`}>F1-Score</div>
                 <div className={`text-xs font-extrabold ${isLight ? 'text-sky-700' : 'text-sky-400'}`}>86.01%</div>
               </div>
-              <div className={`p-2.5 rounded-xl border ${isLight ? 'bg-slate-50 border-slate-200' : 'bg-slate-900/50 border-transparent'}`}>
+              <div className={`p-2.5 rounded-xl border ${isLight ? 'bg-sky-50/60 border-sky-100' : 'bg-slate-900/50 border-transparent'}`}>
                 <div className={`text-[11px] font-medium ${isLight ? 'text-slate-600' : 'text-slate-400'}`}>Latency</div>
                 <div className={`text-xs font-extrabold ${isLight ? 'text-emerald-700' : 'text-emerald-400'}`}>~7.60 ms</div>
               </div>
