@@ -31,7 +31,11 @@ class ModelEngine:
                 # Load Model A (Frozen BERT + custom classifier linear head weights)
                 self.bert_a = BertModel.from_pretrained("bert-base-uncased")
                 self.classifier_a = torch.nn.Linear(768, 2)
-                self.classifier_a.load_state_dict(torch.load(model_a_path, map_location="cpu"))
+                try:
+                    state_dict = torch.load(model_a_path, map_location="cpu", weights_only=False)
+                except TypeError:
+                    state_dict = torch.load(model_a_path, map_location="cpu")
+                self.classifier_a.load_state_dict(state_dict)
                 self.bert_a.eval()
                 self.classifier_a.eval()
                 
