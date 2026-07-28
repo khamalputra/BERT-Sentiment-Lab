@@ -668,7 +668,7 @@ function Comparator({ theme }) {
               </div>
 
               <div className={`flex items-center justify-end space-x-3 pt-4 border-t ${
-                isLight ? 'border-slate-200' : 'border-slate-800'
+                isLight ? 'border-rose-100' : 'border-slate-800'
               }`}>
                 <button
                   onClick={() => setShowConfirmModal(false)}
