@@ -34,7 +34,8 @@ export default function Home({ theme, onNavigate }) {
               : 'bg-umsu-royal/10 text-umsu-royal border-umsu-royal/30'
           }`}>
             <img src="/logo-umsu.png?v=2.0" alt="Logo UMSU" className="w-4 h-4 object-contain flex-shrink-0 drop-shadow-sm" />
-            <span className="truncate">Fakultas Ilmu Komputer & Teknologi Informasi • UMSU</span>
+            <span className="hidden sm:inline">Fakultas Ilmu Komputer & Teknologi Informasi • UMSU</span>
+            <span className="inline sm:hidden">FIKTI • Universitas Muhammadiyah Sumatera Utara</span>
           </div>
 
           {/* Main Title & Subtitle */}
