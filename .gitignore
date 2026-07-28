@@ -22,7 +22,8 @@ backend/models/**/*.bin
 *.bin
 *.h5
 
-# IDE & Editor files
+# IDE & Editor files & scratch directory
 .vscode/
 .idea/
 *.swp
+scratch/

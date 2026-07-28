@@ -1,0 +1,242 @@
+import React from 'react'
+import { 
+  Sparkles, 
+  GitCompare, 
+  BarChart3, 
+  Cpu, 
+  ArrowRight, 
+  Brain, 
+  ShieldCheck, 
+  Award
+} from 'lucide-react'
+
+export default function Home({ theme, onNavigate }) {
+  const isLight = theme === 'light'
+  const notebookSeeds = ['42', '123', '777', '999', '1234', '2024']
+
+  return (
+    <div className="space-y-8 sm:space-y-10 py-2">
+      {/* HERO SECTION - UMSU Academic Design System */}
+      <section className={`relative overflow-hidden rounded-3xl border p-6 sm:p-10 md:p-12 transition-all backdrop-blur-xl ${
+        isLight
+          ? 'bg-white/95 border-slate-200 shadow-xl text-slate-900'
+          : 'bg-[#0a1128]/95 border-blue-900/40 shadow-2xl text-slate-100'
+      }`}>
+        {/* Glow Spheres Background - UMSU Gold & Royal Blue */}
+        <div className="absolute -top-32 -left-32 w-80 h-80 bg-umsu-gold/10 rounded-full blur-3xl pointer-events-none" />
+        <div className="absolute -bottom-32 -right-32 w-80 h-80 bg-umsu-royal/15 rounded-full blur-3xl pointer-events-none" />
+
+        <div className="relative z-10 max-w-4xl mx-auto text-center space-y-5 sm:space-y-6">
+          {/* Institution Badge */}
+          <div className="inline-flex items-center space-x-2 px-3.5 sm:px-4 py-1.5 rounded-full text-[11px] sm:text-xs font-bold bg-umsu-royal/10 text-umsu-royal border border-umsu-royal/30 shadow-sm max-w-full">
+            <Sparkles size={14} className="text-umsu-gold flex-shrink-0" />
+            <span className="truncate">Fakultas Ilmu Komputer & Teknologi Informasi • UMSU</span>
+          </div>
+
+          {/* Main Title & Subtitle */}
+          <div className="space-y-2.5 sm:space-y-3">
+            <h1 className={`text-3xl sm:text-5xl font-extrabold tracking-tight ${
+              isLight ? 'text-slate-900' : 'text-slate-100'
+            }`}>
+              BERT Sentiment Lab
+            </h1>
+            <p className={`text-xs sm:text-base max-w-2xl mx-auto font-medium leading-relaxed ${
+              isLight ? 'text-slate-600' : 'text-slate-300'
+            }`}>
+              Platform riset eksperimental komparatif inferensi sentimen ulasan film membandingkan metode <strong>BERT Feature Extraction</strong> vs <strong>BERT Fine-Tuning</strong>.
+            </p>
+          </div>
+
+          {/* Researcher Identity Pill */}
+          <div className={`inline-flex items-center space-x-2 px-3.5 sm:px-4 py-2 rounded-2xl border text-[11px] sm:text-xs font-semibold shadow-inner ${
+            isLight ? 'bg-slate-100 border-slate-200 text-slate-700' : 'bg-slate-900/80 border-blue-900/40 text-slate-300'
+          }`}>
+            <ShieldCheck size={15} className="text-umsu-gold flex-shrink-0" />
+            <span>Peneliti: <strong>Syafiq Hasan</strong> (NPM: 2209010182)</span>
+          </div>
+
+          {/* Action Navigation Buttons */}
+          <div className="flex flex-col sm:flex-row items-center justify-center gap-3 sm:gap-4 pt-2">
+            <button
+              onClick={() => onNavigate('comparator')}
+              className="w-full sm:w-auto px-6 py-3.5 rounded-2xl text-xs sm:text-sm font-black text-[#040814] bg-gradient-to-r from-umsu-gold via-yellow-400 to-amber-500 hover:from-yellow-400 hover:to-yellow-500 shadow-xl shadow-umsu-gold/20 transition-all flex items-center justify-center space-x-2 cursor-pointer hover:scale-[1.02]"
+            >
+              <GitCompare size={18} />
+              <span>Coba Inferensi Real-Time</span>
+              <ArrowRight size={16} />
+            </button>
+
+            <button
+              onClick={() => onNavigate('analytics')}
+              className={`w-full sm:w-auto px-6 py-3.5 rounded-2xl text-xs sm:text-sm font-bold border transition-all flex items-center justify-center space-x-2 cursor-pointer hover:scale-[1.02] ${
+                isLight
+                  ? 'bg-white text-slate-800 border-slate-300 hover:bg-slate-100 shadow-md'
+                  : 'bg-[#0f172a] text-slate-100 border-slate-700 hover:bg-[#1e293b] shadow-lg'
+              }`}
+            >
+              <BarChart3 size={18} className="text-umsu-gold" />
+              <span>Lihat Benchmark Statistik</span>
+            </button>
+          </div>
+        </div>
+      </section>
+
+      {/* TWO MODEL COMPARISON CARDS */}
+      <section className="space-y-4">
+        <div className="text-left sm:text-center space-y-1">
+          <h2 className={`text-lg sm:text-xl font-bold ${isLight ? 'text-slate-900' : 'text-slate-100'}`}>
+            Arsitektur Model yang Dibandingkan
+          </h2>
+          <p className="text-xs text-slate-400 leading-relaxed">
+            Dua pendekatan komputasi utama berbasis BERT (<em>Bidirectional Encoder Representations from Transformers</em>)
+          </p>
+        </div>
+
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-5 sm:gap-6">
+          {/* Model A Card */}
+          <div className={`p-5 sm:p-6 rounded-2xl border transition-all space-y-4 ${
+            isLight
+              ? 'bg-white border-slate-200 shadow-sm hover:border-sky-300'
+              : 'bg-[#0a1128]/80 border-blue-900/40 hover:border-sky-500/40'
+          }`}>
+            <div className="flex items-center justify-between">
+              <div className="flex items-center space-x-3">
+                <div className="w-10 h-10 rounded-xl bg-sky-500/10 border border-sky-500/30 text-sky-400 flex items-center justify-center flex-shrink-0">
+                  <Cpu size={20} />
+                </div>
+                <div>
+                  <h3 className={`font-bold text-sm sm:text-base ${isLight ? 'text-slate-900' : 'text-slate-100'}`}>
+                    Model A: Feature Extraction
+                  </h3>
+                  <span className="text-[11px] text-slate-400">Frozen Transformer Encoder</span>
+                </div>
+              </div>
+              <span className="px-2.5 py-1 rounded-full text-[10px] font-bold bg-slate-800 text-slate-300 border border-slate-700 flex-shrink-0">
+                Model A
+              </span>
+            </div>
+
+            <p className={`text-xs leading-relaxed ${isLight ? 'text-slate-600' : 'text-slate-300'}`}>
+              Seluruh 12 lapisan <em>transformer encoder</em> dibekukan (<em>frozen</em>). Hanya lapisan <em>linear head</em> atas yang dilatih. Memiliki kecepatan ekstraksi cepat namun terbatas pada konteks kalimat negasi kompleks.
+            </p>
+
+            <div className="grid grid-cols-3 gap-2 pt-2 text-center border-t border-slate-800/40">
+              <div className="p-2 rounded-xl bg-slate-900/50">
+                <div className="text-[10px] text-slate-400">Akurasi</div>
+                <div className="text-xs font-bold text-sky-400">85.15%</div>
+              </div>
+              <div className="p-2 rounded-xl bg-slate-900/50">
+                <div className="text-[10px] text-slate-400">F1-Score</div>
+                <div className="text-xs font-bold text-sky-400">86.01%</div>
+              </div>
+              <div className="p-2 rounded-xl bg-slate-900/50">
+                <div className="text-[10px] text-slate-400">Latency</div>
+                <div className="text-xs font-bold text-emerald-400">~7.60 ms</div>
+              </div>
+            </div>
+          </div>
+
+          {/* Model B Card */}
+          <div className={`p-5 sm:p-6 rounded-2xl border transition-all space-y-4 ${
+            isLight
+              ? 'bg-white border-slate-200 shadow-sm hover:border-purple-300'
+              : 'bg-[#0a1128]/80 border-purple-900/40 hover:border-purple-500/40'
+          }`}>
+            <div className="flex items-center justify-between">
+              <div className="flex items-center space-x-3">
+                <div className="w-10 h-10 rounded-xl bg-purple-500/10 border border-purple-500/30 text-purple-400 flex items-center justify-center flex-shrink-0">
+                  <Brain size={20} />
+                </div>
+                <div>
+                  <h3 className={`font-bold text-sm sm:text-base ${isLight ? 'text-slate-900' : 'text-slate-100'}`}>
+                    Model B: Fine-Tuned
+                  </h3>
+                  <span className="text-[11px] text-slate-400">End-to-End Parameter Optimization</span>
+                </div>
+              </div>
+              <span className="px-2.5 py-1 rounded-full text-[10px] font-bold bg-purple-500/20 text-purple-300 border border-purple-500/40 flex-shrink-0">
+                Model B
+              </span>
+            </div>
+
+            <p className={`text-xs leading-relaxed ${isLight ? 'text-slate-600' : 'text-slate-300'}`}>
+              Seluruh 110 juta parameter BERT diperbarui secara penuh melalui <em>backpropagation</em>. Mampu memahami nuansa negasi (<em>double negation</em>) dan ketergantungan konteks yang rumit dengan akurasi sangat tinggi.
+            </p>
+
+            <div className="grid grid-cols-3 gap-2 pt-2 text-center border-t border-purple-900/30">
+              <div className="p-2 rounded-xl bg-slate-900/50">
+                <div className="text-[10px] text-slate-400">Akurasi</div>
+                <div className="text-xs font-bold text-purple-400">91.61%</div>
+              </div>
+              <div className="p-2 rounded-xl bg-slate-900/50">
+                <div className="text-[10px] text-slate-400">F1-Score</div>
+                <div className="text-xs font-bold text-purple-400">91.98%</div>
+              </div>
+              <div className="p-2 rounded-xl bg-slate-900/50">
+                <div className="text-[10px] text-slate-400">Latency</div>
+                <div className="text-xs font-bold text-emerald-400">~7.71 ms</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* STATISTICAL RESEARCH HIGHLIGHTS */}
+      <section className={`p-5 sm:p-8 rounded-3xl border transition-all ${
+        isLight ? 'bg-slate-100/80 border-slate-200' : 'bg-slate-950/60 border-blue-900/30'
+      }`}>
+        {/* Header with Award Icon Inline with Title */}
+        <div className="space-y-2 mb-6 text-left">
+          <div className="flex items-center space-x-3">
+            <div className="w-10 h-10 rounded-xl bg-amber-500/10 border border-amber-500/30 text-amber-400 flex items-center justify-center flex-shrink-0">
+              <Award size={20} />
+            </div>
+            <h3 className={`font-bold text-base sm:text-lg leading-snug ${isLight ? 'text-slate-900' : 'text-slate-100'}`}>
+              Hasil Pengujian Hipotesis Statistik
+            </h3>
+          </div>
+
+          {/* Explanation Text starting from below the logo */}
+          <div className="text-xs text-slate-400 leading-relaxed space-y-2 pt-1">
+            <p>
+              Evaluasi inferensial ketat menggunakan 6 <em>random seed initializations</em> (N = 6 Seeds):
+            </p>
+            <div className="flex flex-wrap items-center gap-1.5 pt-0.5">
+              {notebookSeeds.map((seed) => (
+                <code key={seed} className="px-2 py-0.5 rounded-md bg-slate-900 border border-slate-700/80 text-teal-300 font-mono text-[11px] font-semibold">
+                  {seed}
+                </code>
+              ))}
+            </div>
+          </div>
+        </div>
+
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3.5 sm:gap-4">
+          <div className="p-4 rounded-2xl bg-slate-900/80 border border-blue-900/30 text-center space-y-1">
+            <div className="text-xs text-slate-400 font-medium">Delta Akurasi Rata-rata</div>
+            <div className="text-xl font-black text-emerald-400">+6.46%</div>
+            <div className="text-[10px] text-slate-400">95% CI: [+4.44%, +8.83%]</div>
+          </div>
+
+          <div className="p-4 rounded-2xl bg-slate-900/80 border border-blue-900/30 text-center space-y-1">
+            <div className="text-xs text-slate-400 font-medium">Uji Wilcoxon Signed-Rank</div>
+            <div className="text-xl font-black text-sky-400">p = 0.01562</div>
+            <div className="text-[10px] text-slate-400">Signifikan (p &lt; 0.05)</div>
+          </div>
+
+          <div className="p-4 rounded-2xl bg-slate-900/80 border border-blue-900/30 text-center space-y-1">
+            <div className="text-xs text-slate-400 font-medium">Uji Disagreement McNemar</div>
+            <div className="text-xl font-black text-purple-400">p = 1.48e-8</div>
+            <div className="text-[10px] text-slate-400">Chi-Square χ² = 32.14</div>
+          </div>
+
+          <div className="p-4 rounded-2xl bg-slate-900/80 border border-blue-900/30 text-center space-y-1">
+            <div className="text-xs text-slate-400 font-medium">Ukuran Efek (Cohen's d)</div>
+            <div className="text-xl font-black text-amber-400">d = 14.45</div>
+            <div className="text-[10px] text-slate-400">Extremely Large Effect</div>
+          </div>
+        </div>
+      </section>
+    </div>
+  )
+}

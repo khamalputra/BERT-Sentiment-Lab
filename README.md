@@ -22,7 +22,7 @@ Sistem ini dikembangkan sebagai platform riset eksperimental komparatif untuk me
 1. **Model A (Feature Extraction / Frozen Backbone)**: Arsitektur BERT di mana seluruh lapisan *transformer encoder* dibekukan (*frozen*), dan hanya lapisan *classification head* linier yang dilatih.
 2. **Model B (End-to-End Fine-Tuning)**: Arsitektur BERT di mana seluruh parameter jaringan (*backbone* + *head*) diperbarui secara penuh (*fine-tuned*) melalui propagasi balik.
 
-Platform ini dilengkapi dengan **Dashboard Analisis Inferensial** yang mengintegrasikan pengujian hipotesis statistik ketat (*McNemar's Test*, *Wilcoxon Signed-Rank Test*, *Bootstrap 95% Confidence Interval*, dan *Cohen's d Effect Size*) dari **6 *random seed initializations*** ($N=6$, Seeds: `42`, `123`, `456`, `789`, `1011`, `1213`).
+Platform ini dilengkapi dengan **Dashboard Analisis Inferensial** yang mengintegrasikan pengujian hipotesis statistik ketat (*McNemar's Test*, *Wilcoxon Signed-Rank Test*, *Bootstrap 95% Confidence Interval*, dan *Cohen's d Effect Size*) dari **6 *random seed initializations*** ($N=6$, Seeds: `42`, `123`, `777`, `999`, `1234`, `2024`).
 
 ---
 
@@ -137,6 +137,7 @@ BERT-Sentiment-Lab/
         ├── App.jsx              # Main Layout, RBAC Guard, PWA Modal
         ├── index.css            # Custom Design System & CSS Variables
         └── components/
+            ├── Home.jsx         # Portal Riset & Halaman Beranda
             ├── Comparator.jsx   # Real-Time Dual Model Inferensi Panel
             └── Analytics.jsx    # Benchmark Inferensial Dashboard Panel
 ```

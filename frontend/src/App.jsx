@@ -1,11 +1,12 @@
 import React, { useState, useEffect } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
-import { Cpu, BarChart2, GitCompare, History, Info, Wifi, WifiOff, Download, Award, Sun, Moon, Lock, Unlock, User, LogOut, KeyRound, ShieldCheck, AlertCircle, X, Eye, EyeOff } from 'lucide-react'
+import { Cpu, BarChart2, GitCompare, History, Info, Wifi, WifiOff, Download, Award, Sun, Moon, Lock, Unlock, User, LogOut, KeyRound, ShieldCheck, AlertCircle, X, Eye, EyeOff, Home as HomeIcon } from 'lucide-react'
 import Comparator from './components/Comparator'
 import Analytics from './components/Analytics'
+import Home from './components/Home'
 
 function App() {
-  const [activeTab, setActiveTab] = useState('comparator') // 'comparator', 'analytics'
+  const [activeTab, setActiveTab] = useState('home') // 'home', 'comparator', 'analytics'
   const [isOnline, setIsOnline] = useState(navigator.onLine)
   const [deferredPrompt, setDeferredPrompt] = useState(null)
   const [showInstallBtn, setShowInstallBtn] = useState(false)
@@ -156,8 +157,9 @@ function App() {
 
   // Navigation items with role lock indicators
   const navItems = [
+    { id: 'home', label: 'Beranda', icon: HomeIcon, isProtected: false },
     { id: 'comparator', label: 'Comparator', icon: GitCompare, isProtected: false },
-    { id: 'analytics', label: 'Benchmark Analytics', icon: BarChart2, isProtected: true },
+    { id: 'analytics', label: 'Analytics', icon: BarChart2, isProtected: true },
   ]
 
   return (
@@ -175,8 +177,8 @@ function App() {
         <div className="max-w-7xl mx-auto flex items-center justify-between">
           {/* Logo & Identity */}
           <div className="flex items-center space-x-2 sm:space-x-3 flex-shrink-0">
-            <div className="w-11 h-11 sm:w-12 sm:h-12 flex items-center justify-center flex-shrink-0">
-              <img src="/icons/icon-192x192.png" alt="Logo UMSU NLP" className="w-full h-full object-contain drop-shadow-md" />
+            <div className="w-16 h-16 sm:w-20 sm:h-20 flex items-center justify-center flex-shrink-0">
+              <img src="/icons/icon-192x192.png" alt="Logo UMSU NLP" className="w-full h-full object-contain drop-shadow-xl" />
             </div>
             <div>
               <div className="flex items-center space-x-1.5 sm:space-x-2">
@@ -318,7 +320,17 @@ function App() {
         {/* Tab Content Rendering */}
         <div className="relative">
           <AnimatePresence mode="wait">
-            {activeTab === 'comparator' ? (
+            {activeTab === 'home' ? (
+              <motion.div
+                key="home"
+                initial={{ opacity: 0, y: 15 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, y: -15 }}
+                transition={{ duration: 0.2 }}
+              >
+                <Home theme={theme} onNavigate={(tabId) => handleTabChange(tabId)} />
+              </motion.div>
+            ) : activeTab === 'comparator' ? (
               <motion.div
                 key="comparator"
                 initial={{ opacity: 0, y: 15 }}
@@ -371,8 +383,8 @@ function App() {
         </div>
       </main>
 
-      {/* Mobile Bottom Navigation Bar */}
-      <nav className="sm:hidden fixed bottom-0 left-0 right-0 bg-umsu-canvas/90 backdrop-blur-lg border-t border-umsu-border px-6 py-2.5 flex justify-around items-center z-40 transition-colors duration-300">
+      {/* Mobile Bottom Navigation Bar (Equal 33.3% Grid Distribution) */}
+      <nav className="sm:hidden fixed bottom-0 left-0 right-0 bg-umsu-canvas/95 backdrop-blur-lg border-t border-umsu-border px-2 py-2 grid grid-cols-3 justify-items-center items-center z-40 transition-colors duration-300">
         {navItems.map((item) => {
           const Icon = item.icon
           const isActive = activeTab === item.id
@@ -382,20 +394,20 @@ function App() {
             <button
               key={item.id}
               onClick={() => handleTabChange(item.id)}
-              className="flex flex-col items-center space-y-1 py-1 relative"
+              className="flex flex-col items-center justify-center space-y-1 py-1 w-full text-center relative cursor-pointer"
             >
-              <div className={`p-2 rounded-xl transition-all ${
+              <div className={`p-1.5 rounded-xl transition-all ${
                 isActive 
                   ? 'bg-umsu-gold/10 text-umsu-gold scale-110' 
                   : 'text-slate-400'
               }`}>
-                <Icon size={20} />
+                <Icon size={19} />
               </div>
-              <span className={`text-[10px] font-medium transition-all flex items-center space-x-1 ${
+              <span className={`text-[10px] font-medium transition-all flex items-center justify-center space-x-1 whitespace-nowrap ${
                 isActive ? 'text-umsu-gold font-bold' : 'text-slate-400'
               }`}>
-                <span>{item.label === 'Comparator' ? 'Comparator' : 'Analytics'}</span>
-                {isLocked && <Lock size={10} className="text-slate-500" />}
+                <span>{item.label}</span>
+                {isLocked && <Lock size={10} className="text-slate-500 flex-shrink-0" />}
               </span>
             </button>
           )
