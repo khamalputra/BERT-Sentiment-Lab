@@ -55,6 +55,10 @@ def startup_event():
     
     # Auto-download PyTorch model weights from Google Drive if missing
     try:
+        import sys
+        backend_dir = os.path.abspath(os.path.join(os.path.dirname(__file__), ".."))
+        if backend_dir not in sys.path:
+            sys.path.insert(0, backend_dir)
         from download_models import setup_models
         setup_models()
     except Exception as e:
