@@ -6,9 +6,13 @@ import Analytics from './components/Analytics'
 import Home from './components/Home'
 
 function App() {
-  // Helper to determine initial active tab from URL hash or localStorage
+  // Helper to determine initial active tab from URL path, hash, or localStorage
   const getInitialTab = () => {
-    const hash = window.location.hash.replace('#', '')
+    const path = window.location.pathname.replace(/^\/+/, '').toLowerCase()
+    if (['home', 'comparator', 'analytics'].includes(path)) {
+      return path
+    }
+    const hash = window.location.hash.replace('#', '').toLowerCase()
     if (['home', 'comparator', 'analytics'].includes(hash)) {
       return hash
     }
@@ -37,34 +41,49 @@ function App() {
 
   const isDosenOrPeneliti = userRole === 'dosen' || userRole === 'peneliti'
 
-  // Sync activeTab state to URL hash and localStorage whenever it changes
+  // Sync activeTab state to URL pathname (History API) and localStorage whenever it changes
   useEffect(() => {
     if (activeTab === 'analytics' && !isDosenOrPeneliti) {
       setActiveTab('home')
       localStorage.setItem('active_tab', 'home')
-      window.location.hash = 'home'
+      window.history.replaceState(null, '', '/')
       return
     }
     localStorage.setItem('active_tab', activeTab)
-    if (window.location.hash !== `#${activeTab}`) {
-      window.location.hash = activeTab
+
+    // Clean URL paths without hashes (#)
+    const targetPath = activeTab === 'home' ? '/' : `/${activeTab}`
+    if (window.location.pathname !== targetPath) {
+      window.history.pushState(null, '', targetPath)
+    } else if (window.location.hash) {
+      window.history.replaceState(null, '', targetPath)
     }
   }, [activeTab, isDosenOrPeneliti])
 
-  // Listen to browser hash changes (Back/Forward navigation)
+  // Listen to browser Back/Forward navigation (popstate) & hashchange fallback
   useEffect(() => {
-    const handleHashChange = () => {
-      const hash = window.location.hash.replace('#', '')
-      if (['home', 'comparator', 'analytics'].includes(hash)) {
-        if (hash === 'analytics' && !isDosenOrPeneliti) {
-          setShowLoginModal(true)
-          return
-        }
-        setActiveTab(hash)
+    const handleUrlChange = () => {
+      const path = window.location.pathname.replace(/^\/+/, '').toLowerCase()
+      const hash = window.location.hash.replace('#', '').toLowerCase()
+      const currentTab = ['comparator', 'analytics'].includes(path) 
+        ? path 
+        : ['comparator', 'analytics'].includes(hash) 
+          ? hash 
+          : 'home'
+
+      if (currentTab === 'analytics' && !isDosenOrPeneliti) {
+        setShowLoginModal(true)
+        return
       }
+      setActiveTab(currentTab)
     }
-    window.addEventListener('hashchange', handleHashChange)
-    return () => window.removeEventListener('hashchange', handleHashChange)
+
+    window.addEventListener('popstate', handleUrlChange)
+    window.addEventListener('hashchange', handleUrlChange)
+    return () => {
+      window.removeEventListener('popstate', handleUrlChange)
+      window.removeEventListener('hashchange', handleUrlChange)
+    }
   }, [isDosenOrPeneliti])
 
   // Initialize and apply theme preference
