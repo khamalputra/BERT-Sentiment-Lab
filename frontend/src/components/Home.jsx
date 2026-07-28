@@ -51,15 +51,15 @@ export default function Home({ theme, onNavigate }) {
             </p>
           </div>
 
-          {/* Researcher Identity Pill - High Contrast in Light & Dark Mode */}
+          {/* Researcher Identity Pill - High Legibility in both Light & Dark Modes */}
           <div className={`inline-flex items-center space-x-2 px-4 py-2 rounded-2xl border text-[11px] sm:text-xs font-semibold shadow-sm transition-all ${
             isLight
-              ? 'bg-slate-100 border-slate-300 text-slate-900'
+              ? 'bg-slate-100/90 border-slate-300 text-slate-800'
               : 'bg-slate-900/90 border-blue-900/60 text-slate-100'
           }`}>
             <ShieldCheck size={16} className={isLight ? 'text-amber-600 flex-shrink-0' : 'text-umsu-gold flex-shrink-0'} />
-            <span className={isLight ? 'text-slate-900' : 'text-slate-100'}>
-              Peneliti: <strong className={isLight ? 'text-slate-950 font-black' : 'text-white font-black'}>Syafiq Hasan</strong> (NPM: 2209010182)
+            <span className={isLight ? 'text-slate-800' : 'text-slate-200'}>
+              Peneliti: <strong className={isLight ? 'text-slate-950 font-extrabold' : 'text-white font-extrabold'}>Syafiq Hasan</strong> <span className={isLight ? 'text-slate-700 font-medium' : 'text-amber-400/90 font-medium'}>(NPM: 2209010182)</span>
             </span>
           </div>
 
