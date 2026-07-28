@@ -426,7 +426,7 @@ function App() {
               initial={{ opacity: 0, scale: 0.95, y: 15 }}
               animate={{ opacity: 1, scale: 1, y: 0 }}
               exit={{ opacity: 0, scale: 0.95, y: 15 }}
-              className={`p-6 sm:p-8 max-w-md w-full rounded-3xl shadow-2xl border relative space-y-6 overflow-hidden ${
+              className={`p-7 sm:p-10 md:p-12 max-w-[500px] w-full rounded-3xl shadow-2xl border relative space-y-6 overflow-hidden ${
                 theme === 'light' 
                   ? 'bg-white/95 border-slate-200 text-slate-900 shadow-slate-300/50' 
                   : 'bg-[#0a1128]/95 border-blue-900/40 text-slate-100 shadow-black/80'
