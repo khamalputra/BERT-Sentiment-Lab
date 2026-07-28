@@ -21,34 +21,29 @@ MODEL_A_FILE_ID = "10Rdz9ZIWX6VqZ5mHuzsWe3OVFu70CtAR"
 MODEL_B_FILE_ID = "1TVR2g4I3QnwcTUX5N9DKXQduSfBca0C7"
 
 def download_from_gdrive(file_id: str, output_path: str):
-    """Downloads a file from Google Drive with gdown + requests fallback (handles large file confirm prompts)."""
+    """Downloads a file from Google Drive using gdown."""
     print(f"Downloading File ID [{file_id}] to '{output_path}'...")
-    
-    # 1. Try gdown first
+    url = f"https://drive.google.com/uc?id={file_id}"
     try:
-        gdown.download(id=file_id, output=output_path, quiet=False)
-        if os.path.exists(output_path) and os.path.getsize(output_path) > 1000:
-            print(f"gdown successfully downloaded '{output_path}' ({os.path.getsize(output_path)} bytes).")
+        gdown.download(url, output_path, quiet=False)
+        if os.path.exists(output_path) and os.path.getsize(output_path) > 5000:
             return
     except Exception as e1:
         print(f"gdown download attempt note: {e1}")
 
-    # 2. Try requests Session fallback with confirm token for large files / virus prompt
+    # Fallback using requests
     print("Executing requests Session fallback with confirm=t...")
     try:
         import requests
         session = requests.Session()
         URL = "https://docs.google.com/uc?export=download"
-        
         response = session.get(URL, params={'id': file_id, 'confirm': 't'}, stream=True)
-        if response.status_code != 200:
-            response = session.get(URL, params={'id': file_id}, stream=True)
-            
-        with open(output_path, "wb") as f:
-            for chunk in response.iter_content(32768):
-                if chunk:
-                    f.write(chunk)
-        print(f"Requests fallback successfully downloaded '{output_path}' ({os.path.getsize(output_path)} bytes).")
+        if response.status_code == 200:
+            with open(output_path, "wb") as f:
+                for chunk in response.iter_content(32768):
+                    if chunk:
+                        f.write(chunk)
+            print(f"Requests fallback downloaded '{output_path}' ({os.path.getsize(output_path)} bytes).")
     except Exception as e2:
         print(f"Requests fallback error: {e2}")
 
@@ -59,6 +54,16 @@ def setup_models():
     model_a_path = os.path.join(MODELS_DIR, "model_a.pt")
     model_b_dir = os.path.join(MODELS_DIR, "model_b")
     model_b_zip_path = os.path.join(MODELS_DIR, "model_b.zip")
+    safetensors_path = os.path.join(model_b_dir, "model.safetensors")
+
+    # Clean up corrupted HTML fallback files if present
+    if os.path.exists(safetensors_path) and os.path.getsize(safetensors_path) < 10000000: # < 10MB
+        print("Cleaning up corrupted model_b weight file (<10MB HTML response)...")
+        shutil.rmtree(model_b_dir, ignore_errors=True)
+        
+    if os.path.exists(model_a_path) and os.path.getsize(model_a_path) < 5000:
+        print("Cleaning up corrupted model_a weight file...")
+        os.remove(model_a_path)
     
     # 1. Check and download Model A (Frozen classifier head weights)
     if not os.path.exists(model_a_path):
@@ -68,36 +73,35 @@ def setup_models():
         print("Model A (model_a.pt) is already present.")
 
     # 2. Check and download Model B (Fine-Tuned BertForSequenceClassification folder or zip)
-    if not os.path.exists(model_b_dir) or not any(f.endswith(('.safetensors', '.bin')) for root, _, files in os.walk(model_b_dir) for f in files):
+    has_valid_weights = os.path.exists(model_b_dir) and any(
+        f.endswith(('.safetensors', '.bin')) and os.path.getsize(os.path.join(root, f)) > 10000000
+        for root, _, files in os.walk(model_b_dir) for f in files
+    )
+
+    if not has_valid_weights:
         print("\n--- Downloading Model B (Fine-Tuned BERT Archive) ---")
         if not os.path.exists(model_b_zip_path):
             download_from_gdrive(MODEL_B_FILE_ID, model_b_zip_path)
         
         # Comprehensive ZIP handling
-        if zipfile.is_zipfile(model_b_zip_path):
+        if os.path.exists(model_b_zip_path) and zipfile.is_zipfile(model_b_zip_path):
             print("Extracting Model B archive...")
             os.makedirs(model_b_dir, exist_ok=True)
             with zipfile.ZipFile(model_b_zip_path, 'r') as zip_ref:
                 file_list = zip_ref.namelist()
-                # If zip contains a top-level 'model_b/' folder
                 if any(name.startswith('model_b/') for name in file_list):
                     zip_ref.extractall(MODELS_DIR)
                 else:
-                    # If zip contains files directly without 'model_b/' wrapper
                     zip_ref.extractall(model_b_dir)
             
-            # Clean up zip archive after extraction
             if os.path.exists(model_b_zip_path):
                 os.remove(model_b_zip_path)
             print("Model B extracted successfully to 'backend/models/model_b/'!")
         else:
-            # Fallback if downloaded file is direct weight file
-            if not os.path.exists(model_b_dir):
-                os.makedirs(model_b_dir, exist_ok=True)
-            target_file = os.path.join(model_b_dir, "model.safetensors")
             if os.path.exists(model_b_zip_path):
-                shutil.move(model_b_zip_path, target_file)
-            print("Moved Model B weight file directly to 'backend/models/model_b/model.safetensors'.")
+                print(f"Downloaded model_b archive ({os.path.getsize(model_b_zip_path)} bytes) is not a valid ZIP file. Removing corrupted file.")
+                os.remove(model_b_zip_path)
+            print("Notice: Please ensure Google Drive file permissions are set to 'Anyone with the link'.")
     else:
         print("Model B directory (model_b/) and weights are already present.")
 
