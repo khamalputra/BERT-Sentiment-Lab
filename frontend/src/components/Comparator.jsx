@@ -145,10 +145,17 @@ function Comparator({ theme }) {
     setTimeout(() => setCopiedIndex(null), 2000)
   }
 
-  const getLatencyColor = (ms) => {
-    if (ms <= 14.3) return 'bg-umsu-emerald/10 text-umsu-emerald border-umsu-emerald/30' // Fast
-    if (ms <= 15.0) return 'bg-umsu-gold/15 text-umsu-gold border-umsu-gold/30' // Moderate
-    return 'bg-umsu-rose/10 text-umsu-rose border-umsu-rose/30' // Slow
+  const getLatencyColor = (ms, compareMs) => {
+    if (!ms) return isLight ? 'bg-slate-100 text-slate-600 border-slate-200' : 'bg-slate-800 text-slate-400 border-slate-700'
+    const isFaster = !compareMs || ms <= compareMs
+    if (isFaster) {
+      return isLight 
+        ? 'bg-emerald-50 text-emerald-700 border-emerald-200' 
+        : 'bg-emerald-500/15 text-emerald-300 border-emerald-500/30'
+    }
+    return isLight 
+      ? 'bg-sky-50 text-sky-700 border-sky-200' 
+      : 'bg-sky-500/15 text-sky-300 border-sky-500/30'
   }
 
   // Filter history list
@@ -373,7 +380,7 @@ function Comparator({ theme }) {
                         <Clock size={12} />
                         <span>Inference Latency</span>
                       </div>
-                      <span className={`text-xs font-mono font-bold border px-2 py-0.5 rounded-full flex items-center space-x-1 ${getLatencyColor(result.model_a.latency_ms)}`}>
+                      <span className={`text-xs font-mono font-bold border px-2 py-0.5 rounded-full flex items-center space-x-1 ${getLatencyColor(result.model_a.latency_ms, result.model_b.latency_ms)}`}>
                         <Zap size={10} />
                         <span>{result.model_a.latency_ms} ms</span>
                       </span>
@@ -442,7 +449,7 @@ function Comparator({ theme }) {
                         <Clock size={12} />
                         <span>Inference Latency</span>
                       </div>
-                      <span className={`text-xs font-mono font-bold border px-2 py-0.5 rounded-full flex items-center space-x-1 ${getLatencyColor(result.model_b.latency_ms)}`}>
+                      <span className={`text-xs font-mono font-bold border px-2 py-0.5 rounded-full flex items-center space-x-1 ${getLatencyColor(result.model_b.latency_ms, result.model_a.latency_ms)}`}>
                         <Zap size={10} />
                         <span>{result.model_b.latency_ms} ms</span>
                       </span>
