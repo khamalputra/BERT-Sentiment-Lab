@@ -33,7 +33,7 @@ export default function Home({ theme, onNavigate }) {
               ? 'bg-blue-50 text-blue-900 border-blue-200'
               : 'bg-umsu-royal/10 text-umsu-royal border-umsu-royal/30'
           }`}>
-            <Sparkles size={14} className={isLight ? 'text-amber-600 flex-shrink-0' : 'text-umsu-gold flex-shrink-0'} />
+            <img src="/logo-umsu.png" alt="Logo UMSU" className="w-4 h-4 object-contain flex-shrink-0 drop-shadow-sm" />
             <span className="truncate">Fakultas Ilmu Komputer & Teknologi Informasi • UMSU</span>
           </div>
 
