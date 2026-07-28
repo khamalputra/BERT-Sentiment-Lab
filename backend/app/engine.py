@@ -55,6 +55,10 @@ class ModelEngine:
             try:
                 inputs = self.tokenizer(text, return_tensors="pt", truncation=True, max_length=128, padding=True)
                 
+                # PyTorch CPU Warmup Pass (eliminates cold-start OpenMP/MKL thread allocation overhead)
+                with torch.no_grad():
+                    _ = self.bert_a(input_ids=inputs["input_ids"], attention_mask=inputs["attention_mask"])
+                
                 # Model A (Feature Extraction) inference
                 start_a = time.time()
                 with torch.no_grad():
