@@ -123,10 +123,10 @@ export default function Home({ theme, onNavigate }) {
 
       {/* TWO MODEL COMPARISON CARDS */}
       <motion.section 
-        initial={{ opacity: 0, y: 30 }}
+        initial={{ opacity: 0, y: 25 }}
         whileInView={{ opacity: 1, y: 0 }}
-        viewport={{ once: true, amount: 0.15 }}
-        transition={{ duration: 0.55, ease: "easeOut" }}
+        viewport={{ once: true, amount: 0.05 }}
+        transition={{ duration: 0.5, ease: "easeOut" }}
         className="space-y-4"
       >
         <div className="text-left sm:text-center space-y-1">
@@ -141,8 +141,11 @@ export default function Home({ theme, onNavigate }) {
         <div className="grid grid-cols-1 md:grid-cols-2 gap-5 sm:gap-6">
           {/* Model A Card */}
           <motion.div 
+            initial={{ opacity: 0, y: 25 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true, amount: 0.05 }}
             whileHover={{ y: -4 }}
-            transition={{ duration: 0.2 }}
+            transition={{ duration: 0.4 }}
             className={`p-5 sm:p-6 rounded-2xl border transition-all flex flex-col justify-between space-y-4 ${
               isLight
                 ? 'bg-white border-slate-200 shadow-sm hover:border-sky-300'
@@ -192,8 +195,11 @@ export default function Home({ theme, onNavigate }) {
 
           {/* Model B Card */}
           <motion.div 
+            initial={{ opacity: 0, y: 25 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true, amount: 0.05 }}
             whileHover={{ y: -4 }}
-            transition={{ duration: 0.2 }}
+            transition={{ duration: 0.4 }}
             className={`p-5 sm:p-6 rounded-2xl border transition-all flex flex-col justify-between space-y-4 ${
               isLight
                 ? 'bg-white border-slate-200 shadow-sm hover:border-purple-300'
@@ -245,10 +251,10 @@ export default function Home({ theme, onNavigate }) {
 
       {/* STATISTICAL RESEARCH HIGHLIGHTS */}
       <motion.section 
-        initial={{ opacity: 0, y: 30 }}
+        initial={{ opacity: 0, y: 25 }}
         whileInView={{ opacity: 1, y: 0 }}
-        viewport={{ once: true, amount: 0.15 }}
-        transition={{ duration: 0.55, ease: "easeOut" }}
+        viewport={{ once: true, amount: 0.05 }}
+        transition={{ duration: 0.5, ease: "easeOut" }}
         className={`p-5 sm:p-8 rounded-3xl border transition-all ${
           isLight ? 'bg-white border-slate-200 shadow-sm' : 'bg-slate-950/60 border-blue-900/30'
         }`}
