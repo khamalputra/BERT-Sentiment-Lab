@@ -449,7 +449,7 @@ function App() {
                   <h3 className={`text-lg font-bold leading-tight ${theme === 'light' ? 'text-slate-900' : 'text-slate-100'}`}>
                     Autentikasi Dosen & Peneliti
                   </h3>
-                  <p className="text-xs text-slate-400 leading-normal max-w-xs mx-auto">
+                  <p className="text-xs text-slate-400 leading-normal max-w-sm mx-auto">
                     Akses khusus analisis statistik & benchmark eksperimen BERT.
                   </p>
                 </div>
