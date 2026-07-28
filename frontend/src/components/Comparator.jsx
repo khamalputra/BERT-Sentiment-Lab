@@ -196,7 +196,7 @@ function Comparator({ theme }) {
               <span className={`text-[11px] px-2.5 py-1 rounded-lg border font-medium ${
                 isLight ? 'bg-slate-200/80 text-slate-700 border-slate-300' : 'bg-slate-900/80 text-slate-300 border-blue-900/40'
               }`}>
-                📊 Uji Wilcoxon & McNemar ($p < 0.05$)
+                📊 Uji Wilcoxon & McNemar (p &lt; 0.05)
               </span>
               <span className={`text-[11px] px-2.5 py-1 rounded-lg border font-medium ${
                 isLight ? 'bg-slate-200/80 text-slate-700 border-slate-300' : 'bg-slate-900/80 text-slate-300 border-blue-900/40'
