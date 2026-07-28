@@ -52,7 +52,15 @@ def startup_event():
     print("Starting up server...")
     # Initialize and seed database if not already done
     init_db()
-    # Load BERT Model Engine (in mock/stub mode)
+    
+    # Auto-download PyTorch model weights from Google Drive if missing
+    try:
+        from download_models import setup_models
+        setup_models()
+    except Exception as e:
+        print(f"Auto-download check note: {e}")
+
+    # Load BERT Model Engine
     model_engine = ModelEngine()
     print("Model Engine loaded.")
 
