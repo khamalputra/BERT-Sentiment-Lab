@@ -1,6 +1,5 @@
 # 🎓 BERT Sentiment Lab & Research Benchmark Dashboard
 
-[![Railway](https://img.shields.io/badge/Railway-Live_Backend-0B0D0E?style=flat-square&logo=railway)](https://nurturing-creation-production-4414.up.railway.app/api/health)
 [![Vercel](https://img.shields.io/badge/Vercel-Live_Frontend-000000?style=flat-square&logo=vercel)](https://vercel.com/)
 [![FastAPI](https://img.shields.io/badge/FastAPI-0.110.0-009688?style=flat-square&logo=fastapi)](https://fastapi.tiangolo.com/)
 [![PyTorch](https://img.shields.io/badge/PyTorch-2.0%2B-EE4C2C?style=flat-square&logo=pytorch)](https://pytorch.org/)
@@ -10,8 +9,6 @@
 
 **Laboratorium Penelitian Komparatif Sentiment Analysis Berbasis Deep Learning Transformer (BERT)**  
 *Fakultas Ilmu Komputer dan Teknologi Informasi (FIKTI), Universitas Muhammadiyah Sumatera Utara (UMSU)*
-
-🌐 **Live Backend API**: [`https://nurturing-creation-production-4414.up.railway.app`](https://nurturing-creation-production-4414.up.railway.app/api/health)
 
 ---
 
