@@ -1,11 +1,11 @@
 from pydantic import BaseModel, Field
-from typing import List, Dict, Any
+from typing import List, Dict, Any, Optional
 from datetime import datetime
 
 # Input payload for /api/predict
 class PredictRequest(BaseModel):
     text: str = Field(..., max_length=500, description="Input text to analyze for sentiment")
-    username: str = Field("public", description="Username associated with prediction for isolated history")
+    username: Optional[str] = Field("public", description="Username associated with prediction for isolated history")
 
 # Model result details in response
 class ModelResultDetails(BaseModel):
