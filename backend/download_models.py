@@ -21,14 +21,36 @@ MODEL_A_FILE_ID = "10Rdz9ZIWX6VqZ5mHuzsWe3OVFu70CtAR"
 MODEL_B_FILE_ID = "1TVR2g4I3QnwcTUX5N9DKXQduSfBca0C7"
 
 def download_from_gdrive(file_id: str, output_path: str):
-    """Downloads a file from Google Drive using gdown with robust fallback options."""
+    """Downloads a file from Google Drive with gdown + requests fallback (handles large file confirm prompts)."""
     print(f"Downloading File ID [{file_id}] to '{output_path}'...")
+    
+    # 1. Try gdown first
     try:
         gdown.download(id=file_id, output=output_path, quiet=False)
+        if os.path.exists(output_path) and os.path.getsize(output_path) > 1000:
+            print(f"gdown successfully downloaded '{output_path}' ({os.path.getsize(output_path)} bytes).")
+            return
     except Exception as e1:
-        print(f"Primary gdown attempt with id failed ({e1}), trying URL fallback...")
-        url = f"https://drive.google.com/uc?id={file_id}&export=download"
-        gdown.download(url=url, output=output_path, quiet=False)
+        print(f"gdown download attempt note: {e1}")
+
+    # 2. Try requests Session fallback with confirm token for large files / virus prompt
+    print("Executing requests Session fallback with confirm=t...")
+    try:
+        import requests
+        session = requests.Session()
+        URL = "https://docs.google.com/uc?export=download"
+        
+        response = session.get(URL, params={'id': file_id, 'confirm': 't'}, stream=True)
+        if response.status_code != 200:
+            response = session.get(URL, params={'id': file_id}, stream=True)
+            
+        with open(output_path, "wb") as f:
+            for chunk in response.iter_content(32768):
+                if chunk:
+                    f.write(chunk)
+        print(f"Requests fallback successfully downloaded '{output_path}' ({os.path.getsize(output_path)} bytes).")
+    except Exception as e2:
+        print(f"Requests fallback error: {e2}")
 
 def setup_models():
     """Ensures model_a.pt and model_b directory are downloaded and extracted."""
