@@ -51,11 +51,17 @@ export default function Home({ theme, onNavigate }) {
             </p>
           </div>
 
-          {/* Researcher Identity Pill - Dark Badge Shape with Bright White & Gold Font */}
-          <div className="inline-flex items-center space-x-2 px-4 py-2 rounded-2xl bg-[#040814] border border-blue-900/50 text-[11px] sm:text-xs font-semibold shadow-md">
-            <ShieldCheck size={16} className="text-umsu-gold flex-shrink-0" />
-            <span className="text-slate-200 font-medium">
-              Peneliti: <strong className="text-white font-black">Syafiq Hasan</strong> <span className="text-amber-400 font-medium">(NPM: 2209010182)</span>
+          {/* Researcher Identity Pill - Dynamic Light & Dark Mode Optimization */}
+          <div className={`inline-flex items-center space-x-2 px-4 py-2 rounded-2xl border text-[11px] sm:text-xs font-semibold shadow-sm transition-all ${
+            isLight
+              ? 'bg-slate-100/90 border-slate-300 text-slate-800'
+              : 'bg-[#040814] border-blue-900/60 text-slate-100'
+          }`}>
+            <ShieldCheck size={16} className={isLight ? 'text-amber-600 flex-shrink-0' : 'text-umsu-gold flex-shrink-0'} />
+            <span>
+              <span className={isLight ? 'text-slate-700 font-medium' : 'text-slate-300 font-medium'}>Peneliti: </span>
+              <strong className={isLight ? 'text-slate-900 font-black' : 'text-white font-black'}>Syafiq Hasan</strong>
+              <span className={isLight ? 'text-blue-900 font-bold' : 'text-amber-400 font-semibold'}> (NPM: 2209010182)</span>
             </span>
           </div>
 
