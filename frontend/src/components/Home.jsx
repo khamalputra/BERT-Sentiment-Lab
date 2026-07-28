@@ -118,32 +118,32 @@ export default function Home({ theme, onNavigate }) {
                   <h3 className={`font-bold text-sm sm:text-base ${isLight ? 'text-slate-900' : 'text-slate-100'}`}>
                     Model A: Feature Extraction
                   </h3>
-                  <span className={`text-[11px] ${isLight ? 'text-slate-500' : 'text-slate-400'}`}>Frozen Transformer Encoder</span>
+                  <span className={`text-[11px] font-medium ${isLight ? 'text-slate-600' : 'text-slate-400'}`}>Frozen Transformer Encoder</span>
                 </div>
               </div>
-              <span className={`px-2.5 py-1 rounded-full text-[10px] font-bold border flex-shrink-0 ${
-                isLight ? 'bg-slate-100 text-slate-800 border-slate-300' : 'bg-slate-800 text-slate-300 border-slate-700'
+              <span className={`px-2.5 py-1 rounded-full text-[10px] font-extrabold border flex-shrink-0 ${
+                isLight ? 'bg-sky-50 text-sky-800 border-sky-200' : 'bg-slate-800 text-slate-300 border-slate-700'
               }`}>
                 Model A
               </span>
             </div>
 
-            <p className={`text-xs leading-relaxed ${isLight ? 'text-slate-600' : 'text-slate-300'}`}>
+            <p className={`text-xs leading-relaxed ${isLight ? 'text-slate-700 font-normal' : 'text-slate-300'}`}>
               Seluruh 12 lapisan <em>transformer encoder</em> dibekukan (<em>frozen</em>). Hanya lapisan <em>linear head</em> atas yang dilatih. Memiliki kecepatan ekstraksi cepat namun terbatas pada konteks kalimat negasi kompleks.
             </p>
 
             <div className={`grid grid-cols-3 gap-2 pt-2 text-center border-t ${isLight ? 'border-slate-200' : 'border-slate-800/40'}`}>
-              <div className={`p-2 rounded-xl ${isLight ? 'bg-slate-100/80' : 'bg-slate-900/50'}`}>
-                <div className={`text-[10px] ${isLight ? 'text-slate-500' : 'text-slate-400'}`}>Akurasi</div>
-                <div className="text-xs font-bold text-sky-600 dark:text-sky-400">85.15%</div>
+              <div className={`p-2.5 rounded-xl border ${isLight ? 'bg-slate-50 border-slate-200' : 'bg-slate-900/50 border-transparent'}`}>
+                <div className={`text-[11px] font-medium ${isLight ? 'text-slate-600' : 'text-slate-400'}`}>Akurasi</div>
+                <div className={`text-xs font-extrabold ${isLight ? 'text-sky-700' : 'text-sky-400'}`}>85.15%</div>
               </div>
-              <div className={`p-2 rounded-xl ${isLight ? 'bg-slate-100/80' : 'bg-slate-900/50'}`}>
-                <div className={`text-[10px] ${isLight ? 'text-slate-500' : 'text-slate-400'}`}>F1-Score</div>
-                <div className="text-xs font-bold text-sky-600 dark:text-sky-400">86.01%</div>
+              <div className={`p-2.5 rounded-xl border ${isLight ? 'bg-slate-50 border-slate-200' : 'bg-slate-900/50 border-transparent'}`}>
+                <div className={`text-[11px] font-medium ${isLight ? 'text-slate-600' : 'text-slate-400'}`}>F1-Score</div>
+                <div className={`text-xs font-extrabold ${isLight ? 'text-sky-700' : 'text-sky-400'}`}>86.01%</div>
               </div>
-              <div className={`p-2 rounded-xl ${isLight ? 'bg-slate-100/80' : 'bg-slate-900/50'}`}>
-                <div className={`text-[10px] ${isLight ? 'text-slate-500' : 'text-slate-400'}`}>Latency</div>
-                <div className="text-xs font-bold text-emerald-600 dark:text-emerald-400">~7.60 ms</div>
+              <div className={`p-2.5 rounded-xl border ${isLight ? 'bg-slate-50 border-slate-200' : 'bg-slate-900/50 border-transparent'}`}>
+                <div className={`text-[11px] font-medium ${isLight ? 'text-slate-600' : 'text-slate-400'}`}>Latency</div>
+                <div className={`text-xs font-extrabold ${isLight ? 'text-emerald-700' : 'text-emerald-400'}`}>~7.60 ms</div>
               </div>
             </div>
           </div>
@@ -163,32 +163,32 @@ export default function Home({ theme, onNavigate }) {
                   <h3 className={`font-bold text-sm sm:text-base ${isLight ? 'text-slate-900' : 'text-slate-100'}`}>
                     Model B: Fine-Tuned
                   </h3>
-                  <span className={`text-[11px] ${isLight ? 'text-slate-500' : 'text-slate-400'}`}>End-to-End Parameter Optimization</span>
+                  <span className={`text-[11px] font-medium ${isLight ? 'text-slate-600' : 'text-slate-400'}`}>End-to-End Parameter Optimization</span>
                 </div>
               </div>
-              <span className={`px-2.5 py-1 rounded-full text-[10px] font-bold border flex-shrink-0 ${
-                isLight ? 'bg-purple-100 text-purple-800 border-purple-300' : 'bg-purple-500/20 text-purple-300 border-purple-500/40'
+              <span className={`px-2.5 py-1 rounded-full text-[10px] font-extrabold border flex-shrink-0 ${
+                isLight ? 'bg-purple-50 text-purple-800 border-purple-200' : 'bg-purple-500/20 text-purple-300 border-purple-500/40'
               }`}>
                 Model B
               </span>
             </div>
 
-            <p className={`text-xs leading-relaxed ${isLight ? 'text-slate-600' : 'text-slate-300'}`}>
+            <p className={`text-xs leading-relaxed ${isLight ? 'text-slate-700 font-normal' : 'text-slate-300'}`}>
               Seluruh 110 juta parameter BERT diperbarui secara penuh melalui <em>backpropagation</em>. Mampu memahami nuansa negasi (<em>double negation</em>) dan ketergantungan konteks yang rumit dengan akurasi sangat tinggi.
             </p>
 
             <div className={`grid grid-cols-3 gap-2 pt-2 text-center border-t ${isLight ? 'border-purple-100' : 'border-purple-900/30'}`}>
-              <div className={`p-2 rounded-xl ${isLight ? 'bg-purple-50/60' : 'bg-slate-900/50'}`}>
-                <div className={`text-[10px] ${isLight ? 'text-slate-500' : 'text-slate-400'}`}>Akurasi</div>
-                <div className="text-xs font-bold text-purple-600 dark:text-purple-400">91.61%</div>
+              <div className={`p-2.5 rounded-xl border ${isLight ? 'bg-purple-50/60 border-purple-100' : 'bg-slate-900/50 border-transparent'}`}>
+                <div className={`text-[11px] font-medium ${isLight ? 'text-slate-600' : 'text-slate-400'}`}>Akurasi</div>
+                <div className={`text-xs font-extrabold ${isLight ? 'text-purple-700' : 'text-purple-400'}`}>91.61%</div>
               </div>
-              <div className={`p-2 rounded-xl ${isLight ? 'bg-purple-50/60' : 'bg-slate-900/50'}`}>
-                <div className={`text-[10px] ${isLight ? 'text-slate-500' : 'text-slate-400'}`}>F1-Score</div>
-                <div className="text-xs font-bold text-purple-600 dark:text-purple-400">91.98%</div>
+              <div className={`p-2.5 rounded-xl border ${isLight ? 'bg-purple-50/60 border-purple-100' : 'bg-slate-900/50 border-transparent'}`}>
+                <div className={`text-[11px] font-medium ${isLight ? 'text-slate-600' : 'text-slate-400'}`}>F1-Score</div>
+                <div className={`text-xs font-extrabold ${isLight ? 'text-purple-700' : 'text-purple-400'}`}>91.98%</div>
               </div>
-              <div className={`p-2 rounded-xl ${isLight ? 'bg-purple-50/60' : 'bg-slate-900/50'}`}>
-                <div className={`text-[10px] ${isLight ? 'text-slate-500' : 'text-slate-400'}`}>Latency</div>
-                <div className="text-xs font-bold text-emerald-600 dark:text-emerald-400">~7.71 ms</div>
+              <div className={`p-2.5 rounded-xl border ${isLight ? 'bg-purple-50/60 border-purple-100' : 'bg-slate-900/50 border-transparent'}`}>
+                <div className={`text-[11px] font-medium ${isLight ? 'text-slate-600' : 'text-slate-400'}`}>Latency</div>
+                <div className={`text-xs font-extrabold ${isLight ? 'text-emerald-700' : 'text-emerald-400'}`}>~7.71 ms</div>
               </div>
             </div>
           </div>
