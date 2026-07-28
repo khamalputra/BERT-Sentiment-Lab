@@ -437,19 +437,19 @@ function App() {
                 <X size={18} />
               </button>
 
-              {/* Modal Brand Header */}
-              <div className="flex items-start space-x-4 pr-6">
-                <div className="w-12 h-12 flex items-center justify-center flex-shrink-0">
+              {/* Modal Brand Header (Centered Logo & Text Alignment) */}
+              <div className="flex flex-col items-center text-center space-y-2.5">
+                <div className="w-14 h-14 flex items-center justify-center flex-shrink-0 mx-auto">
                   <img src="/icons/icon-192x192.png" alt="Logo UMSU NLP" className="w-full h-full object-contain drop-shadow" />
                 </div>
-                <div>
-                  <div className="inline-flex items-center space-x-1.5 px-2.5 py-0.5 rounded-full bg-umsu-royal/10 border border-umsu-royal/20 text-umsu-royal text-[10px] font-bold tracking-wider uppercase mb-1">
+                <div className="space-y-1">
+                  <div className="inline-flex items-center justify-center space-x-1.5 px-3 py-0.5 rounded-full bg-umsu-royal/10 border border-umsu-royal/20 text-umsu-royal text-[10px] font-bold tracking-wider uppercase">
                     <span>BERT Sentiment Lab</span>
                   </div>
                   <h3 className={`text-lg font-bold leading-tight ${theme === 'light' ? 'text-slate-900' : 'text-slate-100'}`}>
                     Autentikasi Dosen & Peneliti
                   </h3>
-                  <p className="text-xs text-slate-400 mt-1 leading-normal">
+                  <p className="text-xs text-slate-400 leading-normal max-w-xs mx-auto">
                     Akses khusus analisis statistik & benchmark eksperimen BERT.
                   </p>
                 </div>
