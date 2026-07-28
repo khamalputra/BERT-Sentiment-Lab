@@ -117,6 +117,8 @@ export default function Home({ theme, onNavigate }) {
               <BarChart3 size={18} className="text-umsu-gold" />
               <span>Lihat Benchmark Statistik</span>
             </button>
+          </div>
+        </div>
       </motion.section>
 
       {/* TWO MODEL COMPARISON CARDS */}
@@ -250,7 +252,7 @@ export default function Home({ theme, onNavigate }) {
         className={`p-5 sm:p-8 rounded-3xl border transition-all ${
           isLight ? 'bg-white border-slate-200 shadow-sm' : 'bg-slate-950/60 border-blue-900/30'
         }`}
-      >   >
+      >
         {/* Header with Award Icon Inline with Title */}
         <div className="space-y-2 mb-6 text-left">
           <div className="flex items-center space-x-3">
