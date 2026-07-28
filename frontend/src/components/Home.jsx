@@ -79,9 +79,9 @@ export default function Home({ theme, onNavigate }) {
 
             <button
               onClick={() => onNavigate('analytics')}
-              className={`w-full sm:w-auto px-6 py-3.5 rounded-2xl text-xs sm:text-sm font-bold border transition-all flex items-center justify-center space-x-2 cursor-pointer hover:scale-[1.02] ${
+              className={`group w-full sm:w-auto px-6 py-3.5 rounded-2xl text-xs sm:text-sm font-bold border transition-all flex items-center justify-center space-x-2 cursor-pointer hover:scale-[1.02] ${
                 isLight
-                  ? 'bg-white text-slate-900 border-slate-300 hover:bg-slate-100 shadow-md'
+                  ? 'bg-white text-slate-900 border-slate-300 hover:bg-slate-900 hover:text-white hover:border-slate-900 shadow-md'
                   : 'bg-[#0f172a] text-slate-100 border-slate-700 hover:bg-[#1e293b] shadow-lg'
               }`}
             >
