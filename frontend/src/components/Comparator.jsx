@@ -158,6 +158,66 @@ function Comparator({ theme }) {
 
   return (
     <div className="space-y-8">
+      {/* HERO BANNER ARTWORK CARD */}
+      <div className={`relative overflow-hidden rounded-2xl border p-6 sm:p-8 transition-all backdrop-blur-xl ${
+        isLight
+          ? 'bg-gradient-to-r from-teal-500/10 via-slate-100/90 to-purple-500/10 border-teal-500/20 shadow-md'
+          : 'bg-gradient-to-r from-teal-950/40 via-slate-950/80 to-purple-950/40 border-teal-500/30 shadow-2xl'
+      }`}>
+        {/* Glow Effects */}
+        <div className="absolute -top-24 -left-24 w-64 h-64 bg-teal-500/20 rounded-full blur-3xl pointer-events-none" />
+        <div className="absolute -bottom-24 -right-24 w-64 h-64 bg-purple-500/20 rounded-full blur-3xl pointer-events-none" />
+
+        <div className="relative z-10 flex flex-col md:flex-row items-center justify-between gap-6">
+          {/* Left Content Column */}
+          <div className="space-y-3.5 max-w-xl text-left">
+            <div className="inline-flex items-center space-x-2 px-3 py-1 rounded-full text-xs font-semibold bg-teal-500/10 text-teal-400 border border-teal-500/30">
+              <Sparkles size={13} className="animate-spin-slow text-teal-400" />
+              <span>Research Benchmark Engine • FIKTI UMSU</span>
+            </div>
+            
+            <h1 className={`text-2xl sm:text-3xl font-extrabold tracking-tight ${
+              isLight ? 'text-slate-900' : 'text-transparent bg-clip-text bg-gradient-to-r from-teal-300 via-sky-200 to-purple-300'
+            }`}>
+              BERT Sentimen Lab
+            </h1>
+            
+            <p className={`text-xs sm:text-sm leading-relaxed ${isLight ? 'text-slate-600' : 'text-slate-300'}`}>
+              Platform riset komparatif inferensi sentimen real-time yang membandingkan performa <strong>BERT Feature Extraction</strong> (Model A) vs <strong>BERT Fine-Tuning</strong> (Model B) berbasis pengujian statistik inferensial.
+            </p>
+
+            {/* Quick Feature Badges */}
+            <div className="flex flex-wrap items-center gap-2 pt-1">
+              <span className={`text-[11px] px-2.5 py-1 rounded-lg border font-medium ${
+                isLight ? 'bg-slate-200/80 text-slate-700 border-slate-300' : 'bg-slate-900/80 text-slate-300 border-blue-900/40'
+              }`}>
+                ⚡ Inferensi Real-Time (~7.6ms)
+              </span>
+              <span className={`text-[11px] px-2.5 py-1 rounded-lg border font-medium ${
+                isLight ? 'bg-slate-200/80 text-slate-700 border-slate-300' : 'bg-slate-900/80 text-slate-300 border-blue-900/40'
+              }`}>
+                📊 Uji Wilcoxon & McNemar ($p < 0.05$)
+              </span>
+              <span className={`text-[11px] px-2.5 py-1 rounded-lg border font-medium ${
+                isLight ? 'bg-slate-200/80 text-slate-700 border-slate-300' : 'bg-slate-900/80 text-slate-300 border-blue-900/40'
+              }`}>
+                📱 Support Native PWA
+              </span>
+            </div>
+          </div>
+
+          {/* Right Image Banner Artwork */}
+          <div className="relative group flex-shrink-0">
+            <div className="absolute -inset-1 bg-gradient-to-r from-teal-400 to-purple-500 rounded-2xl blur-md opacity-50 group-hover:opacity-100 transition duration-500" />
+            <img 
+              src="/hero_banner.png" 
+              alt="BERT Sentimen Lab Illustration"
+              className="relative w-48 sm:w-60 md:w-64 rounded-2xl object-cover border border-teal-500/40 shadow-2xl transform group-hover:scale-102 transition duration-300"
+            />
+          </div>
+        </div>
+      </div>
+
       {/* SECTION 1: Interactive Input Panel */}
       <section className="glass-card p-6">
         <h2 className={`text-lg font-bold mb-4 flex items-center space-x-2 ${isLight ? 'text-slate-900' : 'text-slate-100'}`}>
