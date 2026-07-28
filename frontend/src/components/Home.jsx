@@ -104,35 +104,37 @@ export default function Home({ theme, onNavigate }) {
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-5 sm:gap-6">
           {/* Model A Card */}
-          <div className={`p-5 sm:p-6 rounded-2xl border transition-all space-y-4 ${
+          <div className={`p-5 sm:p-6 rounded-2xl border transition-all flex flex-col justify-between space-y-4 ${
             isLight
               ? 'bg-white border-slate-200 shadow-sm hover:border-sky-300'
               : 'bg-[#0a1128]/80 border-blue-900/40 hover:border-sky-500/40'
           }`}>
-            <div className="flex items-center justify-between">
-              <div className="flex items-center space-x-3">
-                <div className="w-10 h-10 rounded-xl bg-sky-500/10 border border-sky-500/30 text-sky-500 flex items-center justify-center flex-shrink-0">
-                  <Cpu size={20} />
+            <div className="space-y-4">
+              <div className="flex items-center justify-between">
+                <div className="flex items-center space-x-3">
+                  <div className="w-10 h-10 rounded-xl bg-sky-500/10 border border-sky-500/30 text-sky-500 flex items-center justify-center flex-shrink-0">
+                    <Cpu size={20} />
+                  </div>
+                  <div>
+                    <h3 className={`font-bold text-sm sm:text-base ${isLight ? 'text-slate-900' : 'text-slate-100'}`}>
+                      Model A: Feature Extraction
+                    </h3>
+                    <span className={`text-[11px] font-medium ${isLight ? 'text-slate-600' : 'text-slate-400'}`}>Frozen Transformer Encoder</span>
+                  </div>
                 </div>
-                <div>
-                  <h3 className={`font-bold text-sm sm:text-base ${isLight ? 'text-slate-900' : 'text-slate-100'}`}>
-                    Model A: Feature Extraction
-                  </h3>
-                  <span className={`text-[11px] font-medium ${isLight ? 'text-slate-600' : 'text-slate-400'}`}>Frozen Transformer Encoder</span>
-                </div>
+                <span className={`px-2.5 py-1 rounded-full text-[10px] font-extrabold border flex-shrink-0 ${
+                  isLight ? 'bg-sky-50 text-sky-800 border-sky-200' : 'bg-slate-800 text-slate-300 border-slate-700'
+                }`}>
+                  Model A
+                </span>
               </div>
-              <span className={`px-2.5 py-1 rounded-full text-[10px] font-extrabold border flex-shrink-0 ${
-                isLight ? 'bg-sky-50 text-sky-800 border-sky-200' : 'bg-slate-800 text-slate-300 border-slate-700'
-              }`}>
-                Model A
-              </span>
+
+              <p className={`text-xs leading-relaxed ${isLight ? 'text-slate-700 font-normal' : 'text-slate-300'}`}>
+                Seluruh 12 lapisan <em>transformer encoder</em> dibekukan (<em>frozen</em>). Hanya lapisan <em>linear head</em> atas yang dilatih. Memiliki kecepatan ekstraksi cepat namun terbatas pada konteks kalimat negasi kompleks.
+              </p>
             </div>
 
-            <p className={`text-xs leading-relaxed ${isLight ? 'text-slate-700 font-normal' : 'text-slate-300'}`}>
-              Seluruh 12 lapisan <em>transformer encoder</em> dibekukan (<em>frozen</em>). Hanya lapisan <em>linear head</em> atas yang dilatih. Memiliki kecepatan ekstraksi cepat namun terbatas pada konteks kalimat negasi kompleks.
-            </p>
-
-            <div className={`grid grid-cols-3 gap-2 pt-2 text-center border-t ${isLight ? 'border-sky-100' : 'border-slate-800/40'}`}>
+            <div className={`grid grid-cols-3 gap-2 pt-4 mt-auto text-center border-t ${isLight ? 'border-sky-100' : 'border-slate-800/40'}`}>
               <div className={`p-2.5 rounded-xl border ${isLight ? 'bg-sky-50/60 border-sky-100' : 'bg-slate-900/50 border-transparent'}`}>
                 <div className={`text-[11px] font-medium ${isLight ? 'text-slate-600' : 'text-slate-400'}`}>Akurasi</div>
                 <div className={`text-xs font-extrabold ${isLight ? 'text-sky-700' : 'text-sky-400'}`}>85.15%</div>
@@ -149,35 +151,37 @@ export default function Home({ theme, onNavigate }) {
           </div>
 
           {/* Model B Card */}
-          <div className={`p-5 sm:p-6 rounded-2xl border transition-all space-y-4 ${
+          <div className={`p-5 sm:p-6 rounded-2xl border transition-all flex flex-col justify-between space-y-4 ${
             isLight
               ? 'bg-white border-slate-200 shadow-sm hover:border-purple-300'
               : 'bg-[#0a1128]/80 border-purple-900/40 hover:border-purple-500/40'
           }`}>
-            <div className="flex items-center justify-between">
-              <div className="flex items-center space-x-3">
-                <div className="w-10 h-10 rounded-xl bg-purple-500/10 border border-purple-500/30 text-purple-500 flex items-center justify-center flex-shrink-0">
-                  <Brain size={20} />
+            <div className="space-y-4">
+              <div className="flex items-center justify-between">
+                <div className="flex items-center space-x-3">
+                  <div className="w-10 h-10 rounded-xl bg-purple-500/10 border border-purple-500/30 text-purple-500 flex items-center justify-center flex-shrink-0">
+                    <Brain size={20} />
+                  </div>
+                  <div>
+                    <h3 className={`font-bold text-sm sm:text-base ${isLight ? 'text-slate-900' : 'text-slate-100'}`}>
+                      Model B: Fine-Tuned
+                    </h3>
+                    <span className={`text-[11px] font-medium ${isLight ? 'text-slate-600' : 'text-slate-400'}`}>End-to-End Parameter Optimization</span>
+                  </div>
                 </div>
-                <div>
-                  <h3 className={`font-bold text-sm sm:text-base ${isLight ? 'text-slate-900' : 'text-slate-100'}`}>
-                    Model B: Fine-Tuned
-                  </h3>
-                  <span className={`text-[11px] font-medium ${isLight ? 'text-slate-600' : 'text-slate-400'}`}>End-to-End Parameter Optimization</span>
-                </div>
+                <span className={`px-2.5 py-1 rounded-full text-[10px] font-extrabold border flex-shrink-0 ${
+                  isLight ? 'bg-purple-50 text-purple-800 border-purple-200' : 'bg-purple-500/20 text-purple-300 border-purple-500/40'
+                }`}>
+                  Model B
+                </span>
               </div>
-              <span className={`px-2.5 py-1 rounded-full text-[10px] font-extrabold border flex-shrink-0 ${
-                isLight ? 'bg-purple-50 text-purple-800 border-purple-200' : 'bg-purple-500/20 text-purple-300 border-purple-500/40'
-              }`}>
-                Model B
-              </span>
+
+              <p className={`text-xs leading-relaxed ${isLight ? 'text-slate-700 font-normal' : 'text-slate-300'}`}>
+                Seluruh 110 juta parameter BERT diperbarui secara penuh melalui <em>backpropagation</em>. Mampu memahami nuansa negasi (<em>double negation</em>) dan ketergantungan konteks yang rumit dengan akurasi sangat tinggi.
+              </p>
             </div>
 
-            <p className={`text-xs leading-relaxed ${isLight ? 'text-slate-700 font-normal' : 'text-slate-300'}`}>
-              Seluruh 110 juta parameter BERT diperbarui secara penuh melalui <em>backpropagation</em>. Mampu memahami nuansa negasi (<em>double negation</em>) dan ketergantungan konteks yang rumit dengan akurasi sangat tinggi.
-            </p>
-
-            <div className={`grid grid-cols-3 gap-2 pt-2 text-center border-t ${isLight ? 'border-purple-100' : 'border-purple-900/30'}`}>
+            <div className={`grid grid-cols-3 gap-2 pt-4 mt-auto text-center border-t ${isLight ? 'border-purple-100' : 'border-purple-900/30'}`}>
               <div className={`p-2.5 rounded-xl border ${isLight ? 'bg-purple-50/60 border-purple-100' : 'bg-slate-900/50 border-transparent'}`}>
                 <div className={`text-[11px] font-medium ${isLight ? 'text-slate-600' : 'text-slate-400'}`}>Akurasi</div>
                 <div className={`text-xs font-extrabold ${isLight ? 'text-purple-700' : 'text-purple-400'}`}>91.61%</div>
