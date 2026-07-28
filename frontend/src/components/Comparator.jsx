@@ -169,7 +169,7 @@ function Comparator({ theme }) {
       <section className="glass-card p-6">
         <h2 className={`text-lg font-bold mb-4 flex items-center space-x-2 ${isLight ? 'text-slate-900' : 'text-slate-100'}`}>
           <GitCompare className="text-umsu-gold" size={18} />
-          <span>Real-Time Sentiment Comparator</span>
+          <span>Komparator Inferensi Sentimen <em>Real-Time</em></span>
         </h2>
 
         {/* Text Area Card */}
@@ -193,18 +193,18 @@ function Comparator({ theme }) {
               <button
                 onClick={handlePaste}
                 className="text-slate-400 hover:text-slate-200 px-2 py-1 rounded hover:bg-slate-900 transition-all"
-                title="Tempel dari Clipboard"
+                title="Tempel dari Papan Klip"
               >
-                Paste
+                Tempel
               </button>
               {text && (
                 <button
                   onClick={() => setText('')}
                   className="text-slate-400 hover:text-umsu-rose px-2 py-1 rounded hover:bg-slate-900 transition-all flex items-center space-x-1"
-                  title="Clear Text"
+                  title="Hapus Teks Input"
                 >
                   <Trash2 size={12} />
-                  <span>Clear</span>
+                  <span>Hapus</span>
                 </button>
               )}
             </div>
@@ -216,7 +216,7 @@ function Comparator({ theme }) {
           {/* Preset Chips Header & List */}
           <div className="flex flex-col sm:flex-row sm:items-start gap-2.5">
             <span className="text-xs text-slate-400 font-semibold flex-shrink-0 pt-1">
-              Quick Preset:
+              Preset Contoh Kalimat:
             </span>
             <div className="flex flex-col gap-2 flex-grow w-full">
               {presets.map((preset, idx) => (
@@ -316,7 +316,7 @@ function Comparator({ theme }) {
           >
             <div className="flex items-center space-x-2 text-xs text-slate-400 font-semibold px-2">
               <AlertCircle size={14} className="text-umsu-gold" />
-              <span>Garis emas mengindikasikan model dengan tingkat kepercayaan (Confidence Score) lebih tinggi.</span>
+              <span>Garis emas menandai model dengan tingkat kepercayaan (<em>Confidence Score</em>) lebih tinggi.</span>
             </div>
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">

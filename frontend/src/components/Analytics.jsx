@@ -125,7 +125,7 @@ function Analytics({ theme }) {
         {/* Card 1: F1-Score Mean */}
         <div className="glass-card p-5 space-y-2">
           <div className="flex justify-between items-center text-slate-400 text-xs font-semibold">
-            <span>F1-SCORE MEAN (n=6)</span>
+            <span>RERATA <em>F1-SCORE</em> (N = 6)</span>
             <span className="text-umsu-emerald bg-umsu-emerald/10 border border-umsu-emerald/20 px-2 py-0.5 rounded text-[10px] font-bold">
               +{deltaF1}% Delta
             </span>
@@ -134,13 +134,13 @@ function Analytics({ theme }) {
             <span className="text-2xl font-black text-slate-100">{(model_b.f1_mean * 100).toFixed(2)}%</span>
             <span className="text-[11px] text-slate-400">vs {(model_a.f1_mean * 100).toFixed(2)}%</span>
           </div>
-          <p className="text-[10px] text-slate-400">Standard Dev: Model B ({model_b.f1_std.toFixed(4)}) vs Model A ({model_a.f1_std.toFixed(4)})</p>
+          <p className="text-[10px] text-slate-400">Simpangan Baku: Model B ({model_b.f1_std.toFixed(4)}) vs Model A ({model_a.f1_std.toFixed(4)})</p>
         </div>
 
         {/* Card 2: Accuracy Mean */}
         <div className="glass-card p-5 space-y-2">
           <div className="flex justify-between items-center text-slate-400 text-xs font-semibold">
-            <span>ACCURACY MEAN (n=6)</span>
+            <span>RERATA AKURASI (N = 6)</span>
             <span className="text-umsu-emerald bg-umsu-emerald/10 border border-umsu-emerald/20 px-2 py-0.5 rounded text-[10px] font-bold">
               +{deltaAcc}% Delta
             </span>
@@ -149,37 +149,37 @@ function Analytics({ theme }) {
             <span className="text-2xl font-black text-slate-100">{(model_b.accuracy_mean * 100).toFixed(2)}%</span>
             <span className="text-[11px] text-slate-400">vs {(model_a.accuracy_mean * 100).toFixed(2)}%</span>
           </div>
-          <p className="text-[10px] text-slate-400">Standard Dev: Model B ({model_b.accuracy_std.toFixed(4)}) vs Model A ({model_a.accuracy_std.toFixed(4)})</p>
+          <p className="text-[10px] text-slate-400">Simpangan Baku: Model B ({model_b.accuracy_std.toFixed(4)}) vs Model A ({model_a.accuracy_std.toFixed(4)})</p>
         </div>
 
         {/* Card 3: GPU VRAM Allocation */}
         <div className="glass-card p-5 space-y-2">
           <div className="flex justify-between items-center text-slate-400 text-xs font-semibold">
-            <span>GPU VRAM ALLOCATION</span>
+            <span>ALOKASI GPU VRAM</span>
             <span className="text-umsu-orange bg-umsu-orange/10 border border-umsu-orange/20 px-2 py-0.5 rounded text-[10px] font-bold">
-              Costly
+              Komputasi Tinggi
             </span>
           </div>
           <div className="flex items-baseline space-x-2">
             <span className="text-2xl font-black text-slate-100">{model_b.peak_vram_mb} MB</span>
             <span className="text-[11px] text-slate-400">vs {model_a.peak_vram_mb} MB</span>
           </div>
-          <p className="text-[10px] text-slate-400">Peningkatan VRAM sebesar {(model_b.peak_vram_mb / model_a.peak_vram_mb).toFixed(1)}x lipat.</p>
+          <p className="text-[10px] text-slate-400">Peningkatan konsumsi VRAM sebesar {(model_b.peak_vram_mb / model_a.peak_vram_mb).toFixed(1)}× lipat.</p>
         </div>
 
         {/* Card 4: Average Latency */}
         <div className="glass-card p-5 space-y-2">
           <div className="flex justify-between items-center text-slate-400 text-xs font-semibold">
-            <span>AVERAGE LATENCY</span>
+            <span>RERATA LATENSI INFERENSI</span>
             <span className="text-umsu-gold bg-umsu-gold/10 border border-umsu-gold/20 px-2 py-0.5 rounded text-[10px] font-bold">
-              Comparable
+              Komparabel
             </span>
           </div>
           <div className="flex items-baseline space-x-2">
             <span className="text-2xl font-black text-slate-100">{model_b.avg_latency_ms} ms</span>
             <span className="text-[11px] text-slate-400">vs {model_a.avg_latency_ms} ms</span>
           </div>
-          <p className="text-[10px] text-slate-400">Latensi inferensi bertambah tipis (+{((model_b.avg_latency_ms - model_a.avg_latency_ms) / model_a.avg_latency_ms * 100).toFixed(1)}%).</p>
+          <p className="text-[10px] text-slate-400">Perbedaan latensi inferensi bertambah sangat tipis (+{((model_b.avg_latency_ms - model_a.avg_latency_ms) / model_a.avg_latency_ms * 100).toFixed(1)}%).</p>
         </div>
       </section>
 
@@ -190,9 +190,9 @@ function Analytics({ theme }) {
           <div>
             <h3 className="text-sm font-bold text-slate-200 mb-1 flex items-center space-x-2">
               <Activity className="text-umsu-gold" size={16} />
-              <span>Computational Cost Trade-off Chart</span>
+              <span>Grafik Komparasi Biaya Komputasi & Performa</span>
             </h3>
-            <p className="text-[11px] text-slate-400 mb-6">Peningkatan performa prediktif F1-Score vs Latensi & peak VRAM GPU.</p>
+            <p className="text-[11px] text-slate-400 mb-6">Perbandingan performa prediktif <em>F1-score</em> terhadap Latensi & puncak VRAM GPU.</p>
           </div>
 
           <div className="h-[250px] w-full mt-2 font-mono text-[10px]">
@@ -217,9 +217,9 @@ function Analytics({ theme }) {
           <div>
             <h3 className="text-sm font-bold text-slate-200 mb-1 flex items-center space-x-2">
               <Compass className="text-umsu-gold" size={16} />
-              <span>Linguistic Error Analysis Breakdown</span>
+              <span>Analisis Kesalahan Linguistik Berdasarkan Kategori</span>
             </h3>
-            <p className="text-[11px] text-slate-400 mb-6">Persentase (%) akurasi deteksi model berdasarkan karakteristik tata bahasa.</p>
+            <p className="text-[11px] text-slate-400 mb-6">Persentase (%) akurasi deteksi sentimen berdasarkan struktur dan tata bahasa.</p>
           </div>
 
           <div className="h-[250px] w-full flex items-center justify-center font-mono text-[10px]">
@@ -246,7 +246,7 @@ function Analytics({ theme }) {
             <h3 className="text-sm font-bold text-slate-200 mb-1 flex items-center justify-between">
               <span className="flex items-center space-x-2">
                 <Shield className="text-umsu-gold" size={16} />
-                <span>McNemar Contingency Matrix</span>
+                <span>Matriks Kontingensi <em>McNemar</em></span>
               </span>
               <button 
                 onClick={() => setActiveTooltip(activeTooltip === 'mcnemar' ? null : 'mcnemar')}
@@ -256,7 +256,7 @@ function Analytics({ theme }) {
                 <HelpCircle size={16} />
               </button>
             </h3>
-            <p className="text-[11px] text-slate-400 mb-4">Pengujian signifikansi berpasangan tingkat sampel pada Held-out Test Set (N=872).</p>
+            <p className="text-[11px] text-slate-400 mb-4">Pengujian signifikansi berpasangan tingkat sampel pada <em>held-out test set</em> (N = 872).</p>
           </div>
 
           {/* Contingency Table Visual */}
