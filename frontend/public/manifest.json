@@ -3,14 +3,14 @@
   "name": "BERT Sentiment Comparator & Benchmark Dashboard UMSU",
   "icons": [
     {
-      "src": "/icons/icon-192x192.png?v=5.0",
-      "type": "image/png",
+      "src": "/icons/icon-192x192.svg?v=6.0",
+      "type": "image/svg+xml",
       "sizes": "192x192",
       "purpose": "any"
     },
     {
-      "src": "/icons/icon-512x512.png?v=5.0",
-      "type": "image/png",
+      "src": "/icons/icon-512x512.svg?v=6.0",
+      "type": "image/svg+xml",
       "sizes": "512x512",
       "purpose": "any"
     }
