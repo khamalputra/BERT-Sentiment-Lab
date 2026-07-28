@@ -7,6 +7,7 @@ function Comparator({ theme, userUsername = 'public' }) {
   const [text, setText] = useState('')
   const [loading, setLoading] = useState(false)
   const [result, setResult] = useState(null)
+  const [apiError, setApiError] = useState('')
   const [history, setHistory] = useState([])
   const [searchQuery, setSearchQuery] = useState('')
   const [copiedIndex, setCopiedIndex] = useState(null)
@@ -96,6 +97,7 @@ function Comparator({ theme, userUsername = 'public' }) {
     if (!text.trim() || loading) return
     setLoading(true)
     setResult(null)
+    setApiError('')
 
     // Trigger haptic vibration if supported on mobile
     if (navigator.vibrate) {
@@ -115,10 +117,12 @@ function Comparator({ theme, userUsername = 'public' }) {
         setResult(payload.data)
         fetchHistory() // Refresh logs
       } else {
-        console.error("API error response")
+        const errJson = await res.json().catch(() => ({}))
+        setApiError(errJson.detail || "Gagal memproses analisis sentimen.")
       }
     } catch (e) {
       console.error("Connection error:", e)
+      setApiError("Gagal terhubung ke server backend.")
     } finally {
       setLoading(false)
     }
@@ -307,6 +311,17 @@ function Comparator({ theme, userUsername = 'public' }) {
               </div>
               <div className="h-6 w-20 bg-slate-800 rounded-full" />
             </div>
+          </motion.div>
+        )}
+
+        {apiError && (
+          <motion.div
+            initial={{ opacity: 0, y: -10 }}
+            animate={{ opacity: 1, y: 0 }}
+            className="p-4 rounded-2xl bg-umsu-rose/10 border border-umsu-rose/30 text-umsu-rose text-xs flex items-center space-x-3"
+          >
+            <AlertCircle size={18} className="flex-shrink-0" />
+            <span className="font-semibold">{apiError}</span>
           </motion.div>
         )}
 

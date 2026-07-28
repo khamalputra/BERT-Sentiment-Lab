@@ -1,9 +1,25 @@
 from .database import engine, Base, SessionLocal
 from .models import BenchmarkResult, StatisticalTest, PredictionLog
 
+def check_and_migrate_db():
+    try:
+        conn = engine.raw_connection()
+        cursor = conn.cursor()
+        cursor.execute("PRAGMA table_info(prediction_logs)")
+        columns = [row[1] for row in cursor.fetchall()]
+        if "username" not in columns:
+            print("Migrating database: Adding 'username' column to prediction_logs table...")
+            cursor.execute("ALTER TABLE prediction_logs ADD COLUMN username VARCHAR(50) DEFAULT 'public'")
+            conn.commit()
+            print("Migration complete!")
+        conn.close()
+    except Exception as e:
+        print(f"Migration check note: {e}")
+
 def init_db():
     # Create all tables in the database
     Base.metadata.create_all(bind=engine)
+    check_and_migrate_db()
     
     db = SessionLocal()
     try:
