@@ -61,14 +61,23 @@ def setup_models():
         print("Cleaning up corrupted model_b weight file (<10MB HTML response)...")
         shutil.rmtree(model_b_dir, ignore_errors=True)
         
-    if os.path.exists(model_a_path) and os.path.getsize(model_a_path) < 5000:
-        print("Cleaning up corrupted model_a weight file...")
-        os.remove(model_a_path)
+    if os.path.exists(model_a_path):
+        with open(model_a_path, "rb") as f:
+            head = f.read(50).lower()
+            if b"<!doctype" in head or b"<html" in head:
+                print("Cleaning up corrupted model_a weight file (HTML response)...")
+                os.remove(model_a_path)
     
     # 1. Check and download Model A (Frozen classifier head weights)
     if not os.path.exists(model_a_path):
         print("\n--- Downloading Model A (Feature Extraction Weights) ---")
         download_from_gdrive(MODEL_A_FILE_ID, model_a_path)
+        if os.path.exists(model_a_path):
+            with open(model_a_path, "rb") as f:
+                head = f.read(50).lower()
+                if b"<!doctype" in head or b"<html" in head:
+                    print("ERROR: Downloaded model_a.pt is an Access Denied HTML page from Google Drive!")
+                    os.remove(model_a_path)
     else:
         print("Model A (model_a.pt) is already present.")
 
