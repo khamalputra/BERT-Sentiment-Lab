@@ -6,6 +6,7 @@ from typing import List, Optional
 
 from fastapi import FastAPI, Depends, HTTPException, Query
 from fastapi.middleware.cors import CORSMiddleware
+from sqlalchemy.orm import Session
 
 from .database import engine, Base, get_db
 from .models import PredictionLog, BenchmarkResult, StatisticalTest
