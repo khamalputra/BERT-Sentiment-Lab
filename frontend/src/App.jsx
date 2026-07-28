@@ -221,7 +221,7 @@ function App() {
           {/* Logo & Identity */}
           <div className="flex items-center space-x-2 sm:space-x-3 flex-shrink-0">
             <div className="w-16 h-16 sm:w-20 sm:h-20 flex items-center justify-center flex-shrink-0">
-              <img src="/icons/icon-192x192.png?v=3.0" alt="Logo UMSU NLP" className="w-full h-full object-contain drop-shadow-xl" />
+              <img src="/icons/icon-192x192.png?v=4.0" alt="Logo UMSU NLP" className="w-full h-full object-contain drop-shadow-xl" />
             </div>
             <div>
               <div className="flex items-center space-x-1.5 sm:space-x-2">
@@ -495,7 +495,7 @@ function App() {
               {/* Modal Brand Header (Centered Logo & Text Alignment) */}
               <div className="flex flex-col items-center text-center space-y-2.5">
                 <div className="w-14 h-14 flex items-center justify-center flex-shrink-0 mx-auto">
-                  <img src="/icons/icon-192x192.png?v=3.0" alt="Logo UMSU NLP" className="w-full h-full object-contain drop-shadow" />
+                  <img src="/icons/icon-192x192.png?v=4.0" alt="Logo UMSU NLP" className="w-full h-full object-contain drop-shadow" />
                 </div>
                 <div className="space-y-1">
                   <div className="inline-flex items-center justify-center space-x-1.5 px-3 py-0.5 rounded-full bg-umsu-royal/10 border border-umsu-royal/20 text-umsu-royal text-[10px] font-bold tracking-wider uppercase">
@@ -637,7 +637,7 @@ function App() {
               {/* App Icon Graphic */}
               <div className="pt-2">
                 <div className="w-20 h-20 mx-auto rounded-3xl p-3 bg-gradient-to-br from-umsu-gold/20 via-yellow-500/10 to-transparent border border-umsu-gold/30 shadow-xl shadow-umsu-gold/10 flex items-center justify-center">
-                  <img src="/icons/icon-192x192.png?v=3.0" alt="Logo UMSU NLP" className="w-full h-full object-contain drop-shadow-md" />
+                  <img src="/icons/icon-192x192.png?v=4.0" alt="Logo UMSU NLP" className="w-full h-full object-contain drop-shadow-md" />
                 </div>
               </div>
 
