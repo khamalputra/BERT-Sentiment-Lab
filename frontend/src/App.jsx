@@ -6,7 +6,20 @@ import Analytics from './components/Analytics'
 import Home from './components/Home'
 
 function App() {
-  const [activeTab, setActiveTab] = useState('home') // 'home', 'comparator', 'analytics'
+  // Helper to determine initial active tab from URL hash or localStorage
+  const getInitialTab = () => {
+    const hash = window.location.hash.replace('#', '')
+    if (['home', 'comparator', 'analytics'].includes(hash)) {
+      return hash
+    }
+    const saved = localStorage.getItem('active_tab')
+    if (['home', 'comparator', 'analytics'].includes(saved)) {
+      return saved
+    }
+    return 'home'
+  }
+
+  const [activeTab, setActiveTab] = useState(getInitialTab) // 'home', 'comparator', 'analytics'
   const [isOnline, setIsOnline] = useState(navigator.onLine)
   const [deferredPrompt, setDeferredPrompt] = useState(null)
   const [showInstallBtn, setShowInstallBtn] = useState(false)
@@ -23,6 +36,36 @@ function App() {
   const [loginLoading, setLoginLoading] = useState(false)
 
   const isDosenOrPeneliti = userRole === 'dosen' || userRole === 'peneliti'
+
+  // Sync activeTab state to URL hash and localStorage whenever it changes
+  useEffect(() => {
+    if (activeTab === 'analytics' && !isDosenOrPeneliti) {
+      setActiveTab('home')
+      localStorage.setItem('active_tab', 'home')
+      window.location.hash = 'home'
+      return
+    }
+    localStorage.setItem('active_tab', activeTab)
+    if (window.location.hash !== `#${activeTab}`) {
+      window.location.hash = activeTab
+    }
+  }, [activeTab, isDosenOrPeneliti])
+
+  // Listen to browser hash changes (Back/Forward navigation)
+  useEffect(() => {
+    const handleHashChange = () => {
+      const hash = window.location.hash.replace('#', '')
+      if (['home', 'comparator', 'analytics'].includes(hash)) {
+        if (hash === 'analytics' && !isDosenOrPeneliti) {
+          setShowLoginModal(true)
+          return
+        }
+        setActiveTab(hash)
+      }
+    }
+    window.addEventListener('hashchange', handleHashChange)
+    return () => window.removeEventListener('hashchange', handleHashChange)
+  }, [isDosenOrPeneliti])
 
   // Initialize and apply theme preference
   useEffect(() => {
