@@ -269,13 +269,14 @@ def get_benchmark_stats(db: Session = Depends(get_db)):
         # Query error analysis logs
         error_logs = db.query(ErrorAnalysisLog).all()
         if not error_logs:
-            # Fallback default error analysis logs if table is empty
+            # Fallback default error analysis logs if table is empty (empirical Colab values)
+            # Note: Categories are overlapping (non-mutually-exclusive), so total samples > N=872.
             error_analysis_list = [
-                ErrorAnalysisCategory(subject="Tanpa Negasi", model_a_accuracy=86.0, model_b_accuracy=94.0, sample_count=520),
-                ErrorAnalysisCategory(subject="Negasi Biner", model_a_accuracy=42.0, model_b_accuracy=91.0, sample_count=180),
-                ErrorAnalysisCategory(subject="Ironi / Sarkasme", model_a_accuracy=35.0, model_b_accuracy=82.0, sample_count=95),
-                ErrorAnalysisCategory(subject="Review Panjang", model_a_accuracy=72.0, model_b_accuracy=88.0, sample_count=140),
-                ErrorAnalysisCategory(subject="Ambiguitas Tinggi", model_a_accuracy=51.0, model_b_accuracy=85.0, sample_count=65)
+                ErrorAnalysisCategory(subject="Tanpa Negasi", model_a_accuracy=86.5, model_b_accuracy=93.9, sample_count=688),
+                ErrorAnalysisCategory(subject="Negasi Biner", model_a_accuracy=78.3, model_b_accuracy=86.4, sample_count=184),
+                ErrorAnalysisCategory(subject="Ironi / Sarkasme", model_a_accuracy=79.7, model_b_accuracy=91.2, sample_count=148),
+                ErrorAnalysisCategory(subject="Review Panjang", model_a_accuracy=83.4, model_b_accuracy=91.8, sample_count=380),
+                ErrorAnalysisCategory(subject="Ambiguitas Tinggi", model_a_accuracy=77.1, model_b_accuracy=89.6, sample_count=48)
             ]
         else:
             error_analysis_list = [

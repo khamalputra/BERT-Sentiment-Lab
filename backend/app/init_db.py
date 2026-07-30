@@ -57,22 +57,22 @@ def init_db():
         
         # 1. Seed Benchmark Results for Model A (Feature Extraction)
         model_a_data = [
-            BenchmarkResult(seed_number=42, model_type="Model A", accuracy=0.8509, precision=0.8285, recall=0.8956, f1_score=0.8562, inference_time_ms=7.60, peak_vram_mb=2034.56),
-            BenchmarkResult(seed_number=123, model_type="Model A", accuracy=0.8590, precision=0.8285, recall=0.8956, f1_score=0.8669, inference_time_ms=7.60, peak_vram_mb=2034.56),
-            BenchmarkResult(seed_number=777, model_type="Model A", accuracy=0.8544, precision=0.8285, recall=0.8956, f1_score=0.8631, inference_time_ms=7.60, peak_vram_mb=2034.56),
-            BenchmarkResult(seed_number=999, model_type="Model A", accuracy=0.8475, precision=0.8285, recall=0.8956, f1_score=0.8562, inference_time_ms=7.60, peak_vram_mb=2034.56),
-            BenchmarkResult(seed_number=1234, model_type="Model A", accuracy=0.8463, precision=0.8285, recall=0.8956, f1_score=0.8556, inference_time_ms=7.60, peak_vram_mb=2034.56),
-            BenchmarkResult(seed_number=2024, model_type="Model A", accuracy=0.8509, precision=0.8285, recall=0.8956, f1_score=0.8624, inference_time_ms=7.60, peak_vram_mb=2034.56)
+            BenchmarkResult(seed_number=42, model_type="Model A", accuracy=0.8475, precision=0.8233, recall=0.8919, f1_score=0.8562, inference_time_ms=7.65, peak_vram_mb=568.57),
+            BenchmarkResult(seed_number=123, model_type="Model A", accuracy=0.8658, precision=0.8759, recall=0.8581, f1_score=0.8669, inference_time_ms=7.63, peak_vram_mb=2332.74),
+            BenchmarkResult(seed_number=777, model_type="Model A", accuracy=0.8578, precision=0.8463, recall=0.8806, f1_score=0.8631, inference_time_ms=7.59, peak_vram_mb=2322.74),
+            BenchmarkResult(seed_number=999, model_type="Model A", accuracy=0.8417, precision=0.7965, recall=0.9257, f1_score=0.8562, inference_time_ms=7.67, peak_vram_mb=2327.74),
+            BenchmarkResult(seed_number=1234, model_type="Model A", accuracy=0.8429, precision=0.8040, recall=0.9144, f1_score=0.8556, inference_time_ms=7.64, peak_vram_mb=2328.36),
+            BenchmarkResult(seed_number=2024, model_type="Model A", accuracy=0.8532, precision=0.8251, recall=0.9032, f1_score=0.8624, inference_time_ms=7.66, peak_vram_mb=2327.00)
         ]
         
         # 2. Seed Benchmark Results for Model B (Fine-Tuning)
         model_b_data = [
-            BenchmarkResult(seed_number=42, model_type="Model B", accuracy=0.9186, precision=0.8968, recall=0.9444, f1_score=0.9221, inference_time_ms=7.71, peak_vram_mb=2325.26),
-            BenchmarkResult(seed_number=123, model_type="Model B", accuracy=0.9117, precision=0.8968, recall=0.9444, f1_score=0.9157, inference_time_ms=7.71, peak_vram_mb=2325.26),
-            BenchmarkResult(seed_number=777, model_type="Model B", accuracy=0.9197, precision=0.8968, recall=0.9444, f1_score=0.9229, inference_time_ms=7.71, peak_vram_mb=2325.26),
-            BenchmarkResult(seed_number=999, model_type="Model B", accuracy=0.9128, precision=0.8968, recall=0.9444, f1_score=0.9165, inference_time_ms=7.71, peak_vram_mb=2325.26),
-            BenchmarkResult(seed_number=1234, model_type="Model B", accuracy=0.9209, precision=0.8968, recall=0.9444, f1_score=0.9236, inference_time_ms=7.71, peak_vram_mb=2325.26),
-            BenchmarkResult(seed_number=2024, model_type="Model B", accuracy=0.9151, precision=0.8968, recall=0.9444, f1_score=0.9180, inference_time_ms=7.71, peak_vram_mb=2325.26)
+            BenchmarkResult(seed_number=42, model_type="Model B", accuracy=0.9232, precision=0.9002, recall=0.9550, f1_score=0.9268, inference_time_ms=7.78, peak_vram_mb=2312.49),
+            BenchmarkResult(seed_number=123, model_type="Model B", accuracy=0.9117, precision=0.8768, recall=0.9617, f1_score=0.9173, inference_time_ms=7.73, peak_vram_mb=2329.24),
+            BenchmarkResult(seed_number=777, model_type="Model B", accuracy=0.9197, precision=0.8929, recall=0.9572, f1_score=0.9239, inference_time_ms=7.75, peak_vram_mb=2327.61),
+            BenchmarkResult(seed_number=999, model_type="Model B", accuracy=0.9140, precision=0.8901, recall=0.9482, f1_score=0.9182, inference_time_ms=7.76, peak_vram_mb=2328.24),
+            BenchmarkResult(seed_number=1234, model_type="Model B", accuracy=0.9255, precision=0.9278, recall=0.9257, f1_score=0.9267, inference_time_ms=7.77, peak_vram_mb=2323.36),
+            BenchmarkResult(seed_number=2024, model_type="Model B", accuracy=0.9128, precision=0.9017, recall=0.9302, f1_score=0.9157, inference_time_ms=7.78, peak_vram_mb=2327.36)
         ]
         
         # 3. Seed Statistical Tests (Audited Exact Experiment Values)
@@ -89,13 +89,14 @@ def init_db():
             mcnemar_chi2=38.4091
         )
         
-        # 4. Seed Error Analysis per Linguistic Category
+        # 4. Seed Error Analysis per Linguistic Category (Empirical Colab values)
+        # Note: Categories are overlapping (non-mutually-exclusive), so total samples > N=872.
         error_logs = [
-            ErrorAnalysisLog(category_name="Tanpa Negasi", model_a_accuracy=86.0, model_b_accuracy=94.0, sample_count=520),
-            ErrorAnalysisLog(category_name="Negasi Biner", model_a_accuracy=42.0, model_b_accuracy=91.0, sample_count=180),
-            ErrorAnalysisLog(category_name="Ironi / Sarkasme", model_a_accuracy=35.0, model_b_accuracy=82.0, sample_count=95),
-            ErrorAnalysisLog(category_name="Review Panjang", model_a_accuracy=72.0, model_b_accuracy=88.0, sample_count=140),
-            ErrorAnalysisLog(category_name="Ambiguitas Tinggi", model_a_accuracy=51.0, model_b_accuracy=85.0, sample_count=65)
+            ErrorAnalysisLog(category_name="Tanpa Negasi", model_a_accuracy=86.5, model_b_accuracy=93.9, sample_count=688),
+            ErrorAnalysisLog(category_name="Negasi Biner", model_a_accuracy=78.3, model_b_accuracy=86.4, sample_count=184),
+            ErrorAnalysisLog(category_name="Ironi / Sarkasme", model_a_accuracy=79.7, model_b_accuracy=91.2, sample_count=148),
+            ErrorAnalysisLog(category_name="Review Panjang", model_a_accuracy=83.4, model_b_accuracy=91.8, sample_count=380),
+            ErrorAnalysisLog(category_name="Ambiguitas Tinggi", model_a_accuracy=77.1, model_b_accuracy=89.6, sample_count=48)
         ]
         
         # 5. Seed initial prediction history log

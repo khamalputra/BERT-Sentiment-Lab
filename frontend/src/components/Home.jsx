@@ -17,12 +17,12 @@ export default function Home({ theme, benchmarkStats, onNavigate }) {
 
   // Dynamic fallback values if benchmarkStats is not loaded yet
   const summary = benchmarkStats?.summary || {
-    model_a: { accuracy_mean: 0.8515, f1_mean: 0.8601, avg_latency_ms: 7.60 },
-    model_b: { accuracy_mean: 0.9161, f1_mean: 0.9198, avg_latency_ms: 7.71 }
+    model_a: { accuracy_mean: 0.8515, f1_mean: 0.8601, avg_latency_ms: 7.64 },
+    model_b: { accuracy_mean: 0.9178, f1_mean: 0.9214, avg_latency_ms: 7.76 }
   }
   const statsTests = benchmarkStats?.statistical_tests || {
-    mcnemar_p_value: 0.00000001,
-    wilcoxon_p_value: 0.01562,
+    mcnemar_p_value: 5.74e-10,
+    wilcoxon_p_value: 0.015625,
     bootstrap_95_ci: [0.0501, 0.0927],
     cohens_d: 12.72,
     effect_size_interpretation: "Extremely Large Effect"
@@ -329,7 +329,7 @@ export default function Home({ theme, benchmarkStats, onNavigate }) {
           }`}>
             <div className={`text-xs font-medium ${isLight ? 'text-slate-600' : 'text-slate-400'}`}>Uji Kestabilan <em>McNemar</em></div>
             <div className="text-xl font-black text-purple-600 dark:text-purple-400"><span className="italic">p</span> = {statsTests.mcnemar_p_value.toExponential(2)}</div>
-            <div className={`text-[10px] ${isLight ? 'text-slate-500' : 'text-slate-400'}`}>Chi-Square χ² = {mcnemarMatrix.chi2?.toFixed(2) || '32.14'}</div>
+            <div className={`text-[10px] ${isLight ? 'text-slate-500' : 'text-slate-400'}`}>Chi-Square χ² = {mcnemarMatrix.chi2?.toFixed(2) || '38.41'}</div>
           </div>
 
           <div className={`p-4 rounded-2xl border text-center space-y-1 ${

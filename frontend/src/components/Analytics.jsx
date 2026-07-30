@@ -142,19 +142,19 @@ function Analytics({ theme, userRole = 'public' }) {
         status: "success",
         summary: {
           model_a: {
-            accuracy_mean: 0.8515, accuracy_std: 0.0039,
-            f1_mean: 0.8601, f1_std: 0.0044,
-            avg_latency_ms: 7.60, peak_vram_mb: 2034.56
+            accuracy_mean: 0.8515, accuracy_std: 0.0093,
+            f1_mean: 0.8601, f1_std: 0.0047,
+            avg_latency_ms: 7.64, peak_vram_mb: 2034.52
           },
           model_b: {
-            accuracy_mean: 0.9161, accuracy_std: 0.0038,
-            f1_mean: 0.9198, f1_std: 0.0035,
-            avg_latency_ms: 7.71, peak_vram_mb: 2325.26
+            accuracy_mean: 0.9178, accuracy_std: 0.0058,
+            f1_mean: 0.9214, f1_std: 0.0050,
+            avg_latency_ms: 7.76, peak_vram_mb: 2324.72
           }
         },
         statistical_tests: {
-          mcnemar_p_value: 0.00000001,
-          wilcoxon_p_value: 0.01562,
+          mcnemar_p_value: 5.74e-10,
+          wilcoxon_p_value: 0.015625,
           bootstrap_95_ci: [0.0501, 0.0927],
           cohens_d: 12.72,
           effect_size_interpretation: "Extremely Large Effect"
@@ -227,11 +227,11 @@ function Analytics({ theme, userRole = 'public' }) {
         fullMark: 100
       }))
     : [
-        { subject: 'Tanpa Negasi', 'Model A (Frozen)': 86, 'Model B (FT)': 94, fullMark: 100 },
-        { subject: 'Negasi Biner', 'Model A (Frozen)': 42, 'Model B (FT)': 91, fullMark: 100 },
-        { subject: 'Ironi / Sarkasme', 'Model A (Frozen)': 35, 'Model B (FT)': 82, fullMark: 100 },
-        { subject: 'Review Panjang', 'Model A (Frozen)': 72, 'Model B (FT)': 88, fullMark: 100 },
-        { subject: 'Ambiguitas Tinggi', 'Model A (Frozen)': 51, 'Model B (FT)': 85, fullMark: 100 },
+        { subject: 'Tanpa Negasi', 'Model A (Frozen)': 86.5, 'Model B (FT)': 93.9, fullMark: 100 },
+        { subject: 'Negasi Biner', 'Model A (Frozen)': 78.3, 'Model B (FT)': 86.4, fullMark: 100 },
+        { subject: 'Ironi / Sarkasme', 'Model A (Frozen)': 79.7, 'Model B (FT)': 91.2, fullMark: 100 },
+        { subject: 'Review Panjang', 'Model A (Frozen)': 83.4, 'Model B (FT)': 91.8, fullMark: 100 },
+        { subject: 'Ambiguitas Tinggi', 'Model A (Frozen)': 77.1, 'Model B (FT)': 89.6, fullMark: 100 },
       ]
 
   // McNemar Contingency Matrix Data - Dynamic from API/Database

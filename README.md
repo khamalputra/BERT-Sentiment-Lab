@@ -29,12 +29,12 @@ Berdasarkan pengujian eksperimental pada dataset validasi independen:
 
 | Metrik Evaluasi | Model A (Feature Extraction) | Model B (Fine-Tuned) | P-Value / Statisik Inferensial | Interpretasi Akademik |
 | :--- | :---: | :---: | :---: | :--- |
-| **Akurasi Rata-rata ($\mu \pm \sigma$)** | $85.15\% \pm 0.93\%$ | **$91.61\% \pm 0.46\%$** | $p = 0.01562$ *(Wilcoxon)* | Peningkatan signifikan secara statistik ($p < 0.05$) |
-| **F1-Score Rata-rata ($\mu \pm \sigma$)** | $86.01\% \pm 0.47\%$ | **$91.98\% \pm 0.35\%$** | $p = 0.01562$ *(Wilcoxon)* | Konsistensi presisi & recall tinggi |
-| **Latency Inferensi Real-Time** | **$7.60\text{ ms}$** | $7.71\text{ ms}$ | $\Delta = +0.11\text{ ms}$ | Kecepatan inferensi hampir identik |
-| **Uji Disagreement McNemar** | — | — | **$p = 1.48 \times 10^{-8}$** ($\chi^2 = 32.14$) | Perbedaan prediksi signifikan ($p < 0.001$) |
-| **Bootstrap 95% Confidence Interval** | — | — | **$[+4.44\%, +8.83\%]$** | Rentang keunggulan akurasi Model B |
-| **Ukuran Efek (Cohen's $d$)** | — | — | **$d = 14.45$** | *Extremely Large Effect Size* ($d > 0.8$) |
+| **Akurasi Rata-rata ($\mu \pm \sigma$)** | $85.15\% \pm 0.93\%$ | **$91.78\% \pm 0.58\%$** | $p = 0.01562$ *(Wilcoxon)* | Peningkatan signifikan secara statistik ($p < 0.05$) |
+| **F1-Score Rata-rata ($\mu \pm \sigma$)** | $86.01\% \pm 0.47\%$ | **$92.14\% \pm 0.50\%$** | $p = 0.01562$ *(Wilcoxon)* | Konsistensi presisi & recall tinggi |
+| **Latency Inferensi Real-Time** | **$7.64\text{ ms}$** | $7.76\text{ ms}$ | $\Delta = +0.12\text{ ms}$ | Kecepatan inferensi hampir identik |
+| **Uji Disagreement McNemar** | — | — | **$p = 5.74 \times 10^{-10}$** ($\chi^2 = 38.41$) | Perbedaan prediksi signifikan ($p < 0.001$) |
+| **Bootstrap 95% Confidence Interval** | — | — | **$[+5.01\%, +9.27\%]$** | Rentang keunggulan F1-Score Model B |
+| **Ukuran Efek (Cohen's $d$)** | — | — | **$d = 12.72$** | *Extremely Large Effect Size* ($d > 2.0$) |
 
 ---
 
