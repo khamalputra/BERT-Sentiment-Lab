@@ -4,6 +4,7 @@ import { Cpu, Zap, BarChart2, GitCompare, History, Info, Wifi, WifiOff, Download
 import Comparator from './components/Comparator'
 import Analytics from './components/Analytics'
 import Home from './components/Home'
+import { GPU_BACKEND_URL, CPU_BACKEND_URL } from './config'
 
 function App() {
   // Helper to determine initial active tab from URL path, hash, or localStorage
@@ -181,11 +182,15 @@ function App() {
     window.addEventListener('offline', handleOffline)
 
     const checkHealth = async () => {
+      // Define GPU and CPU health check endpoint URLs in variables
+      const gpuHealthUrl = `${GPU_BACKEND_URL}/api/health?ngrok-skip-browser-warning=true`
+      const cpuHealthUrl = `${CPU_BACKEND_URL}/api/health`
+
       // 1. Try Primary GPU Backend (Google Colab Tesla T4)
       try {
         const controller = new AbortController()
         const timeoutId = setTimeout(() => controller.abort(), 4000)
-        const resGpu = await fetch('https://irritably-tipper-january.ngrok-free.dev/api/health?ngrok-skip-browser-warning=true', {
+        const resGpu = await fetch(gpuHealthUrl, {
           headers: { 'ngrok-skip-browser-warning': 'true' },
           signal: controller.signal
         })
@@ -203,7 +208,7 @@ function App() {
       try {
         const controller = new AbortController()
         const timeoutId = setTimeout(() => controller.abort(), 4000)
-        const resCpu = await fetch('https://nurturing-creation-production-4414.up.railway.app/api/health', {
+        const resCpu = await fetch(cpuHealthUrl, {
           signal: controller.signal
         })
         clearTimeout(timeoutId)

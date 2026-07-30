@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { Send, Trash2, Clipboard, Sparkles, CheckCircle, Clock, Zap, AlertCircle, Search, HelpCircle, History, Award, X, GitCompare, Cpu } from 'lucide-react'
+import { GPU_BACKEND_URL, CPU_BACKEND_URL } from '../config'
 
 function Comparator({ theme, userUsername = 'public' }) {
   const isLight = theme === 'light'
@@ -116,12 +117,16 @@ function Comparator({ theme, userUsername = 'public' }) {
       const activeUser = userUsername || 'public'
       let isGpuSuccess = false
 
+      // Store GPU and CPU prediction URLs into explicit variables
+      const gpuPredictUrl = `${GPU_BACKEND_URL}/api/predict?ngrok-skip-browser-warning=true`
+      const cpuPredictUrl = `${CPU_BACKEND_URL}/api/predict`
+
       // 1. Try Direct GPU Colab Server (NVIDIA Tesla T4 ~7.5ms)
       try {
         const controller = new AbortController()
         const timeoutId = setTimeout(() => controller.abort(), 6000)
 
-        const resGpu = await fetch('https://irritably-tipper-january.ngrok-free.dev/api/predict?ngrok-skip-browser-warning=true', {
+        const resGpu = await fetch(gpuPredictUrl, {
           method: 'POST',
           headers: { 
             'Content-Type': 'application/json',
@@ -145,7 +150,7 @@ function Comparator({ theme, userUsername = 'public' }) {
 
       // 2. Fallback to Railway CPU Server if GPU is offline
       if (!isGpuSuccess) {
-        const resCpu = await fetch('https://nurturing-creation-production-4414.up.railway.app/api/predict', {
+        const resCpu = await fetch(cpuPredictUrl, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({ text, username: activeUser })
