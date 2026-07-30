@@ -316,102 +316,127 @@ function Analytics({ theme, userRole = 'public' }) {
         </div>
       </section>
 
-      {/* SECTION 2: Charts (Trade-off & Linguistic Error Analysis) */}
-      <section className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-        {/* Chart A: Trade-Off Analysis with 3-Mode Tab Switcher */}
-        <div className="glass-card p-6 flex flex-col justify-between">
-          <div>
-            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 mb-3">
-              <div>
-                <h3 className="text-sm font-bold text-slate-200 mb-0.5 flex items-center space-x-2">
-                  <Activity className="text-umsu-gold" size={16} />
-                  <span>Grafik Komparasi Komputasi & Performa</span>
-                </h3>
-                <p className="text-[11px] text-slate-400">
-                  {chartTab === 'performance'
-                    ? 'Perbandingan performa prediktif F1-Score (%) & Akurasi (%).'
-                    : chartTab === 'latency'
-                    ? 'Perbandingan latensi waktu inferensi (ms).'
-                    : 'Perbandingan alokasi puncak memori GPU VRAM (MB).'
-                  }
-                </p>
-              </div>
+      {/* SECTION 2: Executive Hardware Efficiency Panel */}
+      <section className="glass-card p-6 flex flex-col justify-between space-y-4">
+        <div>
+          <div className="flex justify-between items-center mb-1">
+            <h3 className="text-sm font-bold text-slate-200 flex items-center space-x-2">
+              <Cpu className="text-umsu-gold" size={16} />
+              <span>Profil Efisiensi Komputasi & Alokasi VRAM GPU</span>
+            </h3>
+            <span className="text-[10px] font-bold px-2.5 py-0.5 rounded-full bg-blue-500/10 text-blue-400 border border-blue-500/20">
+              Hardware Metrics
+            </span>
+          </div>
+          <p className="text-[11px] text-slate-400">Analisis perbandingan latensi inferensi (ms) dan konsumsi puncak alokasi memori GPU VRAM (MB).</p>
+        </div>
 
-              {/* 3-Pill Tab Switcher */}
-              <div className="flex items-center space-x-1 p-1 bg-slate-900/90 border border-slate-800 rounded-xl flex-shrink-0 self-start sm:self-auto shadow-inner">
-                <button
-                  onClick={() => setChartTab('performance')}
-                  className={`px-2.5 py-1 rounded-lg text-[10px] font-bold transition-all cursor-pointer ${
-                    chartTab === 'performance'
-                      ? 'bg-blue-600 text-white shadow-md'
-                      : 'text-slate-400 hover:text-slate-200'
-                  }`}
-                >
-                  Performa (%)
-                </button>
-                <button
-                  onClick={() => setChartTab('latency')}
-                  className={`px-2.5 py-1 rounded-lg text-[10px] font-bold transition-all cursor-pointer ${
-                    chartTab === 'latency'
-                      ? 'bg-teal-500 text-slate-950 font-black shadow-md'
-                      : 'text-slate-400 hover:text-slate-200'
-                  }`}
-                >
-                  Latensi (ms)
-                </button>
-                <button
-                  onClick={() => setChartTab('vram')}
-                  className={`px-2.5 py-1 rounded-lg text-[10px] font-bold transition-all cursor-pointer ${
-                    chartTab === 'vram'
-                      ? 'bg-amber-500 text-slate-950 font-black shadow-md'
-                      : 'text-slate-400 hover:text-slate-200'
-                  }`}
-                >
-                  VRAM (MB)
-                </button>
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 my-1">
+          {/* Metric 1: Latensi Inferensi */}
+          <div className="p-4 rounded-xl bg-slate-900/60 border border-slate-800 space-y-3">
+            <div className="flex justify-between items-center text-xs">
+              <span className="font-semibold text-slate-300 flex items-center space-x-1.5">
+                <Activity size={14} className="text-teal-400" />
+                <span>Latensi Inferensi Rerata (ms)</span>
+              </span>
+              <span className="text-[10px] font-bold text-teal-400 bg-teal-500/10 border border-teal-500/20 px-2 py-0.5 rounded">
+                +1.7% Overhead
+              </span>
+            </div>
+            
+            <div className="flex justify-between items-baseline">
+              <div>
+                <div className="text-[10px] text-slate-400">Model A (Frozen)</div>
+                <div className="text-xl font-black text-slate-200">{model_a.avg_latency_ms} ms</div>
+              </div>
+              <div className="text-right">
+                <div className="text-[10px] text-slate-400">Model B (Fine-Tuned)</div>
+                <div className="text-xl font-black text-teal-400">{model_b.avg_latency_ms} ms</div>
+              </div>
+            </div>
+
+            {/* Visualizer track */}
+            <div className="space-y-1">
+              <div className="flex justify-between text-[9px] text-slate-400 font-mono">
+                <span>Model A: {model_a.avg_latency_ms}ms</span>
+                <span>Model B: {model_b.avg_latency_ms}ms</span>
+              </div>
+              <div className="h-2 w-full bg-slate-800 rounded-full overflow-hidden flex">
+                <div className="h-full bg-slate-500 rounded-l-full" style={{ width: '49.5%' }} />
+                <div className="h-full bg-teal-400 rounded-r-full" style={{ width: '50.5%' }} />
               </div>
             </div>
           </div>
 
+          {/* Metric 2: Peak VRAM GPU */}
+          <div className="p-4 rounded-xl bg-slate-900/60 border border-slate-800 space-y-3">
+            <div className="flex justify-between items-center text-xs">
+              <span className="font-semibold text-slate-300 flex items-center space-x-1.5">
+                <HardDrive size={14} className="text-amber-400" />
+                <span>Puncak Alokasi VRAM GPU (MB)</span>
+              </span>
+              <span className="text-[10px] font-bold text-amber-400 bg-amber-500/10 border border-amber-500/20 px-2 py-0.5 rounded">
+                +14.3% Consumed
+              </span>
+            </div>
+
+            <div className="flex justify-between items-baseline">
+              <div>
+                <div className="text-[10px] text-slate-400">Model A (Frozen)</div>
+                <div className="text-xl font-black text-slate-200">{model_a.peak_vram_mb.toFixed(0)} MB</div>
+              </div>
+              <div className="text-right">
+                <div className="text-[10px] text-slate-400">Model B (Fine-Tuned)</div>
+                <div className="text-xl font-black text-amber-400">{model_b.peak_vram_mb.toFixed(0)} MB</div>
+              </div>
+            </div>
+
+            {/* Visualizer track */}
+            <div className="space-y-1">
+              <div className="flex justify-between text-[9px] text-slate-400 font-mono">
+                <span>Model A: {model_a.peak_vram_mb.toFixed(0)}MB</span>
+                <span>Model B: {model_b.peak_vram_mb.toFixed(0)}MB</span>
+              </div>
+              <div className="h-2 w-full bg-slate-800 rounded-full overflow-hidden flex">
+                <div className="h-full bg-slate-500 rounded-l-full" style={{ width: '46.7%' }} />
+                <div className="h-full bg-amber-400 rounded-r-full" style={{ width: '53.3%' }} />
+              </div>
+            </div>
+          </div>
+        </div>
+
+        {/* Summary Footer */}
+        <div className="p-3 rounded-xl bg-blue-950/30 border border-blue-800/30 text-[11px] text-slate-300 flex items-start space-x-2">
+          <Shield size={16} className="text-blue-400 flex-shrink-0 mt-0.5" />
+          <p className="leading-relaxed">
+            <strong className="text-blue-300">Rasio Efisiensi Komputasi:</strong> Fine-tuning pada Model B menghasilkan lonjakan performa prediktif <em>F1-score</em> sebesar <strong className="text-emerald-400">+{deltaF1}%</strong> dengan hanya penambahan latensi komputasi minimal sebesar <strong className="text-teal-300">+0.13 ms (+1.7%)</strong> dan penambahan alokasi puncak VRAM GPU sebesar <strong className="text-amber-300">+290.7 MB (+14.3%)</strong>.
+          </p>
+        </div>
+      </section>
+
+      {/* SECTION 3: Charts (Performance & Linguistic Error Radar) */}
+      <section className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+        {/* Chart A: Performa Prediktif (F1 vs Akurasi) */}
+        <div className="glass-card p-6 flex flex-col justify-between">
+          <div>
+            <h3 className="text-sm font-bold text-slate-200 mb-1 flex items-center space-x-2">
+              <Activity className="text-umsu-gold" size={16} />
+              <span>Komparasi Performa Prediktif (N = 6 Seeds)</span>
+            </h3>
+            <p className="text-[11px] text-slate-400 mb-4">Perbandingan persentase (%) <em>F1-score</em> dan Rerata Akurasi antara Model A (Frozen) vs Model B (Fine-Tuned).</p>
+          </div>
+
           <div className="h-[250px] w-full mt-2 font-mono text-[10px]">
             <ResponsiveContainer width="100%" height="100%">
-              {chartTab === 'performance' ? (
-                <BarChart data={performanceChartData} margin={{ top: 20, right: 10, left: -15, bottom: 36 }}>
-                  <CartesianGrid strokeDasharray="3 3" stroke={gridColor} />
-                  <XAxis dataKey="name" stroke={textColor} tick={<XAxisTwoLineTick fill={textColor} />} interval={0} />
-                  <YAxis orientation="left" stroke="#3b82f6" domain={[60, 100]} label={{ value: 'Persentase (%)', angle: -90, position: 'insideLeft', offset: 10, fill: '#3b82f6' }} />
-                  <RechartsTooltip contentStyle={{ backgroundColor: tooltipBg, borderColor: tooltipBorder, borderRadius: '12px', color: isLight ? '#0f172a' : '#f8fafc' }} />
-                  <Legend wrapperStyle={{ paddingTop: 10 }} />
-                  <Bar dataKey="F1-Score (%)" fill="#3b82f6" radius={[6, 6, 0, 0]} />
-                  <Bar dataKey="Akurasi (%)" fill="#10b981" radius={[6, 6, 0, 0]} />
-                </BarChart>
-              ) : chartTab === 'latency' ? (
-                <AreaChart data={latencyChartData} margin={{ top: 30, right: 30, left: -15, bottom: 36 }}>
-                  <defs>
-                    <linearGradient id="latencyGrad" x1="0" y1="0" x2="0" y2="1">
-                      <stop offset="5%" stopColor="#14b8a6" stopOpacity={0.4} />
-                      <stop offset="95%" stopColor="#14b8a6" stopOpacity={0.0} />
-                    </linearGradient>
-                  </defs>
-                  <CartesianGrid strokeDasharray="3 3" stroke={gridColor} />
-                  <XAxis dataKey="name" stroke={textColor} tick={<XAxisTwoLineTick fill={textColor} />} interval={0} />
-                  <YAxis orientation="left" stroke="#14b8a6" domain={[0, 12]} label={{ value: 'Latensi (ms)', angle: -90, position: 'insideLeft', offset: 10, fill: '#14b8a6' }} />
-                  <RechartsTooltip contentStyle={{ backgroundColor: tooltipBg, borderColor: tooltipBorder, borderRadius: '12px', color: isLight ? '#0f172a' : '#f8fafc' }} />
-                  <Area type="monotone" dataKey="Latensi (ms)" stroke="#14b8a6" strokeWidth={3} fillOpacity={1} fill="url(#latencyGrad)" dot={{ r: 6, fill: '#14b8a6', stroke: '#0f172a', strokeWidth: 2 }}>
-                    <LabelList dataKey="Latensi (ms)" position="top" fill="#14b8a6" fontSize={11} fontWeight="bold" formatter={(val) => `${val} ms`} />
-                  </Area>
-                </AreaChart>
-              ) : (
-                <BarChart data={vramChartData} margin={{ top: 25, right: 10, left: -5, bottom: 36 }}>
-                  <CartesianGrid strokeDasharray="3 3" stroke={gridColor} />
-                  <XAxis dataKey="name" stroke={textColor} tick={<XAxisTwoLineTick fill={textColor} />} interval={0} />
-                  <YAxis orientation="left" stroke="#f59e0b" domain={[0, 3000]} label={{ value: 'Peak VRAM (MB)', angle: -90, position: 'insideLeft', offset: 10, fill: '#f59e0b' }} />
-                  <RechartsTooltip contentStyle={{ backgroundColor: tooltipBg, borderColor: tooltipBorder, borderRadius: '12px', color: isLight ? '#0f172a' : '#f8fafc' }} />
-                  <Bar dataKey="VRAM Peak (MB)" fill="#f59e0b" radius={[6, 6, 0, 0]} barSize={40}>
-                    <LabelList dataKey="VRAM Peak (MB)" position="top" fill="#f59e0b" fontSize={11} fontWeight="bold" formatter={(val) => `${val} MB`} />
-                  </Bar>
-                </BarChart>
-              )}
+              <BarChart data={performanceChartData} margin={{ top: 20, right: 10, left: -15, bottom: 36 }}>
+                <CartesianGrid strokeDasharray="3 3" stroke={gridColor} />
+                <XAxis dataKey="name" stroke={textColor} tick={<XAxisTwoLineTick fill={textColor} />} interval={0} />
+                <YAxis orientation="left" stroke="#3b82f6" domain={[60, 100]} label={{ value: 'Persentase (%)', angle: -90, position: 'insideLeft', offset: 10, fill: '#3b82f6' }} />
+                <RechartsTooltip contentStyle={{ backgroundColor: tooltipBg, borderColor: tooltipBorder, borderRadius: '12px', color: isLight ? '#0f172a' : '#f8fafc' }} />
+                <Legend wrapperStyle={{ paddingTop: 10 }} />
+                <Bar dataKey="F1-Score (%)" fill="#3b82f6" radius={[6, 6, 0, 0]} />
+                <Bar dataKey="Akurasi (%)" fill="#10b981" radius={[6, 6, 0, 0]} />
+              </BarChart>
             </ResponsiveContainer>
           </div>
         </div>
