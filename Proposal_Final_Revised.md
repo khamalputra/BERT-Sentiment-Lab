@@ -511,11 +511,11 @@ Uji statistik digunakan untuk menentukan apakah perbedaan performa antara Model 
 
 ### **3.9.2. Evaluasi *Trade-off* Komputasi** 
 
-Evaluasi *trade-off* komputasi mengukur efisiensi penggunaan sumber daya perangkat keras pada dua lingkungan yang berbeda:
+Evaluasi *trade-off* komputasi dirancang untuk mengukur efisiensi penggunaan sumber daya perangkat keras dan latensi inferensi pada dua moda arsitektur backend (*Dual-Backend Architecture: GPU Primary & CPU Fallback*):
 
-1. **Waktu Inferensi pada Lingkungan Eksperimen (GPU Colab)**: Diukur secara presisi menggunakan instrumen PyTorch `torch.cuda.Event(enable_timing=True)` untuk menghindari inkonsistensi eksekusi asinkron CUDA pada GPU Tesla T4.
-2. **Waktu Inferensi pada Lingkungan Aplikasi Web (CPU Server)**: Diukur menggunakan rata-rata *wall-clock time* dari 50 iterasi inferensi setelah 5 iterasi *warm-up* untuk menghilangkan *cold-start penalty* alokasi *thread* CPU.
-3. **Penggunaan Memori GPU (MB)**: Diukur menggunakan `torch.cuda.max_memory_allocated()` untuk mencatat puncak alokasi VRAM selama proses evaluasi pada lingkungan Colab.
+1. **Waktu Inferensi Lingkungan GPU (Primary Server / Tesla T4)**: Diukur secara presisi pada lingkungan server GPU menggunakan instrumen PyTorch `torch.cuda.synchronize()` dan `torch.cuda.Event(enable_timing=True)` untuk menjamin akurasi pengukuran latensi eksekusi di GPU Tesla T4 tanpa terdistorsi oleh sifat eksekusi asinkron CUDA.
+2. **Waktu Inferensi Lingkungan CPU (Fallback Server / Cloud CPU)**: Diukur menggunakan rata-rata *wall-clock time* dari 50 iterasi inferensi setelah 5 iterasi *warm-up* untuk menghilangkan *cold-start penalty* alokasi *thread* CPU, sebagai *baseline* efisiensi saat terjadi *failover* ke server pencadangan.
+3. **Penggunaan Memori VRAM GPU (MB)**: Diukur menggunakan `torch.cuda.max_memory_allocated()` untuk mencatat puncak alokasi VRAM dinamis selama inferensi. Metrik ini membandingkan efisiensi alokasi memori antara Model A (*Frozen Feature Extractor*) dan Model B (*End-to-End Fine-Tuning*) pada server backend GPU.
 
 ### **3.9.3. *Error Analysis* Berbasis Kategori Linguistik** 
 
