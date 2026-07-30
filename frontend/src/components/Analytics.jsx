@@ -319,12 +319,12 @@ function Analytics({ theme, userRole = 'public' }) {
       {/* SECTION 2: Executive Hardware Efficiency Panel */}
       <section className="glass-card p-6 flex flex-col justify-between space-y-4">
         <div>
-          <div className="flex justify-between items-center mb-1">
-            <h3 className="text-sm font-bold text-slate-200 flex items-center space-x-2">
-              <Cpu className="text-umsu-gold" size={16} />
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 mb-1">
+            <h3 className="text-sm font-bold text-slate-200 flex items-center space-x-2 pr-2">
+              <Cpu className="text-umsu-gold flex-shrink-0" size={16} />
               <span>Profil Efisiensi Komputasi & Alokasi VRAM GPU</span>
             </h3>
-            <span className="text-[10px] font-bold px-2.5 py-0.5 rounded-full bg-blue-500/10 text-blue-400 border border-blue-500/20">
+            <span className="text-[10px] font-bold px-2.5 py-0.5 rounded-full bg-blue-500/10 text-blue-400 border border-blue-500/20 whitespace-nowrap self-start sm:self-auto flex-shrink-0">
               Hardware Metrics
             </span>
           </div>
