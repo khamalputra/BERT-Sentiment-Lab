@@ -114,38 +114,17 @@ function Comparator({ theme, userUsername = 'public' }) {
 
     try {
       const activeUser = userUsername || 'public'
-      let res
-      try {
-        // Primary: same-origin Vercel proxy → Ngrok GPU (Tesla T4)
-        // vercel.json rewrites /api/predict → Ngrok GPU backend
-        res = await fetch('/api/predict', {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-            'ngrok-skip-browser-warning': 'true'
-          },
-          body: JSON.stringify({ text, username: activeUser })
-        })
-        if (!res.ok) throw new Error("Primary GPU server unavailable")
-        // Verify we got valid JSON (not Ngrok HTML warning page)
-        const payload = await res.json()
-        if (!payload.data) throw new Error("Invalid response from GPU server")
-        setResult(payload.data)
-        fetchHistory()
-        return // Success — exit early
-      } catch (primaryErr) {
-        console.warn("Primary GPU server offline, failing over to Railway CPU server...", primaryErr)
-        res = await fetch('https://nurturing-creation-production-4414.up.railway.app/api/predict', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ text, username: activeUser })
-        })
-      }
+      // Vercel Serverless Function handles GPU→Railway failover server-side
+      const res = await fetch('/api/predict', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ text, username: activeUser })
+      })
 
       if (res.ok) {
         const payload = await res.json()
         setResult(payload.data)
-        fetchHistory() // Refresh logs
+        fetchHistory()
       } else {
         const errJson = await res.json().catch(() => ({}))
         setApiError(errJson.detail || "Gagal memproses analisis sentimen.")
