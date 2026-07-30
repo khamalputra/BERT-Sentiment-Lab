@@ -33,7 +33,7 @@
   "rewrites": [
     {
       "source": "/api/:path*",
-      "destination": "https://irritably-tipper-january.ngrok-free.dev/api/:path*"
+      "destination": "https://irritably-tipper-january.ngrok-free.dev/api/:path*?ngrok-skip-browser-warning=true"
     },
     {
       "source": "/((?!api/).*)",
