@@ -33,7 +33,7 @@
   "rewrites": [
     {
       "source": "/api/:path*",
-      "destination": "https://nurturing-creation-production-4414.up.railway.app/api/:path*"
+      "destination": "https://irritably-tipper-january.ngrok-free.dev/api/:path*"
     },
     {
       "source": "/((?!api/).*)",

@@ -106,11 +106,22 @@ function Comparator({ theme, userUsername = 'public' }) {
 
     try {
       const activeUser = userUsername || 'public'
-      const res = await fetch('/api/predict', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ text, username: activeUser })
-      })
+      let res
+      try {
+        res = await fetch('/api/predict', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ text, username: activeUser })
+        })
+        if (!res.ok) throw new Error("Primary GPU server unavailable")
+      } catch (primaryErr) {
+        console.warn("Primary GPU server offline, failing over to Railway CPU server...", primaryErr)
+        res = await fetch('https://nurturing-creation-production-4414.up.railway.app/api/predict', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ text, username: activeUser })
+        })
+      }
 
       if (res.ok) {
         const payload = await res.json()
