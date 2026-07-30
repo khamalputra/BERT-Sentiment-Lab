@@ -228,6 +228,7 @@ Evaluasi performa model klasifikasi teks dalam penelitian ini menggunakan bebera
 2. _Precision_ , untuk mengukur ketepatan prediksi kelas positif. 
 3. _Recall_ , untuk mengukur kemampuan model dalam mengidentifikasi seluruh instance positif. 
 4. _F1-score_ , sebagai rata-rata harmonis antara precision dan recall yang menggambarkan keseimbangan performa model. 
+5. _Error Analysis_ Berbasis Kategori Linguistik, untuk mengidentifikasi kelemahan spesifik model pada fenomena struktur bahasa tertentu seperti negasi, sarkasme, dan sekuens panjang (Ribeiro et al., 2020). 
 
 ## **2.10. Metode Statistik Inferensial** 
 
@@ -519,7 +520,7 @@ Evaluasi *trade-off* komputasi dirancang untuk mengukur efisiensi penggunaan sum
 
 ### **3.9.3. *Error Analysis* Berbasis Kategori Linguistik** 
 
-*Error analysis* dilakukan untuk mengidentifikasi pola kesalahan prediksi yang dihasilkan oleh kedua model berdasarkan karakteristik linguistik kalimat. Sampel pada *held-out test set* ($N=872$) diklasifikasikan ke dalam 5 kategori fenomena linguistik berdasarkan analisis sintaksis dan pola leksikal:
+*Error analysis* dilakukan mengikuti pendekatan pengujian perilaku (*behavioral testing*) dalam NLP (Ribeiro et al., 2020) untuk mengidentifikasi pola kesalahan prediksi yang dihasilkan oleh kedua model berdasarkan karakteristik linguistik kalimat. Sampel pada *held-out test set* ($N=872$) diklasifikasikan ke dalam 5 kategori fenomena linguistik berdasarkan analisis sintaksis dan pola leksikal:
 
 1. **Tanpa Negasi (*Standard Sentences*)**: Kalimat langsung tanpa partikel negasi.
 2. **Negasi Biner (*Simple Negation*)**: Kalimat yang memuat satu kata negasi langsung seperti *not*, *no*, *never*, atau *without*.
@@ -854,6 +855,8 @@ Nugroho, A. (2021). Akselerasi komputasi GPU dalam pelatihan model NLP skala bes
 Peters, M. E., Neumann, M., Iyyer, M., Gardner, M., Clark, C., Lee, K., & Zettlemoyer, L. (2018). Deep contextualized word representations. In *Proceedings of NAACL-HLT 2018* (pp. 2227–2237). https://doi.org/10.18653/v1/N18-1202 
 
 Qasim, R., Bangyal, W. H., Alqarni, M. A., & Ali Almazroi, A. (2022). A fine-tuned BERT-based transfer learning approach for text classification. *Journal of Healthcare Engineering*, 2022, Article 3498123. 
+
+Ribeiro, M. T., Wu, T., Guestrin, C., & Singh, S. (2020). Beyond accuracy: Behavioral testing of NLP models with CheckList. In *Proceedings of the 58th Annual Meeting of the Association for Computational Linguistics (ACL 2020)* (pp. 4902–4912). https://doi.org/10.18653/v1/2020.acl-main.442
 
 Ruder, S., Peters, M. E., Swayamdipta, S., & Wolf, T. (2019). Transfer learning in natural language processing. In *Proceedings of NAACL-HLT 2019 Tutorials* (pp. 15–18). Association for Computational Linguistics. 
 
