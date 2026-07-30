@@ -32,8 +32,28 @@
   ],
   "rewrites": [
     {
+      "source": "/api/predict",
+      "destination": "https://irritably-tipper-january.ngrok-free.dev/api/predict?ngrok-skip-browser-warning=true"
+    },
+    {
+      "source": "/api/health",
+      "destination": "https://irritably-tipper-january.ngrok-free.dev/api/health?ngrok-skip-browser-warning=true"
+    },
+    {
+      "source": "/api/history",
+      "destination": "https://irritably-tipper-january.ngrok-free.dev/api/history?ngrok-skip-browser-warning=true"
+    },
+    {
+      "source": "/api/benchmark-stats",
+      "destination": "https://irritably-tipper-january.ngrok-free.dev/api/benchmark-stats?ngrok-skip-browser-warning=true"
+    },
+    {
+      "source": "/api/debug-device",
+      "destination": "https://irritably-tipper-january.ngrok-free.dev/api/debug-device?ngrok-skip-browser-warning=true"
+    },
+    {
       "source": "/api/:path*",
-      "destination": "https://irritably-tipper-january.ngrok-free.dev/api/:path*?ngrok-skip-browser-warning=true"
+      "destination": "https://irritably-tipper-january.ngrok-free.dev/api/:path*"
     },
     {
       "source": "/((?!api/).*)",
