@@ -116,12 +116,23 @@ function Comparator({ theme, userUsername = 'public' }) {
       const activeUser = userUsername || 'public'
       let res
       try {
-        res = await fetch('https://irritably-tipper-january.ngrok-free.dev/api/predict?ngrok-skip-browser-warning=true', {
+        // Primary: same-origin Vercel proxy → Ngrok GPU (Tesla T4)
+        // vercel.json rewrites /api/predict → Ngrok GPU backend
+        res = await fetch('/api/predict', {
           method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
+          headers: {
+            'Content-Type': 'application/json',
+            'ngrok-skip-browser-warning': 'true'
+          },
           body: JSON.stringify({ text, username: activeUser })
         })
         if (!res.ok) throw new Error("Primary GPU server unavailable")
+        // Verify we got valid JSON (not Ngrok HTML warning page)
+        const payload = await res.json()
+        if (!payload.data) throw new Error("Invalid response from GPU server")
+        setResult(payload.data)
+        fetchHistory()
+        return // Success — exit early
       } catch (primaryErr) {
         console.warn("Primary GPU server offline, failing over to Railway CPU server...", primaryErr)
         res = await fetch('https://nurturing-creation-production-4414.up.railway.app/api/predict', {
