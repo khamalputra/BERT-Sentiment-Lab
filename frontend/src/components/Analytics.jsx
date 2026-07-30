@@ -152,10 +152,10 @@ function Analytics({ theme, userRole = 'public' }) {
           }
         },
         statistical_tests: {
-          mcnemar_p_value: 0.0000000148,
+          mcnemar_p_value: 0.00000001,
           wilcoxon_p_value: 0.01562,
-          bootstrap_95_ci: [0.0444, 0.0883],
-          cohens_d: 14.45,
+          bootstrap_95_ci: [0.0501, 0.0927],
+          cohens_d: 12.72,
           effect_size_interpretation: "Extremely Large Effect"
         }
       })
@@ -215,10 +215,11 @@ function Analytics({ theme, userRole = 'public' }) {
 
   // McNemar Contingency Matrix Data - Dynamic from API/Database
   const mcnemarMatrix = stats.mcnemar_matrix || {
-    both_correct: 712,
-    a_correct_b_wrong: 27,
-    b_correct_a_wrong: 89,
-    both_wrong: 44
+    both_correct: 717,
+    a_correct_b_wrong: 22,
+    b_correct_a_wrong: 88,
+    both_wrong: 45,
+    chi2: 38.4091
   }
 
   // Explanatory Tooltip Texts for Academic UX

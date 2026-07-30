@@ -21,13 +21,13 @@ export default function Home({ theme, benchmarkStats, onNavigate }) {
     model_b: { accuracy_mean: 0.9161, f1_mean: 0.9198, avg_latency_ms: 7.71 }
   }
   const statsTests = benchmarkStats?.statistical_tests || {
-    mcnemar_p_value: 1.48e-8,
+    mcnemar_p_value: 0.00000001,
     wilcoxon_p_value: 0.01562,
-    bootstrap_95_ci: [0.0444, 0.0883],
-    cohens_d: 14.45,
+    bootstrap_95_ci: [0.0501, 0.0927],
+    cohens_d: 12.72,
     effect_size_interpretation: "Extremely Large Effect"
   }
-  const mcnemarMatrix = benchmarkStats?.mcnemar_matrix || { chi2: 32.14 }
+  const mcnemarMatrix = benchmarkStats?.mcnemar_matrix || { chi2: 38.41 }
 
   const modelA = summary.model_a
   const modelB = summary.model_b

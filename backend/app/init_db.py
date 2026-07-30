@@ -68,18 +68,18 @@ def init_db():
             BenchmarkResult(seed_number=2024, model_type="Model B", accuracy=0.9151, precision=0.8968, recall=0.9444, f1_score=0.9180, inference_time_ms=7.71, peak_vram_mb=2325.26)
         ]
         
-        # 3. Seed Statistical Tests
+        # 3. Seed Statistical Tests (Audited Exact Experiment Values)
         stat_tests = StatisticalTest(
             mcnemar_p_value=0.00000001,
             wilcoxon_p_value=0.01562,
-            bootstrap_ci_lower=0.0444,
-            bootstrap_ci_upper=0.0883,
-            cohens_d=14.45,
-            mcnemar_both_correct=712,
-            mcnemar_a_correct_b_wrong=27,
-            mcnemar_b_correct_a_wrong=89,
-            mcnemar_both_wrong=44,
-            mcnemar_chi2=32.0776
+            bootstrap_ci_lower=0.0501,
+            bootstrap_ci_upper=0.0927,
+            cohens_d=12.72,
+            mcnemar_both_correct=717,
+            mcnemar_a_correct_b_wrong=22,
+            mcnemar_b_correct_a_wrong=88,
+            mcnemar_both_wrong=45,
+            mcnemar_chi2=38.4091
         )
         
         # 4. Seed Error Analysis per Linguistic Category
