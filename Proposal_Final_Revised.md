@@ -46,7 +46,7 @@ Permasalahan ini sejalan dengan temuan dalam literatur yang menyoroti pentingnya
 
 Berdasarkan kesenjangan tersebut, penelitian ini dirancang untuk melakukan evaluasi kuantitatif yang terkontrol terhadap pengaruh _fine-tuning_ pada model BERT dalam tugas klasifikasi teks. Dua konfigurasi model dibandingkan secara sistematis, yaitu (1) penggunaan BERT sebagai _frozen feature extractor_ dengan _classifier_ sederhana, dan (2) _fine-tuning_ seluruh parameter model secara _end-to-end_ . Evaluasi dilakukan pada dataset SST-2 yang merupakan bagian dari GLUE _benchmark_ , sehingga memungkinkan perbandingan hasil dengan studi terdahulu dalam literatur. 
 
-Untuk memastikan validitas temuan, penelitian ini tidak hanya mengandalkan metrik performa seperti akurasi, tetapi juga menerapkan beberapa metode statistik inferensial, termasuk _McNemar’s Test_ , _Wilcoxon Signed-Rank Test_ , _Bootstrap Confidence Interval_ , dan _Cohen’s d_ . Dengan demikian, penelitian ini diharapkan dapat memberikan bukti empiris yang lebih kuat mengenai kontribusi _fine-tuning_ terhadap peningkatan performa klasifikasi teks, sekaligus memberikan pemahaman yang lebih komprehensif terkait _trade-off_ antara akurasi dan kompleksitas komputasi dalam penggunaan model BERT. Selain itu, untuk memperluas kegunaan praktis dari temuan eksperimental ini, hasil pemodelan dan visualisasi analisis statistik diintegrasikan ke dalam sebuah produk aplikasi web interaktif berbasis *FastAPI* dan *React*. Aplikasi ini dirancang untuk memfasilitasi pengujian inferensi klasifikasi sentimen secara *real-time* serta menyajikan *dashboard* perbandingan performa model yang dapat diakses dengan mudah oleh praktisi dan penguji sistem. 
+Untuk memastikan validitas temuan, penelitian ini tidak hanya mengandalkan metrik performa seperti akurasi, tetapi juga menerapkan beberapa metode statistik inferensial, termasuk _McNemar’s Test_ , _Wilcoxon Signed-Rank Test_ , _Bootstrap Confidence Interval_ , dan _Cohen’s d_ . Dengan demikian, penelitian ini diharapkan dapat memberikan bukti empiris yang lebih kuat mengenai kontribusi _fine-tuning_ terhadap peningkatan performa klasifikasi teks, sekaligus memberikan pemahaman yang lebih komprehensif terkait _trade-off_ antara akurasi dan kompleksitas komputasi dalam penggunaan model BERT. Selain itu, untuk memperluas kegunaan praktis dari temuan eksperimental ini, hasil pemodelan dan visualisasi analisis statistik akan diintegrasikan ke dalam sebuah produk aplikasi web interaktif berbasis *FastAPI* dan *React*. Aplikasi ini dirancang untuk memfasilitasi pengujian inferensi klasifikasi sentimen secara *real-time* serta menyajikan *dashboard* perbandingan performa model yang dapat diakses dengan mudah oleh praktisi dan penguji sistem. 
 
 ## **1.2. Rumusan Masalah** 
 
@@ -116,7 +116,7 @@ Berdasarkan tujuan penelitian yang telah dirumuskan, penelitian ini diharapkan d
 
 ### **1.5.1. Manfaat Teoritis** 
 
-Penelitian ini menghasilkan bukti empiris kuantitatif yang terverifikasi secara statistik mengenai efek _fine-tuning_ pada model BERT dalam tugas klasifikasi teks. Temuan ini berkontribusi dalam memperkuat validitas empiris pendekatan _transfer learning_ , khususnya dalam perbandingan antara metode _feature extraction_ dan _fine-tuning_ . 
+Penelitian ini diharapkan menghasilkan bukti empiris kuantitatif yang terverifikasi secara statistik mengenai efek _fine-tuning_ pada model BERT dalam tugas klasifikasi teks. Temuan ini berkontribusi dalam memperkuat validitas empiris pendekatan _transfer learning_ , khususnya dalam perbandingan antara metode _feature extraction_ dan _fine-tuning_ . 
 
 ### **1.5.2. Manfaat Praktis** 
 
@@ -423,9 +423,9 @@ Penelitian ini dirancang sebagai eksperimen komparatif terkontrol yang membandin
 1. **Model A (Feature Extraction)**: Seluruh parameter 12 lapisan *transformer encoder* BERT dibekukan (*frozen*). Output token `[CLS]` (768 dimensi) diteruskan secara langsung ke *classification head* berupa `Linear(768 -> 2)`. Hanya parameter pada *linear layer* (1.538 parameter) yang diperbarui selama proses pelatihan.
 2. **Model B (End-to-End Fine-Tuning)**: Seluruh parameter BERT (~110 juta parameter) dilatih ulang secara bersamaan dengan *classification head* `Linear(768 -> 2)` melalui kelas `BertForSequenceClassification`.
 
-Untuk memastikan transparansi, reproduktibilitas, dan kesetaraan perlakuan eksperimen (*fair baseline*), konfigurasi parameter yang digunakan pada kedua model dirangkum dalam Tabel 3.7.
+Untuk memastikan transparansi, reproduktibilitas, dan kesetaraan perlakuan eksperimen (*fair baseline*), konfigurasi parameter yang digunakan pada kedua model dirangkum dalam Tabel 3.4.
 
-**Tabel 3.7. Parameter Penelitian** 
+**Tabel 3.4. Parameter Penelitian** 
 
 |**Parameter**|**Model A (Feature Extraction)**|**Model B (Fine-Tuning)**|
 |---|---|---|
@@ -535,7 +535,7 @@ Untuk memenuhi kebutuhan penyajian hasil penelitian yang dapat diakses secara in
 
 ### **3.10.1. Modul-Modul Sistem**
 
-Sistem aplikasi web dirancang di atas 7 modul perangkat lunak utama:
+Sistem aplikasi web dirancang di atas 7 modul perangkat lunak utama yang masing-masing memiliki tanggung jawab sebagai berikut:
 
 1. **Modul *Data Pipeline***: Bertanggung jawab melakukan pra-pemrosesan data teks input pengguna secara *real-time* menggunakan `BertTokenizerFast` (tokenisasi, *truncation*, *padding*, dan konversi ke *tensor* PyTorch) sebelum diteruskan ke modul inferensi.
 2. **Modul *Model Engine***: Memuat artefak model terlatih (Model A dan Model B) ke dalam memori GPU/CPU pada saat inisialisasi server untuk melakukan inferensi *dual-model* secara paralel berbasis PyTorch murni. Modul ini dilengkapi dengan fitur *PyTorch Explicit CUDA Synchronization* (`torch.cuda.synchronize()`) sebelum dan sesudah inferensi untuk menjamin kepastian pengukuran latensi eksekusi di VRAM GPU berakurasi mikrodetik tanpa terdistorsi oleh sifat eksekusi asinkron GPU.
@@ -547,9 +547,9 @@ Sistem aplikasi web dirancang di atas 7 modul perangkat lunak utama:
 
 ### **3.10.2. Spesifikasi API *Endpoints***
 
-Backend REST API dirancang untuk menyediakan 7 *endpoint* utama sebagaimana dirangkum dalam Tabel 3.8.
+Backend REST API dirancang untuk menyediakan 7 *endpoint* utama sebagaimana dirangkum dalam Tabel 3.5.
 
-**Tabel 3.8. Spesifikasi API *Endpoints***
+**Tabel 3.5. Spesifikasi API *Endpoints***
 
 |**No**|**Metode**|***Endpoint***|**Deskripsi Fungsi**|
 |---|---|---|---|
@@ -630,9 +630,9 @@ Alur integrasi operasional dari tahap eksplorasi komputasional hingga pemuatan p
    2. Seluruh hasil perhitungan metrik prediktif, alokasi VRAM GPU, latensi, matriks kontingensi Uji *McNemar*, dan data *error analysis* diekspor ke dalam file terstruktur dan dimuat ke basis data melalui skrip *seeding* (`init_db.py`).
 
 3. **Tahap Pemuatan Model & Deployment Server Web (Arsitektur Dual-Backend)**:
-   1. **Server GPU Utama (Google Colab Tesla T4)**: Server *FastAPI* berjalan di *Google Colab* dengan akselerasi GPU Tesla T4 (16 GB VRAM) terhubung secara *real-time* ke publik via *Ngrok Permanent Static Tunnel* (`https://irritably-tipper-january.ngrok-free.dev`), menyajikan inferensi *real-time* dengan kecepatan kilat (**~7.5 ms**).
-   2. **Server CPU Pencadangan (Railway Cloud)**: Server *FastAPI* pencadangan di-deploy pada *platform Railway* (`https://nurturing-creation-production-4414.up.railway.app`) sebagai penopang redundansi saat server GPU Colab mengalami *downtime* atau *restart*.
-   3. **Konfigurasi Sentral Terpisahkan (`config.js`)**: Seluruh *endpoint* URL backend dienkapsulasi secara modular di dalam modul `frontend/src/config.js` (`GPU_BACKEND_URL` dan `CPU_BACKEND_URL`). Setiap fungsi API pada *frontend* menyimpan URL ke dalam variabel eksplisit sebelum dieksekusi oleh logika percabangan *failover* (GPU *Primary* dengan *timeout* 6 detik ➔ CPU *Fallback*).
+   1. **Server GPU Utama (Google Colab Tesla T4)**: Server *FastAPI* dirancang untuk berjalan di *Google Colab* dengan akselerasi GPU Tesla T4 (16 GB VRAM) dan dihubungkan ke publik melalui *Ngrok Static Tunnel*, ditargetkan mampu menyajikan inferensi *real-time* dengan latensi orde milidetik.
+   2. **Server CPU Pencadangan (Railway Cloud)**: Server *FastAPI* pencadangan dirancang untuk di-*deploy* pada *platform Railway* sebagai penopang redundansi saat server GPU Colab mengalami *downtime* atau *restart*.
+   3. **Konfigurasi Sentral Terpisahkan (`config.js`)**: Seluruh *endpoint* URL backend dirancang untuk dienkapsulasi secara modular di dalam modul konfigurasi *frontend* (`GPU_BACKEND_URL` dan `CPU_BACKEND_URL`). Setiap fungsi API pada *frontend* dirancang menyimpan URL ke dalam variabel eksplisit sebelum dieksekusi oleh logika percabangan *failover* (GPU *Primary* dengan *timeout* 6 detik ➔ CPU *Fallback*).
 
 ### **3.10.8. Rancangan Basis Data (*Database Schema*)**
 
