@@ -1,13 +1,27 @@
 import time
 import os
 import torch
+import torch.nn as nn
 import numpy as np
 from transformers import BertModel, BertForSequenceClassification, BertTokenizerFast
+
+class FeatureExtractorClassifier(nn.Module):
+    """Model A architecture matching Experiment_Notebook.ipynb Cell 8"""
+    def __init__(self, bert):
+        super().__init__()
+        self.bert = bert
+        self.classifier = nn.Linear(768, 2)
+
+    def forward(self, input_ids, attention_mask):
+        outputs = self.bert(input_ids=input_ids, attention_mask=attention_mask)
+        cls_representation = outputs.last_hidden_state[:, 0, :]
+        return self.classifier(cls_representation)
 
 class ModelEngine:
     def __init__(self):
         self.tokenizer = None
         self.has_real_models = False
+        self.device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
         
         # Check if actual model files exist in the models directory
         models_dir = os.path.abspath(os.path.join(os.path.dirname(__file__), "..", "models"))
@@ -16,26 +30,30 @@ class ModelEngine:
         
         if os.path.exists(model_a_path) and os.path.exists(model_b_path):
             try:
-                print(f"Weights detected! Loading real PyTorch models from {models_dir}...")
+                print(f"Weights detected! Loading real PyTorch models from {models_dir} on {self.device}...")
                 self.tokenizer = BertTokenizerFast.from_pretrained("bert-base-uncased")
                 
                 # Load Model A (Frozen BERT + custom classifier linear head weights)
-                self.bert_a = BertModel.from_pretrained("bert-base-uncased")
-                self.classifier_a = torch.nn.Linear(768, 2)
+                bert_a_base = BertModel.from_pretrained("bert-base-uncased")
+                for param in bert_a_base.parameters():
+                    param.requires_grad = False
+                
+                self.model_a = FeatureExtractorClassifier(bert_a_base)
                 try:
                     state_dict = torch.load(model_a_path, map_location="cpu", weights_only=False)
                 except TypeError:
                     state_dict = torch.load(model_a_path, map_location="cpu")
-                self.classifier_a.load_state_dict(state_dict)
-                self.bert_a.eval()
-                self.classifier_a.eval()
+                self.model_a.classifier.load_state_dict(state_dict)
+                self.model_a.to(self.device)
+                self.model_a.eval()
                 
                 # Load Model B (Fine-Tuned BertForSequenceClassification model folder)
                 self.model_b = BertForSequenceClassification.from_pretrained(model_b_path)
+                self.model_b.to(self.device)
                 self.model_b.eval()
                 
                 self.has_real_models = True
-                print("Successfully loaded real PyTorch models for inference!")
+                print(f"Successfully loaded real PyTorch models matching Experiment Notebook on {self.device}!")
             except Exception as e:
                 print(f"Error loading PyTorch models: {e}")
                 raise RuntimeError(f"Failed to load PyTorch models: {e}")
@@ -44,32 +62,33 @@ class ModelEngine:
 
     def predict(self, text: str):
         """
-        Runs side-by-side inference on the input text using real PyTorch neural network models.
+        Runs side-by-side inference on the input text matching Experiment_Notebook.ipynb.
         """
         if not self.has_real_models:
             raise RuntimeError("Real PyTorch models are not initialized or model weight files are missing.")
 
-        inputs = self.tokenizer(text, return_tensors="pt", truncation=True, max_length=128, padding=True)
+        encoded = self.tokenizer(text, return_tensors="pt", truncation=True, max_length=128, padding=True)
+        input_ids = encoded["input_ids"].to(self.device)
+        attention_mask = encoded["attention_mask"].to(self.device)
         
-        # PyTorch CPU Warmup Pass (eliminates cold-start OpenMP/MKL thread allocation overhead)
+        # Warmup pass for both models on device to ensure fair latency measurement
         with torch.no_grad():
-            _ = self.bert_a(input_ids=inputs["input_ids"], attention_mask=inputs["attention_mask"])
-        
-        # Model A (Feature Extraction) inference
+            _ = self.model_a(input_ids=input_ids, attention_mask=attention_mask)
+            _ = self.model_b(input_ids=input_ids, attention_mask=attention_mask)
+
+        # Model A Inference (Feature Extraction)
         start_a = time.time()
         with torch.no_grad():
-            outputs_a_bert = self.bert_a(input_ids=inputs["input_ids"], attention_mask=inputs["attention_mask"])
-            cls_rep = outputs_a_bert.last_hidden_state[:, 0, :]
-            logits_a = self.classifier_a(cls_rep)
-            probs_a = torch.softmax(logits_a, dim=1)[0].numpy()
+            logits_a = self.model_a(input_ids=input_ids, attention_mask=attention_mask)
+            probs_a = torch.softmax(logits_a, dim=1)[0].cpu().numpy()
             pred_class_a = int(np.argmax(probs_a))
         latency_a = round((time.time() - start_a) * 1000, 2)
         
-        # Model B (Fine-Tuned) inference
+        # Model B Inference (End-to-End Fine-Tuning)
         start_b = time.time()
         with torch.no_grad():
-            logits_b = self.model_b(input_ids=inputs["input_ids"], attention_mask=inputs["attention_mask"]).logits
-            probs_b = torch.softmax(logits_b, dim=1)[0].numpy()
+            outputs_b = self.model_b(input_ids=input_ids, attention_mask=attention_mask)
+            probs_b = torch.softmax(outputs_b.logits, dim=1)[0].cpu().numpy()
             pred_class_b = int(np.argmax(probs_b))
         latency_b = round((time.time() - start_b) * 1000, 2)
         
