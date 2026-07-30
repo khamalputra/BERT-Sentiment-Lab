@@ -212,7 +212,7 @@ Dalam adaptasi model BERT ke tugas klasifikasi teks, terdapat dua pendekatan uta
 
 2. **_Fine-Tuning Approach_**: Pada pendekatan ini, seluruh parameter model BERT (~110 juta parameter) dilatih ulang secara bersama-sama dengan *classification head* untuk menyesuaikan representasi internal terhadap tugas spesifik. 
 
-Penelitian oleh Hao et al. (2020) menunjukkan bahwa proses _fine-tuning_ tidak hanya menyesuaikan output model, tetapi juga mengubah representasi internal, khususnya pada mekanisme _attention_ di lapisan akhir serta fitur pada lapisan menengah. Selain itu, _fine-tuning_ secara umum menunjukkan performa yang lebih baik dibandingkan pendekatan _feature-based_ , meskipun memerlukan sumber daya komputasi yang lebih tinggi. 
+Studi eksperimental oleh Sun et al. (2019) serta Hao et al. (2020) menunjukkan bahwa proses _fine-tuning_ tidak hanya menyesuaikan output model, tetapi juga mengubah representasi internal, khususnya pada mekanisme _attention_ di lapisan akhir serta fitur pada lapisan menengah. Selain itu, _fine-tuning_ secara umum menunjukkan performa yang lebih baik dibandingkan pendekatan _feature-based_ , meskipun memerlukan sumber daya komputasi yang lebih tinggi. 
 
 ## **2.8. Dataset SST-2 (** **_Stanford Sentiment Treebank_ )** 
 
@@ -233,10 +233,10 @@ Evaluasi performa model klasifikasi teks dalam penelitian ini menggunakan bebera
 
 Untuk memastikan bahwa perbedaan performa antar model signifikan secara statistik dan bukan disebabkan oleh variansi acak, penelitian ini menerapkan empat metode statistik inferensial: 
 
-1. **McNemar’s Test**: Menguji perbedaan proporsi kesalahan klasifikasi biner pada data sampel berpasangan (*Held-out Test Set*). 
-2. **Wilcoxon Signed-Rank Test**: Uji non-parametrik untuk membandingkan median perbedaan performa F1-score antar model dari $n=6$ *random seed*. 
-3. **Bootstrap Confidence Interval**: Metode *resampling* (10.000 kali) untuk mengestimasi interval kepercayaan 95% dari selisih performa tanpa asumsi distribusi tertentu. 
-4. **Cohen’s d**: Mengukur ukuran efek (_effect size_) numerik dari perbedaan performa antar kedua model. 
+1. **McNemar’s Test**: Menguji perbedaan proporsi kesalahan klasifikasi biner pada data sampel berpasangan (*Held-out Test Set*) (McNemar, 1947; Dror et al., 2018). 
+2. **Wilcoxon Signed-Rank Test**: Uji non-parametrik untuk membandingkan median perbedaan performa F1-score antar model dari $n=6$ *random seed* (Wilcoxon, 1945; Dror et al., 2018). 
+3. **Bootstrap Confidence Interval**: Metode *resampling* (10.000 kali) untuk mengestimasi interval kepercayaan 95% dari selisih performa tanpa asumsi distribusi tertentu (Efron, 1979). 
+4. **Cohen’s d**: Mengukur ukuran efek (_effect size_) numerik dari perbedaan performa antar kedua model (Cohen, 1988). 
 
 ## **2.11. Arsitektur Aplikasi Web, REST API, dan Progressive Web App (PWA)** 
 
@@ -504,8 +504,8 @@ Prosedur eksperimen dilaksanakan secara sistematis mengikuti tahapan-tahapan ber
 
 Uji statistik digunakan untuk menentukan apakah perbedaan performa antara Model A dan Model B signifikan secara statistik atau sekadar variasi acak:
 
-1. **McNemar’s Test**: Digunakan pada level prediksi sampel individu pada *Held-out Test Set* (872 sampel) untuk menguji apakah perbedaan proporsi kesalahan klasifikasi bersifat simetris atau asimetris (Dror et al., 2018). Uji ini menghasilkan statistik $\chi^2$ dan nilai $p$-value.
-2. **Wilcoxon Signed-Rank Test**: Digunakan pada level agregat untuk membandingkan distribusi F1-score yang diperoleh dari 6 run *random seed* ($n=6$). Dengan $n=6$, nilai $p$-value secara teoritis dapat mencapai $p < 0.05$ (nilai minimum $p = 0,03125$), sehingga uji signifikansi statistik non-parametrik berpasangan menjadi valid.
+1. **McNemar’s Test**: Digunakan pada level prediksi sampel individu pada *Held-out Test Set* (872 sampel) untuk menguji apakah perbedaan proporsi kesalahan klasifikasi bersifat simetris atau asimetris (McNemar, 1947; Dror et al., 2018). Uji ini menghasilkan statistik $\chi^2$ dan nilai $p$-value.
+2. **Wilcoxon Signed-Rank Test**: Digunakan pada level agregat untuk membandingkan distribusi F1-score yang diperoleh dari 6 run *random seed* ($n=6$) (Wilcoxon, 1945; Dror et al., 2018). Dengan $n=6$, nilai $p$-value secara teoritis dapat mencapai $p < 0.05$ (nilai minimum $p = 0,03125$), sehingga uji signifikansi statistik non-parametrik berpasangan menjadi valid.
 3. **Bootstrap Confidence Interval**: Menggunakan metode *resampling* dengan pengulangan 10.000 kali (*10,000 bootstrap resamples*) untuk menghitung interval kepercayaan 95% dari perbedaan nilai F1-score antar model (Efron, 1979).
 4. **Cohen’s d**: Mengukur ukuran efek (*effect size*) dari perbedaan performa prediktif untuk menilai seberapa besar pengaruh praktis dari perlakuan *fine-tuning* (Cohen, 1988).
 
