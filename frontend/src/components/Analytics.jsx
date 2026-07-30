@@ -152,11 +152,11 @@ function Analytics({ theme, userRole = 'public' }) {
           }
         },
         statistical_tests: {
-          mcnemar_p_value: 0.00000000000000000000366,
-          wilcoxon_p_value: 0.000000000000000000000214,
-          bootstrap_95_ci: [0.0512, 0.0780],
-          cohens_d: 1.4872,
-          effect_size_interpretation: "Very Large Effect"
+          mcnemar_p_value: 0.0000000148,
+          wilcoxon_p_value: 0.01562,
+          bootstrap_95_ci: [0.0444, 0.0883],
+          cohens_d: 14.45,
+          effect_size_interpretation: "Extremely Large Effect"
         }
       })
       setLoading(false)
