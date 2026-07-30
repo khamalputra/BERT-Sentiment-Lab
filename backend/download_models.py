@@ -17,8 +17,8 @@ BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 MODELS_DIR = os.path.join(BASE_DIR, "models")
 
 # Google Drive File IDs provided by user
-MODEL_A_FILE_ID = "10Rdz9ZIWX6VqZ5mHuzsWe3OVFu70CtAR"
-MODEL_B_FILE_ID = "1TVR2g4I3QnwcTUX5N9DKXQduSfBca0C7"
+MODEL_A_FILE_ID = "17xeb3UljO0jrH7Zebrft_ou6yi-m3Tx_"
+MODEL_B_FILE_ID = "1Zd9wFkTNqLrEx8pAFeBls4xLg_W0H4Ad"
 
 def download_from_gdrive(file_id: str, output_path: str):
     """Downloads a file from Google Drive using gdown."""
