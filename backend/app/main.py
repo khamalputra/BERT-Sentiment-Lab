@@ -48,6 +48,15 @@ async def options_handler(full_path: str):
         }
     )
 
+@app.get("/")
+def read_root():
+    return {
+        "status": "online",
+        "message": "BERT Sentiment Lab API Backend running on Google Colab Tesla T4 GPU",
+        "docs": "/docs",
+        "health": "/api/health"
+    }
+
 # Comprehensive HTTP Security Headers Middleware
 @app.middleware("http")
 async def add_security_headers(request, call_next):
