@@ -121,37 +121,74 @@ function App() {
     setActiveTab(tabId)
   }
 
-  // Handle Login Authentication
+  // Handle Login Authentication with GPU -> CPU failover
   const handleLoginSubmit = async (e) => {
     e.preventDefault()
     setLoginError('')
     setLoginLoading(true)
 
+    const gpuLoginUrl = `${GPU_BACKEND_URL}/api/login?ngrok-skip-browser-warning=true`
+    const cpuLoginUrl = `${CPU_BACKEND_URL}/api/login`
+
+    let res
+    let isSuccess = false
+
+    // 1. Try GPU Backend
     try {
-      const res = await fetch('/api/login', {
+      const controller = new AbortController()
+      const timeoutId = setTimeout(() => controller.abort(), 6000)
+
+      res = await fetch(gpuLoginUrl, {
         method: 'POST',
-        headers: { 
+        headers: {
           'Content-Type': 'application/json',
           'ngrok-skip-browser-warning': 'true'
         },
-        body: JSON.stringify({ username: loginUsername, password: loginPassword })
+        body: JSON.stringify({ username: loginUsername, password: loginPassword }),
+        signal: controller.signal
       })
+      clearTimeout(timeoutId)
+      if (res.ok) isSuccess = true
+    } catch (gpuErr) {
+      console.warn("GPU server unreachable for login, trying Railway CPU...", gpuErr)
+    }
 
-      const data = await res.json()
+    // 2. Fallback to CPU Backend if GPU failed
+    if (!isSuccess) {
+      try {
+        res = await fetch(cpuLoginUrl, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ username: loginUsername, password: loginPassword })
+        })
+      } catch (cpuErr) {
+        console.error("Both backends failed for login:", cpuErr)
+      }
+    }
 
-      if (res.ok && data.status === 'success') {
-        localStorage.setItem('user_role', data.role)
-        localStorage.setItem('user_name', data.user_name)
-        localStorage.setItem('user_username', data.user_username)
-        setUserRole(data.role)
-        setUserName(data.user_name)
-        setUserUsername(data.user_username)
-        setShowLoginModal(false)
-        setLoginUsername('')
-        setLoginPassword('')
-        setActiveTab('analytics')
-      } else {
+    try {
+      if (res && res.ok) {
+        const data = await res.json()
+        if (data.status === 'success') {
+          localStorage.setItem('user_role', data.role)
+          localStorage.setItem('user_name', data.user_name)
+          localStorage.setItem('user_username', data.user_username)
+          setUserRole(data.role)
+          setUserName(data.user_name)
+          setUserUsername(data.user_username)
+          setShowLoginModal(false)
+          setLoginUsername('')
+          setLoginPassword('')
+          setActiveTab('analytics')
+          return
+        }
+      }
+
+      if (res) {
+        const data = await res.json().catch(() => ({}))
         setLoginError(data.detail || 'Username atau password salah.')
+      } else {
+        setLoginError('Gagal terhubung ke server backend.')
       }
     } catch (err) {
       setLoginError('Gagal terhubung ke server backend.')

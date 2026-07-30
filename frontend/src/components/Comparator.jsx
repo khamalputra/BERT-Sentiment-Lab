@@ -39,14 +39,35 @@ function Comparator({ theme, userUsername = 'public' }) {
     },
   ]
 
-  // Load history from API for current isolated user account
+  // Load history from API for current isolated user account with GPU -> CPU failover
   const fetchHistory = async () => {
     try {
       const activeUser = userUsername || 'public'
-      const res = await fetch(`/api/history?username=${encodeURIComponent(activeUser)}&limit=10`, {
-        headers: { 'ngrok-skip-browser-warning': 'true' }
-      })
-      if (res.ok) {
+      const gpuUrl = `${GPU_BACKEND_URL}/api/history?username=${encodeURIComponent(activeUser)}&limit=10&ngrok-skip-browser-warning=true`
+      const cpuUrl = `${CPU_BACKEND_URL}/api/history?username=${encodeURIComponent(activeUser)}&limit=10`
+
+      let res
+      try {
+        const controller = new AbortController()
+        const timeoutId = setTimeout(() => controller.abort(), 4000)
+        res = await fetch(gpuUrl, {
+          headers: { 'ngrok-skip-browser-warning': 'true' },
+          signal: controller.signal
+        })
+        clearTimeout(timeoutId)
+      } catch (gpuErr) {
+        // Fallback to CPU
+      }
+
+      if (!res || !res.ok) {
+        try {
+          res = await fetch(cpuUrl)
+        } catch (cpuErr) {
+          // Both failed
+        }
+      }
+
+      if (res && res.ok) {
         const data = await res.json()
         setHistory(data)
       }
@@ -55,14 +76,35 @@ function Comparator({ theme, userUsername = 'public' }) {
     }
   }
 
-  // Delete single history log
+  // Delete single history log with GPU -> CPU failover
   const handleDeleteItem = async (id) => {
     try {
-      const res = await fetch(`/api/history/${id}`, {
-        method: 'DELETE',
-        headers: { 'ngrok-skip-browser-warning': 'true' }
-      })
-      if (res.ok) {
+      const gpuUrl = `${GPU_BACKEND_URL}/api/history/${id}?ngrok-skip-browser-warning=true`
+      const cpuUrl = `${CPU_BACKEND_URL}/api/history/${id}`
+
+      let res
+      try {
+        const controller = new AbortController()
+        const timeoutId = setTimeout(() => controller.abort(), 4000)
+        res = await fetch(gpuUrl, {
+          method: 'DELETE',
+          headers: { 'ngrok-skip-browser-warning': 'true' },
+          signal: controller.signal
+        })
+        clearTimeout(timeoutId)
+      } catch (gpuErr) {
+        // Fallback to CPU
+      }
+
+      if (!res || !res.ok) {
+        try {
+          res = await fetch(cpuUrl, { method: 'DELETE' })
+        } catch (cpuErr) {
+          // Both failed
+        }
+      }
+
+      if (res && res.ok) {
         setHistory(prev => prev.filter(item => item.id !== id))
       }
     } catch (e) {
@@ -76,11 +118,32 @@ function Comparator({ theme, userUsername = 'public' }) {
     setShowConfirmModal(false)
     try {
       const activeUser = userUsername || 'public'
-      const res = await fetch(`/api/history?username=${encodeURIComponent(activeUser)}`, {
-        method: 'DELETE',
-        headers: { 'ngrok-skip-browser-warning': 'true' }
-      })
-      if (res.ok) {
+      const gpuUrl = `${GPU_BACKEND_URL}/api/history?username=${encodeURIComponent(activeUser)}&ngrok-skip-browser-warning=true`
+      const cpuUrl = `${CPU_BACKEND_URL}/api/history?username=${encodeURIComponent(activeUser)}`
+
+      let res
+      try {
+        const controller = new AbortController()
+        const timeoutId = setTimeout(() => controller.abort(), 4000)
+        res = await fetch(gpuUrl, {
+          method: 'DELETE',
+          headers: { 'ngrok-skip-browser-warning': 'true' },
+          signal: controller.signal
+        })
+        clearTimeout(timeoutId)
+      } catch (gpuErr) {
+        // Fallback to CPU
+      }
+
+      if (!res || !res.ok) {
+        try {
+          res = await fetch(cpuUrl, { method: 'DELETE' })
+        } catch (cpuErr) {
+          // Both failed
+        }
+      }
+
+      if (res && res.ok) {
         setHistory([])
         await fetchHistory()
       }

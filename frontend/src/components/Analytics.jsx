@@ -5,8 +5,9 @@ import {
   BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip as RechartsTooltip, Legend, ResponsiveContainer,
   RadarChart, PolarGrid, PolarAngleAxis, PolarRadiusAxis, Radar
 } from 'recharts'
+import { GPU_BACKEND_URL, CPU_BACKEND_URL } from '../config'
 
-function Analytics({ theme }) {
+function Analytics({ theme, userRole = 'public' }) {
   const isLight = theme === 'light'
   const gridColor = isLight ? '#cbd5e1' : '#1e293b'
   const textColor = isLight ? '#475569' : '#94a3b8'
@@ -17,45 +18,72 @@ function Analytics({ theme }) {
   const [stats, setStats] = useState(null)
   const [activeTooltip, setActiveTooltip] = useState(null)
 
-  // Fetch benchmark stats from FastAPI API
+  // Fetch benchmark stats with GPU -> CPU failover
   useEffect(() => {
     const loadStats = async () => {
+      const gpuStatsUrl = `${GPU_BACKEND_URL}/api/benchmark-stats?ngrok-skip-browser-warning=true`
+      const cpuStatsUrl = `${CPU_BACKEND_URL}/api/benchmark-stats`
+
+      let res
+      // 1. Try GPU Backend
       try {
-        const res = await fetch('/api/benchmark-stats', {
-          headers: { 'ngrok-skip-browser-warning': 'true' }
+        const controller = new AbortController()
+        const timeoutId = setTimeout(() => controller.abort(), 6000)
+        res = await fetch(gpuStatsUrl, {
+          headers: { 'ngrok-skip-browser-warning': 'true' },
+          signal: controller.signal
         })
-        if (res.ok) {
+        clearTimeout(timeoutId)
+      } catch (gpuErr) {
+        console.warn("GPU server unreachable for stats, trying Railway CPU...", gpuErr)
+      }
+
+      // 2. Fallback to CPU Backend if GPU failed
+      if (!res || !res.ok) {
+        try {
+          const controller = new AbortController()
+          const timeoutId = setTimeout(() => controller.abort(), 6000)
+          res = await fetch(cpuStatsUrl, { signal: controller.signal })
+          clearTimeout(timeoutId)
+        } catch (cpuErr) {
+          console.warn("CPU server unreachable for stats:", cpuErr)
+        }
+      }
+
+      try {
+        if (res && res.ok) {
           const data = await res.json()
           setStats(data)
+          return
         }
       } catch (e) {
-        console.error("Failed to load stats, using local fallback data:", e)
-        // Fallback local data if offline (matches PRD)
-        setStats({
-          status: "success",
-          summary: {
-            model_a: {
-              accuracy_mean: 0.8515, accuracy_std: 0.0039,
-              f1_mean: 0.8601, f1_std: 0.0044,
-              avg_latency_ms: 7.60, peak_vram_mb: 2034.56
-            },
-            model_b: {
-              accuracy_mean: 0.9161, accuracy_std: 0.0038,
-              f1_mean: 0.9198, f1_std: 0.0035,
-              avg_latency_ms: 7.71, peak_vram_mb: 2325.26
-            }
-          },
-          statistical_tests: {
-            mcnemar_p_value: 0.00000001,
-            wilcoxon_p_value: 0.01562,
-            bootstrap_95_ci: [0.0444, 0.0883],
-            cohens_d: 14.45,
-            effect_size_interpretation: "Extremely Large Effect"
-          }
-        })
-      } finally {
-        setLoading(false)
+        console.error("Failed to parse stats response:", e)
       }
+
+      // Fallback local data if offline (matches PRD)
+      setStats({
+        status: "success",
+        summary: {
+          model_a: {
+            accuracy_mean: 0.8515, accuracy_std: 0.0039,
+            f1_mean: 0.8601, f1_std: 0.0044,
+            avg_latency_ms: 7.60, peak_vram_mb: 2034.56
+          },
+          model_b: {
+            accuracy_mean: 0.9161, accuracy_std: 0.0038,
+            f1_mean: 0.9198, f1_std: 0.0035,
+            avg_latency_ms: 7.71, peak_vram_mb: 2325.26
+          }
+        },
+        statistical_tests: {
+          mcnemar_p_value: 0.00000000000000000000366,
+          wilcoxon_p_value: 0.000000000000000000000214,
+          bootstrap_95_ci: [0.0512, 0.0780],
+          cohens_d: 1.4872,
+          effect_size_interpretation: "Very Large Effect"
+        }
+      })
+      setLoading(false)
     }
 
     loadStats()
