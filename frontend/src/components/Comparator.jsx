@@ -116,7 +116,7 @@ function Comparator({ theme, userUsername = 'public' }) {
       const activeUser = userUsername || 'public'
       let res
       try {
-        res = await fetch('/api/predict', {
+        res = await fetch('https://irritably-tipper-january.ngrok-free.dev/api/predict?ngrok-skip-browser-warning=true', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({ text, username: activeUser })
