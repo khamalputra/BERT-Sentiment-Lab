@@ -21,7 +21,9 @@ function Analytics({ theme }) {
   useEffect(() => {
     const loadStats = async () => {
       try {
-        const res = await fetch('/api/benchmark-stats')
+        const res = await fetch('/api/benchmark-stats', {
+          headers: { 'ngrok-skip-browser-warning': 'true' }
+        })
         if (res.ok) {
           const data = await res.json()
           setStats(data)

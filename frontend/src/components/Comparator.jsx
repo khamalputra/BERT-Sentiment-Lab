@@ -42,7 +42,9 @@ function Comparator({ theme, userUsername = 'public' }) {
   const fetchHistory = async () => {
     try {
       const activeUser = userUsername || 'public'
-      const res = await fetch(`/api/history?username=${encodeURIComponent(activeUser)}&limit=10`)
+      const res = await fetch(`/api/history?username=${encodeURIComponent(activeUser)}&limit=10`, {
+        headers: { 'ngrok-skip-browser-warning': 'true' }
+      })
       if (res.ok) {
         const data = await res.json()
         setHistory(data)
@@ -55,7 +57,10 @@ function Comparator({ theme, userUsername = 'public' }) {
   // Delete single history log
   const handleDeleteItem = async (id) => {
     try {
-      const res = await fetch(`/api/history/${id}`, { method: 'DELETE' })
+      const res = await fetch(`/api/history/${id}`, {
+        method: 'DELETE',
+        headers: { 'ngrok-skip-browser-warning': 'true' }
+      })
       if (res.ok) {
         setHistory(prev => prev.filter(item => item.id !== id))
       }
@@ -70,7 +75,10 @@ function Comparator({ theme, userUsername = 'public' }) {
     setShowConfirmModal(false)
     try {
       const activeUser = userUsername || 'public'
-      const res = await fetch(`/api/history?username=${encodeURIComponent(activeUser)}`, { method: 'DELETE' })
+      const res = await fetch(`/api/history?username=${encodeURIComponent(activeUser)}`, {
+        method: 'DELETE',
+        headers: { 'ngrok-skip-browser-warning': 'true' }
+      })
       if (res.ok) {
         setHistory([])
         await fetchHistory()
@@ -110,7 +118,10 @@ function Comparator({ theme, userUsername = 'public' }) {
       try {
         res = await fetch('/api/predict', {
           method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
+          headers: { 
+            'Content-Type': 'application/json',
+            'ngrok-skip-browser-warning': 'true'
+          },
           body: JSON.stringify({ text, username: activeUser })
         })
         if (!res.ok) throw new Error("Primary GPU server unavailable")

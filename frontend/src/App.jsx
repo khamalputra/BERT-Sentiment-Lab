@@ -128,7 +128,10 @@ function App() {
     try {
       const res = await fetch('/api/login', {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+        headers: { 
+          'Content-Type': 'application/json',
+          'ngrok-skip-browser-warning': 'true'
+        },
         body: JSON.stringify({ username: loginUsername, password: loginPassword })
       })
 
@@ -175,7 +178,9 @@ function App() {
 
     const checkHealth = async () => {
       try {
-        const res = await fetch('/api/health')
+        const res = await fetch('/api/health', {
+          headers: { 'ngrok-skip-browser-warning': 'true' }
+        })
         if (res.ok) {
           setIsOnline(true)
         } else {
