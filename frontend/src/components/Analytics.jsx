@@ -7,6 +7,27 @@ import {
 } from 'recharts'
 import { GPU_BACKEND_URL, CPU_BACKEND_URL } from '../config'
 
+// Custom XAxis tick that wraps label into two lines at the opening parenthesis
+// e.g. "Model A (Frozen)" → line1: "Model A", line2: "(Frozen)"
+const XAxisTwoLineTick = ({ x, y, payload, fill }) => {
+  const label = payload?.value || ''
+  const parenIdx = label.indexOf('(')
+  const line1 = parenIdx > -1 ? label.slice(0, parenIdx).trim() : label
+  const line2 = parenIdx > -1 ? label.slice(parenIdx).trim() : ''
+  return (
+    <g transform={`translate(${x},${y})`}>
+      <text x={0} y={0} dy={12} textAnchor="middle" fill={fill} fontSize={10} fontFamily="monospace">
+        {line1}
+      </text>
+      {line2 && (
+        <text x={0} y={0} dy={24} textAnchor="middle" fill={fill} fontSize={10} fontFamily="monospace">
+          {line2}
+        </text>
+      )}
+    </g>
+  )
+}
+
 function Analytics({ theme, userRole = 'public' }) {
   const isLight = theme === 'light'
   const gridColor = isLight ? '#cbd5e1' : '#1e293b'
@@ -228,9 +249,9 @@ function Analytics({ theme, userRole = 'public' }) {
 
           <div className="h-[250px] w-full mt-2 font-mono text-[10px]">
             <ResponsiveContainer width="100%" height="100%">
-              <BarChart data={tradeOffData} margin={{ top: 10, right: 10, left: -20, bottom: 0 }}>
+              <BarChart data={tradeOffData} margin={{ top: 10, right: 10, left: -20, bottom: 36 }}>
                 <CartesianGrid strokeDasharray="3 3" stroke={gridColor} />
-                <XAxis dataKey="name" stroke={textColor} />
+                <XAxis dataKey="name" stroke={textColor} tick={<XAxisTwoLineTick fill={textColor} />} interval={0} />
                 <YAxis yAxisId="left" orientation="left" stroke="#3b82f6" domain={[0, 100]} label={{ value: 'F1 / Latency', angle: -90, position: 'insideLeft', offset: 10, fill: '#3b82f6' }} />
                 <YAxis yAxisId="right" orientation="right" stroke="#f59e0b" domain={[0, 1500]} label={{ value: 'Peak VRAM (MB)', angle: 90, position: 'insideRight', offset: 10, fill: '#f59e0b' }} />
                 <RechartsTooltip contentStyle={{ backgroundColor: tooltipBg, borderColor: tooltipBorder, borderRadius: '12px', color: isLight ? '#0f172a' : '#f8fafc' }} />
