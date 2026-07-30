@@ -636,18 +636,19 @@ Alur integrasi operasional dari tahap eksplorasi komputasional hingga pemuatan p
 
 ### **3.10.8. Rancangan Basis Data (*Database Schema*)**
 
-Untuk mendukung *data persistence*, pencatatan riwayat inferensi pengguna, serta penyimpanan log eksperimen *benchmark* secara terstruktur, aplikasi web dilengkapi dengan basis data relasional **SQLite** yang dikelola melalui ORM *SQLAlchemy* pada *FastAPI*. Skema basis data dirancang terdiri dari 3 tabel utama:
+Untuk mendukung *data persistence*, pencatatan riwayat inferensi pengguna, serta penyimpanan log eksperimen *benchmark* secara terstruktur, aplikasi web dilengkapi dengan basis data relasional **SQLite** yang dikelola melalui ORM *SQLAlchemy* pada *FastAPI*. Skema basis data dirancang terdiri dari 4 tabel utama:
 
 1. **Tabel `prediction_logs`**: Menyimpan setiap riwayat pengujian kalimat ulasan yang dikirimkan oleh pengguna melalui Komparator Inferensi *Real-Time*.
    1. `id` (INTEGER, *Primary Key*, *Auto Increment*)
-   2. `input_text` (TEXT, isi kalimat ulasan input)
-   3. `model_a_label` (VARCHAR(20), label prediksi Model A)
-   4. `model_a_confidence` (FLOAT, skor kepercayaan Model A %)
-   5. `model_a_latency_ms` (FLOAT, latensi inferensi Model A ms)
-   6. `model_b_label` (VARCHAR(20), label prediksi Model B)
-   7. `model_b_confidence` (FLOAT, skor kepercayaan Model B %)
-   8. `model_b_latency_ms` (FLOAT, latensi inferensi Model B ms)
-   9. `created_at` (DATETIME, *timestamp* waktu pengujian)
+   2. `username` (VARCHAR(50), pengenal pengguna / *role*: 'public' atau nama akun)
+   3. `input_text` (TEXT, isi kalimat ulasan input)
+   4. `model_a_label` (VARCHAR(20), label prediksi Model A)
+   5. `model_a_confidence` (FLOAT, skor kepercayaan Model A %)
+   6. `model_a_latency_ms` (FLOAT, latensi inferensi Model A ms)
+   7. `model_b_label` (VARCHAR(20), label prediksi Model B)
+   8. `model_b_confidence` (FLOAT, skor kepercayaan Model B %)
+   9. `model_b_latency_ms` (FLOAT, latensi inferensi Model B ms)
+   10. `created_at` (DATETIME, *timestamp* waktu pengujian)
 
 2. **Tabel `benchmark_results`**: Menyimpan ringkasan metrik evaluasi komparatif dari 6 *run random seed*.
    1. `id` (INTEGER, *Primary Key*, *Auto Increment*)
@@ -656,12 +657,23 @@ Untuk mendukung *data persistence*, pencatatan riwayat inferensi pengguna, serta
    4. `accuracy` (FLOAT), `precision` (FLOAT), `recall` (FLOAT), `f1_score` (FLOAT)
    5. `inference_time_ms` (FLOAT), `peak_vram_mb` (FLOAT)
 
-3. **Tabel `statistical_tests`**: Menyimpan hasil pengujian statistik inferensial.
+3. **Tabel `statistical_tests`**: Menyimpan hasil pengujian statistik inferensial dan matriks kontingensi Uji McNemar.
    1. `id` (INTEGER, *Primary Key*, *Auto Increment*)
    2. `mcnemar_p_value` (FLOAT), `wilcoxon_p_value` (FLOAT)
    3. `bootstrap_ci_lower` (FLOAT), `bootstrap_ci_upper` (FLOAT)
    4. `cohens_d` (FLOAT)
-   5. `created_at` (DATETIME, *timestamp* waktu pengujian statistik)
+   5. `mcnemar_both_correct` (INTEGER), `mcnemar_a_correct_b_wrong` (INTEGER)
+   6. `mcnemar_b_correct_a_wrong` (INTEGER), `mcnemar_both_wrong` (INTEGER)
+   7. `mcnemar_chi2` (FLOAT)
+   8. `created_at` (DATETIME, *timestamp* waktu pengujian statistik)
+
+4. **Tabel `error_analysis_logs`**: Menyimpan data evaluasi akurasi per-kategori fenomena linguistik untuk visualisasi grafik radar.
+   1. `id` (INTEGER, *Primary Key*, *Auto Increment*)
+   2. `category_name` (VARCHAR(50), nama kategori fenomena linguistik)
+   3. `model_a_accuracy` (FLOAT, persentase akurasi Model A %)
+   4. `model_b_accuracy` (FLOAT, persentase akurasi Model B %)
+   5. `sample_count` (INTEGER, jumlah sampel dalam kategori)
+   6. `created_at` (DATETIME, *timestamp* pembuatan log)
 
 ### **3.10.9. Diagram Kasus Penggunaan (*Use Case Diagram*)**
 
@@ -758,41 +770,44 @@ Alur sistem aplikasi web berlangsung dalam 4 tahapan eksekusi:
 
 ### **3.10.11. Diagram Relasi Entitas Basis Data (*Entity Relationship Diagram / ERD*)**
 
-Struktur fisik dan skema tabel basis data relasional SQLite dirancang untuk menyimpan log prediksi dan data statistik *benchmark* komparatif:
+Struktur fisik dan skema tabel basis data relasional SQLite dirancang untuk menyimpan log prediksi, data *benchmark* multi-*seed*, pengujian statistik, serta data *error analysis*:
 
 ```text
 +------------------------------------+       +------------------------------------+
 |          prediction_logs           |       |         benchmark_results          |
 +------------------------------------+       +------------------------------------+
 | PK  id                  INTEGER    |       | PK  id                  INTEGER    |
-|     input_text          TEXT       |       |     seed_number         INTEGER    |
-|     model_a_label       VARCHAR(20)|       |     model_type          VARCHAR(20)|
-|     model_a_confidence  FLOAT      |       |     accuracy            FLOAT      |
-|     model_a_latency_ms  FLOAT      |       |     precision           FLOAT      |
-|     model_b_label       VARCHAR(20)|       |     recall              FLOAT      |
-|     model_b_confidence  FLOAT      |       |     f1_score            FLOAT      |
-|     model_b_latency_ms  FLOAT      |       |     inference_time_ms   FLOAT      |
-|     created_at          DATETIME   |       |     peak_vram_mb        FLOAT      |
-+------------------------------------+       +------------------------------------+
-
+|     username            VARCHAR(50)|       |     seed_number         INTEGER    |
+|     input_text          TEXT       |       |     model_type          VARCHAR(20)|
+|     model_a_label       VARCHAR(20)|       |     accuracy            FLOAT      |
+|     model_a_confidence  FLOAT      |       |     precision           FLOAT      |
+|     model_a_latency_ms  FLOAT      |       |     recall              FLOAT      |
+|     model_b_label       VARCHAR(20)|       |     f1_score            FLOAT      |
+|     model_b_confidence  FLOAT      |       |     inference_time_ms   FLOAT      |
+|     model_b_latency_ms  FLOAT      |       |     peak_vram_mb        FLOAT      |
+|     created_at          DATETIME   |       +------------------------------------+
++------------------------------------+
                                              +------------------------------------+
-                                             |         statistical_tests          |
-                                             +------------------------------------+
-                                             | PK  id                  INTEGER    |
-                                             |     mcnemar_p_value     FLOAT      |
-                                             |     wilcoxon_p_value    FLOAT      |
-                                             |     bootstrap_ci_lower  FLOAT      |
-                                             |     bootstrap_ci_upper  FLOAT      |
-                                             |     cohens_d            FLOAT      |
-                                             |     created_at          DATETIME   |
-                                             +------------------------------------+
++------------------------------------+       |        error_analysis_logs         |
+|         statistical_tests          |       +------------------------------------+
++------------------------------------+       | PK  id                  INTEGER    |
+| PK  id                  INTEGER    |       |     category_name       VARCHAR(50)|
+|     mcnemar_p_value     FLOAT      |       |     model_a_accuracy    FLOAT      |
+|     wilcoxon_p_value    FLOAT      |       |     model_b_accuracy    FLOAT      |
+|     bootstrap_ci_lower  FLOAT      |       |     sample_count        INTEGER    |
+|     bootstrap_ci_upper  FLOAT      |       |     created_at          DATETIME   |
+|     cohens_d            FLOAT      |       +------------------------------------+
+|     mcnemar_chi2        FLOAT      |
+|     created_at          DATETIME   |
++------------------------------------+
 ```
 
-Deskripsi peranan 3 entitas tabel basis data:
+Deskripsi peranan 4 entitas tabel basis data:
 
-1. **Entitas `prediction_logs`**: Mengakomodasi kebutuhan audit log riwayat pengujian kalimat ulasan pengguna, menyimpan prediksi label sentimen, tingkat kepercayaan (%), dan latensi komputasi (ms) dari kedua model.
+1. **Entitas `prediction_logs`**: Mengakomodasi kebutuhan audit log riwayat pengujian kalimat ulasan pengguna, menyimpan nama/peran pengguna, prediksi label sentimen, tingkat kepercayaan (%), dan latensi komputasi (ms) dari kedua model.
 2. **Entitas `benchmark_results`**: Menyimpan data hasil evaluasi performa prediktif dan efisiensi komputasi dari 6 *run random seed* untuk Model A dan Model B.
-3. **Entitas `statistical_tests`**: Menyimpan nilai statistik pengujian inferensial kuantitatif (*McNemar p-value*, *Wilcoxon p-value*, interval *Bootstrap 95% CI*, dan *Cohen's d*) yang ditampilkan pada *Dashboard* Analitik.
+3. **Entitas `statistical_tests`**: Menyimpan nilai statistik pengujian inferensial kuantitatif (*McNemar p-value*, *Wilcoxon p-value*, interval *Bootstrap 95% CI*, *Cohen's d*, dan matriks kontingensi $\chi^2$) yang ditampilkan pada *Dashboard* Analitik.
+4. **Entitas `error_analysis_logs`**: Menyimpan data breakdown akurasi per-kategori fenomena linguistik (tanpa negasi, negasi biner, ironi/sarkasme, review panjang, ambiguitas tinggi) untuk menyokong visualisasi grafik radar multidimensi.
 
 ## **3.11. Kontrol Variansi dan Reliabilitas** 
 
