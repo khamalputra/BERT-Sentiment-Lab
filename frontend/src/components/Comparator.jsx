@@ -114,21 +114,52 @@ function Comparator({ theme, userUsername = 'public' }) {
 
     try {
       const activeUser = userUsername || 'public'
-      // Vercel Serverless Function handles GPU→Railway failover server-side
-      const res = await fetch('/api/predict', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ text, username: activeUser })
-      })
+      let isGpuSuccess = false
 
-      if (res.ok) {
-        const payload = await res.json()
-        setResult(payload.data)
-        fetchHistory()
-      } else {
-        const errJson = await res.json().catch(() => ({}))
-        setApiError(errJson.detail || "Gagal memproses analisis sentimen.")
+      // 1. Try Direct GPU Colab Server (NVIDIA Tesla T4 ~7.5ms)
+      try {
+        const controller = new AbortController()
+        const timeoutId = setTimeout(() => controller.abort(), 6000)
+
+        const resGpu = await fetch('https://irritably-tipper-january.ngrok-free.dev/api/predict?ngrok-skip-browser-warning=true', {
+          method: 'POST',
+          headers: { 
+            'Content-Type': 'application/json',
+            'ngrok-skip-browser-warning': 'true'
+          },
+          body: JSON.stringify({ text, username: activeUser }),
+          signal: controller.signal
+        })
+        clearTimeout(timeoutId)
+
+        if (resGpu.ok) {
+          const payload = await resGpu.json()
+          if (payload && payload.data) {
+            setResult(payload.data)
+            isGpuSuccess = true
+          }
+        }
+      } catch (gpuErr) {
+        console.warn("Direct GPU server unreachable or timed out, failing over to Railway CPU...", gpuErr)
       }
+
+      // 2. Fallback to Railway CPU Server if GPU is offline
+      if (!isGpuSuccess) {
+        const resCpu = await fetch('https://nurturing-creation-production-4414.up.railway.app/api/predict', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ text, username: activeUser })
+        })
+        if (resCpu.ok) {
+          const payload = await resCpu.json()
+          setResult(payload.data)
+        } else {
+          const errJson = await resCpu.json().catch(() => ({}))
+          setApiError(errJson.detail || "Gagal memproses analisis sentimen.")
+        }
+      }
+
+      fetchHistory()
     } catch (e) {
       console.error("Connection error:", e)
       setApiError("Gagal terhubung ke server backend.")
