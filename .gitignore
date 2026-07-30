@@ -27,3 +27,6 @@ backend/models/**/*.bin
 .idea/
 *.swp
 scratch/
+
+# Local documents kept off GitHub
+Proposal_Final_Revised.md
