@@ -121,7 +121,13 @@ def startup_event():
 
 @app.get("/api/health")
 def health_check():
-    return {"status": "healthy", "timestamp": datetime.utcnow()}
+    import torch
+    is_gpu = (model_engine and model_engine.device.type == "cuda") or torch.cuda.is_available()
+    return {
+        "status": "healthy",
+        "device": "GPU" if is_gpu else "CPU",
+        "timestamp": datetime.utcnow()
+    }
 
 @app.post("/api/predict", response_model=PredictResponse)
 def predict_sentiment(payload: PredictRequest, db: Session = Depends(get_db)):

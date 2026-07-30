@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
-import { Cpu, BarChart2, GitCompare, History, Info, Wifi, WifiOff, Download, Award, Sun, Moon, Lock, Unlock, User, LogOut, KeyRound, ShieldCheck, AlertCircle, X, Eye, EyeOff, Home as HomeIcon } from 'lucide-react'
+import { Cpu, Zap, BarChart2, GitCompare, History, Info, Wifi, WifiOff, Download, Award, Sun, Moon, Lock, Unlock, User, LogOut, KeyRound, ShieldCheck, AlertCircle, X, Eye, EyeOff, Home as HomeIcon } from 'lucide-react'
 import Comparator from './components/Comparator'
 import Analytics from './components/Analytics'
 import Home from './components/Home'
@@ -25,6 +25,7 @@ function App() {
 
   const [activeTab, setActiveTab] = useState(getInitialTab) // 'home', 'comparator', 'analytics'
   const [isOnline, setIsOnline] = useState(navigator.onLine)
+  const [serverDeviceStatus, setServerDeviceStatus] = useState('GPU') // 'GPU' | 'CPU' | 'Offline'
   const [deferredPrompt, setDeferredPrompt] = useState(null)
   const [showInstallBtn, setShowInstallBtn] = useState(false)
   const [theme, setTheme] = useState('dark')
@@ -169,29 +170,59 @@ function App() {
     setActiveTab('comparator')
   }
 
-  // Listen to network status
+  // Listen to network status and backend GPU/CPU availability
   useEffect(() => {
     const handleOnline = () => setIsOnline(true)
-    const handleOffline = () => setIsOnline(false)
+    const handleOffline = () => {
+      setIsOnline(false)
+      setServerDeviceStatus('Offline')
+    }
     window.addEventListener('online', handleOnline)
     window.addEventListener('offline', handleOffline)
 
     const checkHealth = async () => {
+      // 1. Try Primary GPU Backend (Google Colab Tesla T4)
       try {
-        const res = await fetch('/api/health', {
-          headers: { 'ngrok-skip-browser-warning': 'true' }
+        const controller = new AbortController()
+        const timeoutId = setTimeout(() => controller.abort(), 4000)
+        const resGpu = await fetch('https://irritably-tipper-january.ngrok-free.dev/api/health?ngrok-skip-browser-warning=true', {
+          headers: { 'ngrok-skip-browser-warning': 'true' },
+          signal: controller.signal
         })
-        if (res.ok) {
+        clearTimeout(timeoutId)
+        if (resGpu.ok) {
           setIsOnline(true)
-        } else {
-          setIsOnline(false)
+          setServerDeviceStatus('GPU')
+          return
         }
       } catch (e) {
-        setIsOnline(false)
+        // GPU server offline
       }
+
+      // 2. Try Secondary CPU Backend (Railway CPU)
+      try {
+        const controller = new AbortController()
+        const timeoutId = setTimeout(() => controller.abort(), 4000)
+        const resCpu = await fetch('https://nurturing-creation-production-4414.up.railway.app/api/health', {
+          signal: controller.signal
+        })
+        clearTimeout(timeoutId)
+        if (resCpu.ok) {
+          setIsOnline(true)
+          setServerDeviceStatus('CPU')
+          return
+        }
+      } catch (e) {
+        // CPU server offline
+      }
+
+      // 3. Both backends offline
+      setIsOnline(false)
+      setServerDeviceStatus('Offline')
     }
 
-    const interval = setInterval(checkHealth, 15000)
+    checkHealth()
+    const interval = setInterval(checkHealth, 12000)
     return () => {
       window.removeEventListener('online', handleOnline)
       window.removeEventListener('offline', handleOffline)
@@ -336,14 +367,31 @@ function App() {
               </button>
             )}
 
-            {/* Network Status Badge */}
-            <div className={`flex items-center space-x-1.5 px-2 lg:px-3 py-1.5 rounded-full border text-[11px] font-medium transition-all whitespace-nowrap flex-shrink-0 ${
-              isOnline
-                ? 'bg-umsu-emerald/10 text-umsu-emerald border-umsu-emerald/30'
-                : 'bg-umsu-rose/10 text-umsu-rose border-umsu-rose/30 animate-pulse'
-            }`}>
-              {isOnline ? <Wifi size={12} className="flex-shrink-0" /> : <WifiOff size={12} className="flex-shrink-0" />}
-              <span className="hidden lg:inline">{isOnline ? 'Online' : 'Offline'}</span>
+            {/* Server Device / Network Status Badge */}
+            <div
+              title={
+                serverDeviceStatus === 'GPU'
+                  ? 'Server Backend Terhubung pada NVIDIA Tesla T4 GPU (~7.5 ms)'
+                  : serverDeviceStatus === 'CPU'
+                  ? 'Server Backend Terhubung pada Railway CPU (~2.8 s)'
+                  : 'Server Backend Tidak Terhubung / Offline'
+              }
+              className={`flex items-center space-x-1.5 px-2.5 lg:px-3 py-1.5 rounded-full border text-[11px] font-bold transition-all whitespace-nowrap flex-shrink-0 ${
+                serverDeviceStatus === 'GPU'
+                  ? 'bg-emerald-500/15 text-emerald-400 border-emerald-500/40 shadow-sm shadow-emerald-500/10'
+                  : serverDeviceStatus === 'CPU'
+                  ? 'bg-sky-500/15 text-sky-400 border-sky-500/40 shadow-sm shadow-sky-500/10'
+                  : 'bg-rose-500/15 text-rose-400 border-rose-500/40 animate-pulse'
+              }`}
+            >
+              {serverDeviceStatus === 'GPU' ? (
+                <Zap size={12} className="flex-shrink-0 text-emerald-400" />
+              ) : serverDeviceStatus === 'CPU' ? (
+                <Cpu size={12} className="flex-shrink-0 text-sky-400" />
+              ) : (
+                <WifiOff size={12} className="flex-shrink-0 text-rose-400" />
+              )}
+              <span className="font-mono tracking-wide">{serverDeviceStatus}</span>
             </div>
 
             {/* Theme Toggle Button */}
@@ -376,7 +424,7 @@ function App() {
 
       {/* Main Content Area */}
       <main className="flex-grow max-w-7xl w-full mx-auto px-4 py-6 z-10">
-        {!isOnline && (
+        {serverDeviceStatus === 'Offline' && (
           <motion.div
             initial={{ opacity: 0, y: -10 }}
             animate={{ opacity: 1, y: 0 }}
