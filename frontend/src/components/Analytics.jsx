@@ -222,12 +222,12 @@ function Analytics({ theme, userRole = 'public' }) {
     chi2: 38.4091
   }
 
-  // Explanatory Tooltip Texts for Academic UX
+  // Explanatory Tooltip Texts for Academic UX - Dynamic Templating
   const tooltips = {
-    mcnemar: "Uji McNemar adalah uji statistik berpasangan non-parametrik pada tabel kontingensi 2x2 (N=872). Chi2 = 32.0776, p-value < 0.0001 membuktikan ketimpangan kesalahan Model A (89 salah) vs Model B (27 salah) sangat signifikan.",
-    wilcoxon: "Uji Wilcoxon Signed-Rank adalah uji non-parametrik berpasangan pada 6 random seeds. Nilai statistik W = 21.0, p = 0.01562 (< 0.05) membuktikan keunggulan F1-Score Model B terbukti stabil di seluruh seed.",
-    bootstrap: "Bootstrap Confidence Interval (95%) dihitung dengan 10.000 kali resampling. Rentang [0.0444 - 0.0883] (+4.44% s/d +8.83%) bernilai positif dan tidak melewati 0.0, membuktikan peningkatan F1-Score nyata.",
-    cohen: "Cohen's d mengukur ukuran efek (Effect Size). Nilai d = 14.45 mengindikasikan dampak yang luar biasa kuat (Extremely Large Effect, d >= 2.0) dari metode Fine-Tuning dibanding Feature Extraction."
+    mcnemar: `Uji McNemar adalah uji statistik berpasangan non-parametrik pada tabel kontingensi 2x2 (N=872). Chi2 = ${mcnemarMatrix.chi2?.toFixed(2) || '38.41'}, p-value < 0.0001 membuktikan ketimpangan kesalahan Model A (${mcnemarMatrix.b_correct_a_wrong} salah) vs Model B (${mcnemarMatrix.a_correct_b_wrong} salah) sangat signifikan.`,
+    wilcoxon: `Uji Wilcoxon Signed-Rank adalah uji non-parametrik berpasangan pada 6 random seeds. Nilai statistik W = 21.0, p = ${testResults.wilcoxon_p_value} (< 0.05) membuktikan keunggulan F1-Score Model B terbukti stabil di seluruh seed.`,
+    bootstrap: `Bootstrap Confidence Interval (95%) dihitung dengan 10.000 kali resampling. Rentang [${(testResults.bootstrap_95_ci[0]*100).toFixed(2)}% s/d ${(testResults.bootstrap_95_ci[1]*100).toFixed(2)}%] bernilai positif dan tidak melewati 0.0, membuktikan peningkatan F1-Score nyata.`,
+    cohen: `Cohen's d mengukur ukuran efek (Effect Size). Nilai d = ${testResults.cohens_d.toFixed(2)} mengindikasikan dampak yang luar biasa kuat (${testResults.effect_size_interpretation || 'Extremely Large Effect'}) dari metode Fine-Tuning dibanding Feature Extraction.`
   }
 
   return (
