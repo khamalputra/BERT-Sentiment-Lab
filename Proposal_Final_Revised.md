@@ -286,7 +286,7 @@ Kesenjangan pada Tabel 2.2 menunjukkan pentingnya merancang eksperimen yang meng
 
 Berdasarkan kesenjangan penelitian yang telah diidentifikasi, diperlukan suatu kerangka konseptual yang mampu menggambarkan hubungan antar variabel secara sistematis serta mendukung perancangan eksperimen yang terkontrol dan pengembangan sistem web. Penelitian ini berfokus pada perbandingan dua pendekatan adaptasi model BERT, yaitu _feature extraction_ dan _fine-tuning_ . 
 
-Variabel independen dalam penelitian ini adalah pendekatan adaptasi model, sedangkan variabel dependen meliputi performa klasifikasi ( _accuracy_ , _precision_ , _recall_ , _F1-score_ ), efisiensi komputasi (waktu inferensi dan VRAM GPU), serta unjuk kerja latensi pada aplikasi web. 
+Secara konseptual, manipulasi strategi adaptasi model (variabel independen) dihubungkan dengan pengukuran performa prediktif, efisiensi sumber daya komputasi, serta signifikansi statistik inferensial (variabel dependen). Alur hubungan antar komponen variabel dan integrasi produk web dirangkum dalam bagan kerangka konseptual pada diagram berikut. 
 
 ```text
 +-----------------------------------------------------------------------------------+
@@ -572,9 +572,9 @@ Antarmuka web dirancang dengan tiga halaman utama yang saling terhubung melalui 
 3. **Halaman *Dashboard* Analitik *Benchmark* (*Analytics*) [Akses Terlindungi]**: Menyajikan visualisasi grafik interaktif dari hasil evaluasi *benchmark* statistik komparatif. Halaman ini dilindungi oleh sistem RBAC dan hanya dapat diakses oleh pengguna yang telah terotentikasi (dosen pembimbing, dosen penguji, atau peneliti). Komponen visualisasi pada halaman ini meliputi:
    1. Empat kartu ringkasan statistik utama (delta rerata akurasi, delta rerata *F1-score*, alokasi GPU VRAM, dan rerata latensi inferensi).
    2. Grafik batang sumbu ganda (*dual-axis bar chart*) menggunakan *Recharts* yang menampilkan perbandingan *F1-score* (%), latensi (ms), dan *peak* VRAM (MB) antar model.
-   3. Grafik radar multidimensi (*radar chart*) menggunakan *Recharts* yang menampilkan analisis kesalahan linguistik berdasarkan 5 kategori: tanpa negasi, negasi biner, ironi/sarkasme dan negasi majemuk, *review* panjang (>40 token), dan ambiguitas tinggi.
+   3. Grafik radar multidimensi (*radar chart*) berbasis *Recharts* yang menampilkan breakdown akurasi per-kategori fenomena linguistik (merujuk rumusan pada Sub-bab 3.9.3).
    4. Matriks kontingensi 2×2 Uji *McNemar* yang menampilkan distribusi kesepakatan dan ketidaksepakatan prediksi pada $N=872$ sampel *held-out test set*.
-   5. *Badge* metrik pengujian statistik inferensial (*McNemar p-value*, *Wilcoxon p-value*, bilah interval *Bootstrap* 95% CI, dan *gauge* ukuran efek *Cohen's d*).
+   5. Widget dan *badge* metrik pengujian statistik inferensial (*McNemar p-value*, *Wilcoxon p-value*, bilah visualisasi interval *Bootstrap* 95% CI, dan *gauge meter Cohen's d*).
    6. *Tooltip* penjelasan akademis pada setiap komponen statistik.
 
 ### **3.10.4. Rancangan Sistem Navigasi dan Tema Visual**
@@ -764,9 +764,9 @@ Diagram alur sistem menggambarkan urutan eksekusi logika dan alur data dari sudu
 Alur sistem aplikasi web berlangsung dalam 4 tahapan eksekusi:
 
 1. **Tahap Navigasi**: Pengguna memilih halaman target via *hash-based routing*.
-2. **Tahap Pengujian Inferensi**: Input teks dikirim ke *endpoint* `POST /api/predict`, ditokenisasi oleh `BertTokenizerFast`, lalu diinferensi secara paralel oleh Model A dan Model B.
-3. **Tahap Persistensi Data**: Hasil prediksi, skor kepercayaan, dan latensi secara otomatis dicatat ke dalam tabel `prediction_logs` pada basis data SQLite.
-4. **Tahap Otorisasi Dashboard**: Akses ke *Dashboard* Analitik memicu pemeriksaan token JWT/RBAC di `localStorage`. Jika valid, data statistik dari `GET /api/benchmark-stats` dimuat dan ditampilkan via *Recharts*.
+2. **Tahap Pengujian Inferensi**: Input teks dikirim ke backend API, ditokenisasi oleh `BertTokenizerFast`, lalu diinferensi secara paralel oleh Model A dan Model B (merujuk spesifikasi API pada Tabel 3.5).
+3. **Tahap Persistensi Data**: Hasil prediksi, skor kepercayaan, dan latensi secara otomatis dicatat ke dalam basis data SQLite (`prediction_logs`).
+4. **Tahap Otorisasi Dashboard**: Akses ke *Dashboard* Analitik memicu verifikasi otorisasi RBAC; apabila valid, visualisasi statistik dimuat dari backend dan disajikan secara interaktif.
 
 ### **3.10.11. Diagram Relasi Entitas Basis Data (*Entity Relationship Diagram / ERD*)**
 
