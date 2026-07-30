@@ -54,6 +54,7 @@ function Analytics({ theme, userRole = 'public' }) {
         if (res && res.ok) {
           const data = await res.json()
           setStats(data)
+          setLoading(false)
           return
         }
       } catch (e) {
