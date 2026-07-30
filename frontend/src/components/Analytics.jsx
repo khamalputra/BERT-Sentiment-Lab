@@ -92,6 +92,7 @@ function Analytics({ theme, userRole = 'public' }) {
   const [loading, setLoading] = useState(true)
   const [stats, setStats] = useState(null)
   const [activeTooltip, setActiveTooltip] = useState(null)
+  const [chartTab, setChartTab] = useState('performance') // 'performance' | 'compute'
 
   // Fetch benchmark stats with GPU -> CPU failover
   useEffect(() => {
@@ -181,19 +182,30 @@ function Analytics({ theme, userRole = 'public' }) {
   const deltaF1 = ((model_b.f1_mean - model_a.f1_mean) / model_a.f1_mean * 100).toFixed(2)
   const deltaAcc = ((model_b.accuracy_mean - model_a.accuracy_mean) / model_a.accuracy_mean * 100).toFixed(2)
 
-  // Chart Data: F1 vs Latency vs VRAM Trade-off
-  const tradeOffData = [
+  // Chart Data: Split into 2 Tab Modes for 100% scale precision & beauty
+  const performanceChartData = [
     {
       name: 'Model A (Frozen)',
-      'F1-Score (%)': (model_a.f1_mean * 100).toFixed(2),
-      'VRAM Peak (MB)': model_a.peak_vram_mb,
-      'Latency (ms)': model_a.avg_latency_ms,
+      'F1-Score (%)': Number((model_a.f1_mean * 100).toFixed(2)),
+      'Akurasi (%)': Number((model_a.accuracy_mean * 100).toFixed(2)),
     },
     {
       name: 'Model B (Fine-Tuned)',
-      'F1-Score (%)': (model_b.f1_mean * 100).toFixed(2),
-      'VRAM Peak (MB)': model_b.peak_vram_mb,
-      'Latency (ms)': model_b.avg_latency_ms,
+      'F1-Score (%)': Number((model_b.f1_mean * 100).toFixed(2)),
+      'Akurasi (%)': Number((model_b.accuracy_mean * 100).toFixed(2)),
+    }
+  ]
+
+  const computeChartData = [
+    {
+      name: 'Model A (Frozen)',
+      'Latensi (ms)': Number(model_a.avg_latency_ms.toFixed(2)),
+      'VRAM Peak (MB)': Number(model_a.peak_vram_mb.toFixed(2)),
+    },
+    {
+      name: 'Model B (Fine-Tuned)',
+      'Latensi (ms)': Number(model_b.avg_latency_ms.toFixed(2)),
+      'VRAM Peak (MB)': Number(model_b.peak_vram_mb.toFixed(2)),
     }
   ]
 
@@ -297,29 +309,73 @@ function Analytics({ theme, userRole = 'public' }) {
 
       {/* SECTION 2: Charts (Trade-off & Linguistic Error Analysis) */}
       <section className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-        {/* Chart A: Trade-Off Analysis */}
+        {/* Chart A: Trade-Off Analysis with Tab Switcher */}
         <div className="glass-card p-6 flex flex-col justify-between">
           <div>
-            <h3 className="text-sm font-bold text-slate-200 mb-1 flex items-center space-x-2">
-              <Activity className="text-umsu-gold" size={16} />
-              <span>Grafik Komparasi Biaya Komputasi & Performa</span>
-            </h3>
-            <p className="text-[11px] text-slate-400 mb-6">Perbandingan performa prediktif <em>F1-score</em> terhadap Latensi & puncak VRAM GPU.</p>
+            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 mb-3">
+              <div>
+                <h3 className="text-sm font-bold text-slate-200 mb-0.5 flex items-center space-x-2">
+                  <Activity className="text-umsu-gold" size={16} />
+                  <span>Grafik Komparasi Biaya Komputasi & Performa</span>
+                </h3>
+                <p className="text-[11px] text-slate-400">
+                  {chartTab === 'performance'
+                    ? 'Perbandingan performa prediktif F1-Score (%) & Akurasi (%).'
+                    : 'Perbandingan latensi inferensi (ms) & puncak alokasi VRAM GPU (MB).'
+                  }
+                </p>
+              </div>
+
+              {/* Tab Switcher Pills */}
+              <div className="flex items-center space-x-1 p-1 bg-slate-900/90 border border-slate-800 rounded-xl flex-shrink-0 self-start sm:self-auto shadow-inner">
+                <button
+                  onClick={() => setChartTab('performance')}
+                  className={`px-3 py-1 rounded-lg text-[10px] font-bold transition-all cursor-pointer ${
+                    chartTab === 'performance'
+                      ? 'bg-blue-600 text-white shadow-md'
+                      : 'text-slate-400 hover:text-slate-200'
+                  }`}
+                >
+                  Performa (%)
+                </button>
+                <button
+                  onClick={() => setChartTab('compute')}
+                  className={`px-3 py-1 rounded-lg text-[10px] font-bold transition-all cursor-pointer ${
+                    chartTab === 'compute'
+                      ? 'bg-amber-500 text-slate-950 font-black shadow-md'
+                      : 'text-slate-400 hover:text-slate-200'
+                  }`}
+                >
+                  Komputasi (ms/MB)
+                </button>
+              </div>
+            </div>
           </div>
 
           <div className="h-[250px] w-full mt-2 font-mono text-[10px]">
             <ResponsiveContainer width="100%" height="100%">
-              <BarChart data={tradeOffData} margin={{ top: 10, right: 10, left: -20, bottom: 36 }}>
-                <CartesianGrid strokeDasharray="3 3" stroke={gridColor} />
-                <XAxis dataKey="name" stroke={textColor} tick={<XAxisTwoLineTick fill={textColor} />} interval={0} />
-                <YAxis yAxisId="left" orientation="left" stroke="#3b82f6" domain={[0, 100]} label={{ value: 'F1 / Latency', angle: -90, position: 'insideLeft', offset: 10, fill: '#3b82f6' }} />
-                <YAxis yAxisId="right" orientation="right" stroke="#f59e0b" domain={[0, 1500]} label={{ value: 'Peak VRAM (MB)', angle: 90, position: 'insideRight', offset: 10, fill: '#f59e0b' }} />
-                <RechartsTooltip contentStyle={{ backgroundColor: tooltipBg, borderColor: tooltipBorder, borderRadius: '12px', color: isLight ? '#0f172a' : '#f8fafc' }} />
-                <Legend wrapperStyle={{ paddingTop: 10 }} />
-                <Bar yAxisId="left" dataKey="F1-Score (%)" fill="#3b82f6" radius={[4, 4, 0, 0]} />
-                <Bar yAxisId="left" dataKey="Latency (ms)" fill="#10b981" radius={[4, 4, 0, 0]} />
-                <Bar yAxisId="right" dataKey="VRAM Peak (MB)" fill="#f59e0b" radius={[4, 4, 0, 0]} />
-              </BarChart>
+              {chartTab === 'performance' ? (
+                <BarChart data={performanceChartData} margin={{ top: 15, right: 10, left: -15, bottom: 36 }}>
+                  <CartesianGrid strokeDasharray="3 3" stroke={gridColor} />
+                  <XAxis dataKey="name" stroke={textColor} tick={<XAxisTwoLineTick fill={textColor} />} interval={0} />
+                  <YAxis yAxisId="left" orientation="left" stroke="#3b82f6" domain={[70, 100]} label={{ value: 'Persentase (%)', angle: -90, position: 'insideLeft', offset: 10, fill: '#3b82f6' }} />
+                  <RechartsTooltip contentStyle={{ backgroundColor: tooltipBg, borderColor: tooltipBorder, borderRadius: '12px', color: isLight ? '#0f172a' : '#f8fafc' }} />
+                  <Legend wrapperStyle={{ paddingTop: 10 }} />
+                  <Bar yAxisId="left" dataKey="F1-Score (%)" fill="#3b82f6" radius={[6, 6, 0, 0]} />
+                  <Bar yAxisId="left" dataKey="Akurasi (%)" fill="#10b981" radius={[6, 6, 0, 0]} />
+                </BarChart>
+              ) : (
+                <BarChart data={computeChartData} margin={{ top: 15, right: 30, left: -15, bottom: 36 }}>
+                  <CartesianGrid strokeDasharray="3 3" stroke={gridColor} />
+                  <XAxis dataKey="name" stroke={textColor} tick={<XAxisTwoLineTick fill={textColor} />} interval={0} />
+                  <YAxis yAxisId="left" orientation="left" stroke="#14b8a6" domain={[0, 12]} label={{ value: 'Latensi (ms)', angle: -90, position: 'insideLeft', offset: 10, fill: '#14b8a6' }} />
+                  <YAxis yAxisId="right" orientation="right" stroke="#f59e0b" domain={[0, 3000]} label={{ value: 'Peak VRAM (MB)', angle: 90, position: 'insideRight', offset: 15, fill: '#f59e0b' }} />
+                  <RechartsTooltip contentStyle={{ backgroundColor: tooltipBg, borderColor: tooltipBorder, borderRadius: '12px', color: isLight ? '#0f172a' : '#f8fafc' }} />
+                  <Legend wrapperStyle={{ paddingTop: 10 }} />
+                  <Bar yAxisId="left" dataKey="Latensi (ms)" fill="#14b8a6" radius={[6, 6, 0, 0]} />
+                  <Bar yAxisId="right" dataKey="VRAM Peak (MB)" fill="#f59e0b" radius={[6, 6, 0, 0]} />
+                </BarChart>
+              )}
             </ResponsiveContainer>
           </div>
         </div>
