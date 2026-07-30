@@ -27,18 +27,25 @@ def init_db():
         if db.query(BenchmarkResult).count() > 0:
             stat = db.query(StatisticalTest).first()
             if stat:
-                stat.wilcoxon_p_value = 0.01562
-                stat.cohens_d = 14.45
+                stat.wilcoxon_p_value = 0.015625
+                stat.cohens_d = 12.72
+                stat.bootstrap_ci_lower = 0.0501
+                stat.bootstrap_ci_upper = 0.0927
+                stat.mcnemar_both_correct = 717
+                stat.mcnemar_a_correct_b_wrong = 22
+                stat.mcnemar_b_correct_a_wrong = 88
+                stat.mcnemar_both_wrong = 45
+                stat.mcnemar_chi2 = 38.4091
                 db.commit()
             
             # Seed ErrorAnalysisLog if empty
             if db.query(ErrorAnalysisLog).count() == 0:
                 error_logs = [
-                    ErrorAnalysisLog(category_name="Tanpa Negasi", model_a_accuracy=86.0, model_b_accuracy=94.0, sample_count=520),
-                    ErrorAnalysisLog(category_name="Negasi Biner", model_a_accuracy=42.0, model_b_accuracy=91.0, sample_count=180),
-                    ErrorAnalysisLog(category_name="Ironi / Sarkasme", model_a_accuracy=35.0, model_b_accuracy=82.0, sample_count=95),
-                    ErrorAnalysisLog(category_name="Review Panjang", model_a_accuracy=72.0, model_b_accuracy=88.0, sample_count=140),
-                    ErrorAnalysisLog(category_name="Ambiguitas Tinggi", model_a_accuracy=51.0, model_b_accuracy=85.0, sample_count=65)
+                    ErrorAnalysisLog(category_name="Tanpa Negasi", model_a_accuracy=86.5, model_b_accuracy=93.9, sample_count=688),
+                    ErrorAnalysisLog(category_name="Negasi Biner", model_a_accuracy=78.3, model_b_accuracy=86.4, sample_count=184),
+                    ErrorAnalysisLog(category_name="Ironi / Sarkasme", model_a_accuracy=79.7, model_b_accuracy=91.2, sample_count=148),
+                    ErrorAnalysisLog(category_name="Review Panjang", model_a_accuracy=83.4, model_b_accuracy=91.8, sample_count=380),
+                    ErrorAnalysisLog(category_name="Ambiguitas Tinggi", model_a_accuracy=77.1, model_b_accuracy=89.6, sample_count=48)
                 ]
                 db.add_all(error_logs)
                 db.commit()
