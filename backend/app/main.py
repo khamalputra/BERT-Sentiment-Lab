@@ -54,7 +54,26 @@ def read_root():
         "status": "online",
         "message": "BERT Sentiment Lab API Backend running on Google Colab Tesla T4 GPU",
         "docs": "/docs",
-        "health": "/api/health"
+        "health": "/api/health",
+        "debug": "/api/debug-device"
+    }
+
+@app.get("/api/debug-device")
+def debug_device():
+    import torch
+    if model_engine is None or not model_engine.has_real_models:
+        return {"status": "error", "message": "Model engine not loaded"}
+    
+    model_a_device = str(next(model_engine.model_a.parameters()).device)
+    model_b_device = str(next(model_engine.model_b.parameters()).device)
+    
+    return {
+        "status": "success",
+        "cuda_available": torch.cuda.is_available(),
+        "cuda_device_name": torch.cuda.get_device_name(0) if torch.cuda.is_available() else "None",
+        "engine_device_setting": str(model_engine.device),
+        "model_a_actual_device": model_a_device,
+        "model_b_actual_device": model_b_device,
     }
 
 # Comprehensive HTTP Security Headers Middleware
