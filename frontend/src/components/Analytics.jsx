@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react'
 import { motion } from 'framer-motion'
 import { Info, AlertCircle, HelpCircle, Shield, Activity, HardDrive, Cpu, Compass } from 'lucide-react'
 import {
-  BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip as RechartsTooltip, Legend, ResponsiveContainer, LabelList,
+  BarChart, Bar, AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip as RechartsTooltip, Legend, ResponsiveContainer, LabelList,
   RadarChart, PolarGrid, PolarAngleAxis, PolarRadiusAxis, Radar
 } from 'recharts'
 import { GPU_BACKEND_URL, CPU_BACKEND_URL } from '../config'
@@ -386,15 +386,21 @@ function Analytics({ theme, userRole = 'public' }) {
                   <Bar dataKey="Akurasi (%)" fill="#10b981" radius={[6, 6, 0, 0]} />
                 </BarChart>
               ) : chartTab === 'latency' ? (
-                <BarChart data={latencyChartData} margin={{ top: 25, right: 10, left: -15, bottom: 36 }}>
+                <AreaChart data={latencyChartData} margin={{ top: 30, right: 30, left: -15, bottom: 36 }}>
+                  <defs>
+                    <linearGradient id="latencyGrad" x1="0" y1="0" x2="0" y2="1">
+                      <stop offset="5%" stopColor="#14b8a6" stopOpacity={0.4} />
+                      <stop offset="95%" stopColor="#14b8a6" stopOpacity={0.0} />
+                    </linearGradient>
+                  </defs>
                   <CartesianGrid strokeDasharray="3 3" stroke={gridColor} />
                   <XAxis dataKey="name" stroke={textColor} tick={<XAxisTwoLineTick fill={textColor} />} interval={0} />
                   <YAxis orientation="left" stroke="#14b8a6" domain={[0, 12]} label={{ value: 'Latensi (ms)', angle: -90, position: 'insideLeft', offset: 10, fill: '#14b8a6' }} />
                   <RechartsTooltip contentStyle={{ backgroundColor: tooltipBg, borderColor: tooltipBorder, borderRadius: '12px', color: isLight ? '#0f172a' : '#f8fafc' }} />
-                  <Bar dataKey="Latensi (ms)" fill="#14b8a6" radius={[6, 6, 0, 0]} barSize={40}>
+                  <Area type="monotone" dataKey="Latensi (ms)" stroke="#14b8a6" strokeWidth={3} fillOpacity={1} fill="url(#latencyGrad)" dot={{ r: 6, fill: '#14b8a6', stroke: '#0f172a', strokeWidth: 2 }}>
                     <LabelList dataKey="Latensi (ms)" position="top" fill="#14b8a6" fontSize={11} fontWeight="bold" formatter={(val) => `${val} ms`} />
-                  </Bar>
-                </BarChart>
+                  </Area>
+                </AreaChart>
               ) : (
                 <BarChart data={vramChartData} margin={{ top: 25, right: 10, left: -5, bottom: 36 }}>
                   <CartesianGrid strokeDasharray="3 3" stroke={gridColor} />
