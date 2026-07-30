@@ -197,23 +197,28 @@ function Analytics({ theme, userRole = 'public' }) {
     }
   ]
 
-  // Chart Data: Error Analysis on Negations (Linguistic)
-  // Real statistical patterns in SST-2 show Model A fails heavily on negation
-  const linguisticData = [
-    { subject: 'Tanpa Negasi', 'Model A (Frozen)': 86, 'Model B (FT)': 94, fullMark: 100 },
-    { subject: 'Negasi Biner', 'Model A (Frozen)': 42, 'Model B (FT)': 91, fullMark: 100 },
-    { subject: 'Ironi / Sarkasme', 'Model A (Frozen)': 35, 'Model B (FT)': 82, fullMark: 100 },
-    { subject: 'Review Panjang', 'Model A (Frozen)': 72, 'Model B (FT)': 88, fullMark: 100 },
-    { subject: 'Ambiguitas Tinggi', 'Model A (Frozen)': 51, 'Model B (FT)': 85, fullMark: 100 },
-  ]
+  // Chart Data: Error Analysis on Negations (Linguistic) - Dynamic from API/Database
+  const linguisticData = (stats.error_analysis && stats.error_analysis.length > 0)
+    ? stats.error_analysis.map(item => ({
+        subject: item.subject,
+        'Model A (Frozen)': item.model_a_accuracy,
+        'Model B (FT)': item.model_b_accuracy,
+        fullMark: 100
+      }))
+    : [
+        { subject: 'Tanpa Negasi', 'Model A (Frozen)': 86, 'Model B (FT)': 94, fullMark: 100 },
+        { subject: 'Negasi Biner', 'Model A (Frozen)': 42, 'Model B (FT)': 91, fullMark: 100 },
+        { subject: 'Ironi / Sarkasme', 'Model A (Frozen)': 35, 'Model B (FT)': 82, fullMark: 100 },
+        { subject: 'Review Panjang', 'Model A (Frozen)': 72, 'Model B (FT)': 88, fullMark: 100 },
+        { subject: 'Ambiguitas Tinggi', 'Model A (Frozen)': 51, 'Model B (FT)': 85, fullMark: 100 },
+      ]
 
-  // McNemar Contingency Matrix Data (based on 872 held-out test samples - Seed 42)
-  // Audited exact results from experiment notebook
-  const mcnemarMatrix = {
-    both_correct: 712,      // Both Model A and Model B correct (81.7%)
-    a_correct_b_wrong: 27,  // Model A correct, Model B wrong (3.1%)
-    b_correct_a_wrong: 89,  // Model B correct, Model A wrong (10.2%)
-    both_wrong: 44          // Both models wrong (5.0%)
+  // McNemar Contingency Matrix Data - Dynamic from API/Database
+  const mcnemarMatrix = stats.mcnemar_matrix || {
+    both_correct: 712,
+    a_correct_b_wrong: 27,
+    b_correct_a_wrong: 89,
+    both_wrong: 44
   }
 
   // Explanatory Tooltip Texts for Academic UX

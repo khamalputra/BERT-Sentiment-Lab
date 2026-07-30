@@ -272,6 +272,44 @@ function App() {
     }
   }, [])
 
+  const [benchmarkStats, setBenchmarkStats] = useState(null)
+
+  // Fetch top-level benchmark stats for Home & global sync
+  useEffect(() => {
+    const fetchGlobalStats = async () => {
+      const gpuStatsUrl = `${GPU_BACKEND_URL}/api/benchmark-stats?ngrok-skip-browser-warning=true`
+      const cpuStatsUrl = `${CPU_BACKEND_URL}/api/benchmark-stats`
+
+      try {
+        const controller = new AbortController()
+        const timeoutId = setTimeout(() => controller.abort(), 5000)
+        const res = await fetch(gpuStatsUrl, {
+          headers: { 'ngrok-skip-browser-warning': 'true' },
+          signal: controller.signal
+        })
+        clearTimeout(timeoutId)
+        if (res.ok) {
+          const data = await res.json()
+          setBenchmarkStats(data)
+          return
+        }
+      } catch (e) {}
+
+      try {
+        const controller = new AbortController()
+        const timeoutId = setTimeout(() => controller.abort(), 5000)
+        const res = await fetch(cpuStatsUrl, { signal: controller.signal })
+        clearTimeout(timeoutId)
+        if (res.ok) {
+          const data = await res.json()
+          setBenchmarkStats(data)
+        }
+      } catch (e) {}
+    }
+
+    fetchGlobalStats()
+  }, [])
+
   const [showInstallModal, setShowInstallModal] = useState(false)
 
   // Listen to PWA install prompt
@@ -490,7 +528,7 @@ function App() {
                 exit={{ opacity: 0, y: -15 }}
                 transition={{ duration: 0.2 }}
               >
-                <Home theme={theme} onNavigate={(tabId) => handleTabChange(tabId)} />
+                <Home theme={theme} benchmarkStats={benchmarkStats} onNavigate={(tabId) => handleTabChange(tabId)} />
               </motion.div>
             ) : activeTab === 'comparator' ? (
               <motion.div

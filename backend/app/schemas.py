@@ -59,11 +59,29 @@ class StatisticalTestDetails(BaseModel):
     cohens_d: float
     effect_size_interpretation: str
 
+# Error analysis per category for Radar Chart
+class ErrorAnalysisCategory(BaseModel):
+    subject: str
+    model_a_accuracy: float
+    model_b_accuracy: float
+    sample_count: int
+
+# McNemar contingency matrix 2x2 details
+class McNemarMatrixDetails(BaseModel):
+    both_correct: int
+    a_correct_b_wrong: int
+    b_correct_a_wrong: int
+    both_wrong: int
+    chi2: float
+
 # Final benchmark response payload
 class BenchmarkStatsResponse(BaseModel):
     status: str
     summary: Dict[str, ModelSummaryStats]
     statistical_tests: StatisticalTestDetails
+    error_analysis: List[ErrorAnalysisCategory]
+    mcnemar_matrix: McNemarMatrixDetails
+
 
 # Authentication schemas for Dosen & Peneliti RBAC
 class LoginRequest(BaseModel):

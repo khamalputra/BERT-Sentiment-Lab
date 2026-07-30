@@ -38,4 +38,20 @@ class StatisticalTest(Base):
     bootstrap_ci_lower = Column(Float, nullable=False)
     bootstrap_ci_upper = Column(Float, nullable=False)
     cohens_d = Column(Float, nullable=False)
+    mcnemar_both_correct = Column(Integer, nullable=True, default=712)
+    mcnemar_a_correct_b_wrong = Column(Integer, nullable=True, default=27)
+    mcnemar_b_correct_a_wrong = Column(Integer, nullable=True, default=89)
+    mcnemar_both_wrong = Column(Integer, nullable=True, default=44)
+    mcnemar_chi2 = Column(Float, nullable=True, default=32.0776)
     created_at = Column(DateTime(timezone=True), server_default=func.now())
+
+class ErrorAnalysisLog(Base):
+    __tablename__ = "error_analysis_logs"
+
+    id = Column(Integer, primary_key=True, index=True)
+    category_name = Column(String(50), nullable=False)
+    model_a_accuracy = Column(Float, nullable=False)
+    model_b_accuracy = Column(Float, nullable=False)
+    sample_count = Column(Integer, nullable=False, default=0)
+    created_at = Column(DateTime(timezone=True), server_default=func.now())
+

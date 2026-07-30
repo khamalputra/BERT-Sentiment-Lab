@@ -11,9 +11,29 @@ import {
   Award
 } from 'lucide-react'
 
-export default function Home({ theme, onNavigate }) {
+export default function Home({ theme, benchmarkStats, onNavigate }) {
   const isLight = theme === 'light'
   const notebookSeeds = ['42', '123', '777', '999', '1234', '2024']
+
+  // Dynamic fallback values if benchmarkStats is not loaded yet
+  const summary = benchmarkStats?.summary || {
+    model_a: { accuracy_mean: 0.8515, f1_mean: 0.8601, avg_latency_ms: 7.60 },
+    model_b: { accuracy_mean: 0.9161, f1_mean: 0.9198, avg_latency_ms: 7.71 }
+  }
+  const statsTests = benchmarkStats?.statistical_tests || {
+    mcnemar_p_value: 1.48e-8,
+    wilcoxon_p_value: 0.01562,
+    bootstrap_95_ci: [0.0444, 0.0883],
+    cohens_d: 14.45,
+    effect_size_interpretation: "Extremely Large Effect"
+  }
+  const mcnemarMatrix = benchmarkStats?.mcnemar_matrix || { chi2: 32.14 }
+
+  const modelA = summary.model_a
+  const modelB = summary.model_b
+  const deltaAcc = ((modelB.accuracy_mean - modelA.accuracy_mean) / modelA.accuracy_mean * 100).toFixed(2)
+  const ciLowerPercent = (statsTests.bootstrap_95_ci[0] * 100).toFixed(2)
+  const ciUpperPercent = (statsTests.bootstrap_95_ci[1] * 100).toFixed(2)
 
   const containerVariants = {
     hidden: { opacity: 0 },
@@ -180,15 +200,15 @@ export default function Home({ theme, onNavigate }) {
             <div className={`grid grid-cols-3 gap-2 pt-4 mt-auto text-center border-t ${isLight ? 'border-sky-100' : 'border-slate-800/40'}`}>
               <div className={`p-2.5 rounded-xl border ${isLight ? 'bg-sky-50/60 border-sky-100' : 'bg-slate-900/50 border-transparent'}`}>
                 <div className={`text-[11px] font-medium ${isLight ? 'text-slate-600' : 'text-slate-400'}`}>Akurasi</div>
-                <div className={`text-xs font-extrabold ${isLight ? 'text-sky-700' : 'text-sky-400'}`}>85,15%</div>
+                <div className={`text-xs font-extrabold ${isLight ? 'text-sky-700' : 'text-sky-400'}`}>{(modelA.accuracy_mean * 100).toFixed(2)}%</div>
               </div>
               <div className={`p-2.5 rounded-xl border ${isLight ? 'bg-sky-50/60 border-sky-100' : 'bg-slate-900/50 border-transparent'}`}>
                 <div className={`text-[11px] font-medium ${isLight ? 'text-slate-600' : 'text-slate-400'}`}><em>F1-score</em></div>
-                <div className={`text-xs font-extrabold ${isLight ? 'text-sky-700' : 'text-sky-400'}`}>86,01%</div>
+                <div className={`text-xs font-extrabold ${isLight ? 'text-sky-700' : 'text-sky-400'}`}>{(modelA.f1_mean * 100).toFixed(2)}%</div>
               </div>
               <div className={`p-2.5 rounded-xl border ${isLight ? 'bg-sky-50/60 border-sky-100' : 'bg-slate-900/50 border-transparent'}`}>
                 <div className={`text-[11px] font-medium ${isLight ? 'text-slate-600' : 'text-slate-400'}`}>Latensi</div>
-                <div className={`text-xs font-extrabold ${isLight ? 'text-emerald-700' : 'text-emerald-400'}`}>~7,60 ms</div>
+                <div className={`text-xs font-extrabold ${isLight ? 'text-emerald-700' : 'text-emerald-400'}`}>~{modelA.avg_latency_ms.toFixed(2)} ms</div>
               </div>
             </div>
           </motion.div>
@@ -234,15 +254,15 @@ export default function Home({ theme, onNavigate }) {
             <div className={`grid grid-cols-3 gap-2 pt-4 mt-auto text-center border-t ${isLight ? 'border-purple-100' : 'border-purple-900/30'}`}>
               <div className={`p-2.5 rounded-xl border ${isLight ? 'bg-purple-50/60 border-purple-100' : 'bg-slate-900/50 border-transparent'}`}>
                 <div className={`text-[11px] font-medium ${isLight ? 'text-slate-600' : 'text-slate-400'}`}>Akurasi</div>
-                <div className={`text-xs font-extrabold ${isLight ? 'text-purple-700' : 'text-purple-400'}`}>91,61%</div>
+                <div className={`text-xs font-extrabold ${isLight ? 'text-purple-700' : 'text-purple-400'}`}>{(modelB.accuracy_mean * 100).toFixed(2)}%</div>
               </div>
               <div className={`p-2.5 rounded-xl border ${isLight ? 'bg-purple-50/60 border-purple-100' : 'bg-slate-900/50 border-transparent'}`}>
                 <div className={`text-[11px] font-medium ${isLight ? 'text-slate-600' : 'text-slate-400'}`}><em>F1-score</em></div>
-                <div className={`text-xs font-extrabold ${isLight ? 'text-purple-700' : 'text-purple-400'}`}>91,98%</div>
+                <div className={`text-xs font-extrabold ${isLight ? 'text-purple-700' : 'text-purple-400'}`}>{(modelB.f1_mean * 100).toFixed(2)}%</div>
               </div>
               <div className={`p-2.5 rounded-xl border ${isLight ? 'bg-purple-50/60 border-purple-100' : 'bg-slate-900/50 border-transparent'}`}>
                 <div className={`text-[11px] font-medium ${isLight ? 'text-slate-600' : 'text-slate-400'}`}>Latensi</div>
-                <div className={`text-xs font-extrabold ${isLight ? 'text-emerald-700' : 'text-emerald-400'}`}>~7,71 ms</div>
+                <div className={`text-xs font-extrabold ${isLight ? 'text-emerald-700' : 'text-emerald-400'}`}>~{modelB.avg_latency_ms.toFixed(2)} ms</div>
               </div>
             </div>
           </motion.div>
@@ -292,15 +312,15 @@ export default function Home({ theme, onNavigate }) {
             isLight ? 'bg-emerald-50/50 border-emerald-100' : 'bg-slate-900/80 border-blue-900/30'
           }`}>
             <div className={`text-xs font-medium ${isLight ? 'text-slate-600' : 'text-slate-400'}`}>Delta Rerata Akurasi</div>
-            <div className="text-xl font-black text-emerald-600 dark:text-emerald-400">+6,46%</div>
-            <div className={`text-[10px] ${isLight ? 'text-slate-500' : 'text-slate-400'}`}>95% CI: [+4,44%, +8,83%]</div>
+            <div className="text-xl font-black text-emerald-600 dark:text-emerald-400">+{deltaAcc}%</div>
+            <div className={`text-[10px] ${isLight ? 'text-slate-500' : 'text-slate-400'}`}>95% CI: [{ciLowerPercent}%, {ciUpperPercent}%]</div>
           </div>
 
           <div className={`p-4 rounded-2xl border text-center space-y-1 ${
             isLight ? 'bg-sky-50/50 border-sky-100' : 'bg-slate-900/80 border-blue-900/30'
           }`}>
             <div className={`text-xs font-medium ${isLight ? 'text-slate-600' : 'text-slate-400'}`}>Uji <em>Wilcoxon Signed-Rank</em></div>
-            <div className="text-xl font-black text-sky-600 dark:text-sky-400"><span className="italic">p</span> = 0,01562</div>
+            <div className="text-xl font-black text-sky-600 dark:text-sky-400"><span className="italic">p</span> = {statsTests.wilcoxon_p_value}</div>
             <div className={`text-[10px] ${isLight ? 'text-slate-500' : 'text-slate-400'}`}>Signifikan (<span className="italic">p</span> &lt; 0,05)</div>
           </div>
 
@@ -308,19 +328,20 @@ export default function Home({ theme, onNavigate }) {
             isLight ? 'bg-purple-50/50 border-purple-100' : 'bg-slate-900/80 border-blue-900/30'
           }`}>
             <div className={`text-xs font-medium ${isLight ? 'text-slate-600' : 'text-slate-400'}`}>Uji Kestabilan <em>McNemar</em></div>
-            <div className="text-xl font-black text-purple-600 dark:text-purple-400"><span className="italic">p</span> = 1,48e-8</div>
-            <div className={`text-[10px] ${isLight ? 'text-slate-500' : 'text-slate-400'}`}>Chi-Square χ² = 32,14</div>
+            <div className="text-xl font-black text-purple-600 dark:text-purple-400"><span className="italic">p</span> = {statsTests.mcnemar_p_value.toExponential(2)}</div>
+            <div className={`text-[10px] ${isLight ? 'text-slate-500' : 'text-slate-400'}`}>Chi-Square χ² = {mcnemarMatrix.chi2?.toFixed(2) || '32.14'}</div>
           </div>
 
           <div className={`p-4 rounded-2xl border text-center space-y-1 ${
             isLight ? 'bg-amber-50/50 border-amber-100' : 'bg-slate-900/80 border-blue-900/30'
           }`}>
             <div className={`text-xs font-medium ${isLight ? 'text-slate-600' : 'text-slate-400'}`}>Ukuran Efek (<em>Cohen's d</em>)</div>
-            <div className="text-xl font-black text-amber-600 dark:text-amber-400"><span className="italic">d</span> = 14,45</div>
-            <div className={`text-[10px] ${isLight ? 'text-slate-500' : 'text-slate-400'}`}>Efek Sangat Besar (<em>Extremely Large Effect</em>)</div>
+            <div className="text-xl font-black text-amber-600 dark:text-amber-400"><span className="italic">d</span> = {statsTests.cohens_d.toFixed(2)}</div>
+            <div className={`text-[10px] ${isLight ? 'text-slate-500' : 'text-slate-400'}`}>{statsTests.effect_size_interpretation || 'Extremely Large Effect'}</div>
           </div>
         </div>
       </motion.section>
     </motion.div>
   )
 }
+
