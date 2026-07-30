@@ -77,19 +77,27 @@ class ModelEngine:
             _ = self.model_b(input_ids=input_ids, attention_mask=attention_mask)
 
         # Model A Inference (Feature Extraction)
+        if self.device.type == "cuda":
+            torch.cuda.synchronize()
         start_a = time.time()
         with torch.no_grad():
             logits_a = self.model_a(input_ids=input_ids, attention_mask=attention_mask)
             probs_a = torch.softmax(logits_a, dim=1)[0].cpu().numpy()
             pred_class_a = int(np.argmax(probs_a))
+        if self.device.type == "cuda":
+            torch.cuda.synchronize()
         latency_a = round((time.time() - start_a) * 1000, 2)
         
         # Model B Inference (End-to-End Fine-Tuning)
+        if self.device.type == "cuda":
+            torch.cuda.synchronize()
         start_b = time.time()
         with torch.no_grad():
             outputs_b = self.model_b(input_ids=input_ids, attention_mask=attention_mask)
             probs_b = torch.softmax(outputs_b.logits, dim=1)[0].cpu().numpy()
             pred_class_b = int(np.argmax(probs_b))
+        if self.device.type == "cuda":
+            torch.cuda.synchronize()
         latency_b = round((time.time() - start_b) * 1000, 2)
         
         label_map = {0: "Negative", 1: "Positive"}
