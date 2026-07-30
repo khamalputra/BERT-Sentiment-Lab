@@ -314,29 +314,29 @@ function App() {
       <div className="absolute top-1/2 left-0 w-[300px] h-[300px] bg-umsu-royal/5 rounded-full blur-[80px] pointer-events-none" />
 
       {/* Header */}
-      <header className={`sticky top-0 z-40 backdrop-blur-lg px-4 py-3 sm:py-4 transition-all duration-300 ${
+      <header className={`sticky top-0 z-40 backdrop-blur-xl px-4 py-2 sm:py-2.5 transition-all duration-300 ${
         theme === 'light'
-          ? 'bg-white/90 border-b border-slate-200/90 shadow-sm'
-          : 'bg-[#040814]/80 border-b border-blue-900/30'
+          ? 'bg-white/95 border-b border-slate-200/90 shadow-sm'
+          : 'bg-[#040814]/90 border-b border-blue-900/30 shadow-md shadow-black/20'
       }`}>
-        <div className="max-w-7xl mx-auto flex items-center justify-between">
+        <div className="max-w-7xl mx-auto flex items-center justify-between gap-2 sm:gap-4">
           {/* Logo & Identity */}
-          <div className="flex items-center space-x-2 sm:space-x-3 flex-shrink-0">
-            <div className="w-16 h-16 sm:w-20 sm:h-20 flex items-center justify-center flex-shrink-0">
-              <img src="/icons/icon-192x192.svg?v=6.0" alt="Logo UMSU NLP" className="w-full h-full object-contain drop-shadow-xl" />
+          <div className="flex items-center space-x-2.5 sm:space-x-3 flex-shrink-0">
+            <div className="w-9 h-9 sm:w-10 sm:h-10 flex items-center justify-center flex-shrink-0">
+              <img src="/icons/icon-192x192.svg?v=6.0" alt="Logo UMSU NLP" className="w-full h-full object-contain drop-shadow-md" />
             </div>
             <div>
               <div className="flex items-center space-x-1.5 sm:space-x-2">
-                <h1 className={`font-bold text-sm sm:text-base md:text-lg leading-none whitespace-nowrap ${
+                <h1 className={`font-extrabold text-sm sm:text-base leading-none tracking-tight whitespace-nowrap ${
                   theme === 'light' ? 'text-slate-900' : 'text-slate-100'
                 }`}>
                   BERT Sentiment Lab
                 </h1>
-                <span className="hidden sm:inline-block bg-umsu-royal/15 text-umsu-royal text-[10px] font-bold px-2 py-0.5 rounded-full border border-umsu-royal/30 whitespace-nowrap">
+                <span className="hidden sm:inline-block bg-umsu-royal/15 text-umsu-royal text-[9px] font-bold px-1.5 py-0.5 rounded-md border border-umsu-royal/30 whitespace-nowrap">
                   FIKTI UMSU
                 </span>
               </div>
-              <p className={`text-[11px] mt-1 hidden xl:block whitespace-nowrap ${
+              <p className={`text-[10px] sm:text-[11px] mt-0.5 hidden xl:block whitespace-nowrap leading-none ${
                 theme === 'light' ? 'text-slate-500' : 'text-slate-400'
               }`}>
                 Penerapan Fine-Tuning Model BERT - Syafiq Hasan (NPM: 2209010182)
@@ -345,9 +345,9 @@ function App() {
           </div>
 
           {/* Desktop Nav & User Role Controls */}
-          <div className="flex items-center space-x-1.5 sm:space-x-2.5 flex-shrink-0">
+          <div className="flex items-center space-x-1.5 sm:space-x-2 flex-shrink-0">
             {/* Desktop Navigation */}
-            <nav className={`hidden md:flex space-x-1 p-1 rounded-xl border transition-colors ${
+            <nav className={`hidden md:flex items-center space-x-1 p-1 rounded-xl border transition-colors ${
               theme === 'light'
                 ? 'bg-slate-100/90 border-slate-200'
                 : 'bg-slate-900/60 border-umsu-border'
@@ -361,18 +361,18 @@ function App() {
                   <button
                     key={item.id}
                     onClick={() => handleTabChange(item.id)}
-                    className={`flex items-center space-x-2 px-3 lg:px-4 py-2 rounded-lg text-xs font-semibold transition-all relative whitespace-nowrap ${
+                    className={`flex items-center space-x-1.5 px-3 py-1.5 rounded-lg text-xs font-bold transition-all relative whitespace-nowrap ${
                       isActive
-                        ? 'bg-umsu-gold text-[#040814] shadow-md shadow-umsu-gold/10 font-bold'
+                        ? 'bg-umsu-gold text-[#040814] shadow-sm shadow-umsu-gold/20'
                         : theme === 'light'
                           ? 'text-slate-600 hover:text-slate-900 hover:bg-slate-200/60'
                           : 'text-slate-400 hover:text-slate-200 hover:bg-slate-800/40'
                     }`}
                   >
-                    <Icon size={14} className="flex-shrink-0" />
+                    <Icon size={13} className="flex-shrink-0" />
                     <span>{item.label}</span>
                     {isLocked && (
-                      <Lock size={12} className={theme === 'light' ? 'text-slate-500 ml-0.5 flex-shrink-0' : 'text-slate-400 ml-0.5 flex-shrink-0'} />
+                      <Lock size={11} className={theme === 'light' ? 'text-slate-500 ml-0.5 flex-shrink-0' : 'text-slate-400 ml-0.5 flex-shrink-0'} />
                     )}
                   </button>
                 )
@@ -381,14 +381,14 @@ function App() {
 
             {/* Role Authentication Badge & Button */}
             {isDosenOrPeneliti ? (
-              <div className="flex items-center space-x-2 flex-shrink-0">
-                <div className="hidden xl:flex items-center space-x-1.5 px-3 py-1 rounded-xl bg-umsu-gold/10 border border-umsu-gold/30 text-umsu-gold text-xs font-bold whitespace-nowrap">
-                  <ShieldCheck size={14} className="flex-shrink-0" />
+              <div className="flex items-center space-x-1.5 flex-shrink-0">
+                <div className="hidden xl:flex items-center space-x-1.5 px-2.5 py-1.5 rounded-xl bg-umsu-gold/10 border border-umsu-gold/30 text-umsu-gold text-xs font-bold whitespace-nowrap">
+                  <ShieldCheck size={13} className="flex-shrink-0" />
                   <span>{userName}</span>
                 </div>
                 <button
                   onClick={handleLogout}
-                  className="flex items-center space-x-1 px-2.5 sm:px-3 py-1.5 rounded-xl bg-rose-500/10 hover:bg-rose-500/20 text-rose-500 dark:text-rose-400 border border-rose-500/30 text-xs font-semibold transition-all whitespace-nowrap cursor-pointer"
+                  className="flex items-center space-x-1 px-2.5 py-1.5 rounded-xl bg-rose-500/10 hover:bg-rose-500/20 text-rose-500 dark:text-rose-400 border border-rose-500/30 text-xs font-semibold transition-all whitespace-nowrap cursor-pointer"
                   title="Keluar Sesi Peneliti"
                 >
                   <LogOut size={13} className="flex-shrink-0" />
@@ -401,7 +401,7 @@ function App() {
                   setLoginError('')
                   setShowLoginModal(true)
                 }}
-                className="flex items-center space-x-1.5 px-2.5 sm:px-3 py-1.5 rounded-xl bg-umsu-royal/10 hover:bg-umsu-royal/20 text-umsu-royal border border-umsu-royal/30 text-xs font-bold transition-all whitespace-nowrap flex-shrink-0 cursor-pointer"
+                className="flex items-center space-x-1.5 px-2.5 py-1.5 rounded-xl bg-umsu-royal/10 hover:bg-umsu-royal/20 text-umsu-royal border border-umsu-royal/30 text-xs font-bold transition-all whitespace-nowrap flex-shrink-0 cursor-pointer"
               >
                 <Lock size={13} className="flex-shrink-0" />
                 <span className="hidden lg:inline">Login Dosen / Peneliti</span>
@@ -418,7 +418,7 @@ function App() {
                   ? 'Server Backend Terhubung pada Railway CPU (~2.8 s)'
                   : 'Server Backend Tidak Terhubung / Offline'
               }
-              className={`flex items-center space-x-1.5 px-2.5 lg:px-3 py-1.5 rounded-full border text-[11px] font-bold transition-all whitespace-nowrap flex-shrink-0 ${
+              className={`flex items-center space-x-1.5 px-2.5 py-1.5 rounded-full border text-[11px] font-bold transition-all whitespace-nowrap flex-shrink-0 ${
                 serverDeviceStatus === 'GPU'
                   ? 'bg-emerald-500/15 text-emerald-400 border-emerald-500/40 shadow-sm shadow-emerald-500/10'
                   : serverDeviceStatus === 'CPU'
@@ -439,21 +439,21 @@ function App() {
             {/* Theme Toggle Button */}
             <button
               onClick={toggleTheme}
-              className={`p-2 rounded-full border transition-all flex-shrink-0 cursor-pointer ${
+              className={`p-1.5 rounded-full border transition-all flex-shrink-0 cursor-pointer ${
                 theme === 'light'
                   ? 'border-slate-300 bg-slate-100 text-slate-700 hover:text-amber-600 hover:border-amber-400'
                   : 'border-blue-900/30 bg-slate-900/60 text-slate-300 hover:text-umsu-gold hover:border-umsu-gold/50'
               }`}
               title={theme === 'dark' ? 'Aktifkan Mode Terang' : 'Aktifkan Mode Gelap'}
             >
-              {theme === 'dark' ? <Sun size={12} /> : <Moon size={12} />}
+              {theme === 'dark' ? <Sun size={13} /> : <Moon size={13} />}
             </button>
 
             {/* Install PWA Button */}
             {showInstallBtn && (
               <button
                 onClick={handleInstallClick}
-                className="flex items-center space-x-1 bg-umsu-gold hover:bg-yellow-400 text-[#040814] px-2.5 sm:px-3 py-1.5 rounded-full text-xs font-bold shadow-lg shadow-umsu-gold/20 transition-all hover:scale-105 whitespace-nowrap flex-shrink-0 cursor-pointer"
+                className="flex items-center space-x-1 bg-umsu-gold hover:bg-yellow-400 text-[#040814] px-2.5 py-1.5 rounded-full text-xs font-bold shadow-lg shadow-umsu-gold/20 transition-all hover:scale-105 whitespace-nowrap flex-shrink-0 cursor-pointer"
                 title="Pasang PWA App"
               >
                 <Download size={12} className="flex-shrink-0" />
