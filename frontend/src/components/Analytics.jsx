@@ -28,6 +28,60 @@ const XAxisTwoLineTick = ({ x, y, payload, fill }) => {
   )
 }
 
+// Custom PolarAngleAxis tick for RadarChart.
+// Splits label into two lines at the best split point (space or '/').
+// Adjusts text-anchor and position based on angle so labels never overlap the chart area.
+const RadarTwoLineTick = ({ payload, x, y, cx, cy, fill }) => {
+  const label = payload?.value || ''
+
+  // Find best split point near the middle of the string
+  const mid = Math.floor(label.length / 2)
+  const splitChars = [' ', '/']
+  let bestIdx = -1
+  let bestDist = Infinity
+  for (let i = 0; i < label.length; i++) {
+    if (splitChars.includes(label[i])) {
+      const dist = Math.abs(i - mid)
+      if (dist < bestDist) { bestDist = dist; bestIdx = i }
+    }
+  }
+
+  let line1, line2
+  if (bestIdx > -1 && label.length > 10) {
+    // Keep the split char with the second line only if it's '/'
+    const splitChar = label[bestIdx]
+    if (splitChar === '/') {
+      line1 = label.slice(0, bestIdx).trim()
+      line2 = label.slice(bestIdx).trim()   // keeps the '/'
+    } else {
+      line1 = label.slice(0, bestIdx).trim()
+      line2 = label.slice(bestIdx + 1).trim()
+    }
+  } else {
+    line1 = label
+    line2 = ''
+  }
+
+  // Determine text alignment based on angular position relative to center
+  const dx = x - cx
+  const textAnchor = Math.abs(dx) < 10 ? 'middle' : dx > 0 ? 'start' : 'end'
+
+  // Push label slightly away from chart edge
+  const OFFSET = 4
+  const lx = dx > 0 ? x + OFFSET : dx < 0 ? x - OFFSET : x
+  const lineH = 13
+
+  return (
+    <g>
+      <text x={lx} y={y} textAnchor={textAnchor} fill={fill} fontSize={10} fontFamily="sans-serif">
+        <tspan x={lx} dy={line2 ? -lineH / 2 : 0}>{line1}</tspan>
+        {line2 && <tspan x={lx} dy={lineH}>{line2}</tspan>}
+      </text>
+    </g>
+  )
+}
+
+
 function Analytics({ theme, userRole = 'public' }) {
   const isLight = theme === 'light'
   const gridColor = isLight ? '#cbd5e1' : '#1e293b'
@@ -274,11 +328,15 @@ function Analytics({ theme, userRole = 'public' }) {
             <p className="text-[11px] text-slate-400 mb-6">Persentase (%) akurasi deteksi sentimen berdasarkan struktur dan tata bahasa.</p>
           </div>
 
-          <div className="h-[250px] w-full flex items-center justify-center font-mono text-[10px]">
+          <div className="h-[280px] w-full flex items-center justify-center font-mono text-[10px]">
             <ResponsiveContainer width="100%" height="100%">
-              <RadarChart cx="50%" cy="50%" outerRadius="75%" data={linguisticData}>
+              <RadarChart cx="50%" cy="50%" outerRadius="60%" data={linguisticData}>
                 <PolarGrid stroke={gridColor} />
-                <PolarAngleAxis dataKey="subject" stroke={textColor} />
+                <PolarAngleAxis
+                  dataKey="subject"
+                  stroke={textColor}
+                  tick={<RadarTwoLineTick fill={textColor} />}
+                />
                 <PolarRadiusAxis angle={30} domain={[0, 100]} stroke="#475569" />
                 <Radar name="Model A (Frozen)" dataKey="Model A (Frozen)" stroke="#3b82f6" fill="#3b82f6" fillOpacity={0.25} />
                 <Radar name="Model B (Fine-Tuned)" dataKey="Model B (FT)" stroke="#facc15" fill="#facc15" fillOpacity={0.25} />
