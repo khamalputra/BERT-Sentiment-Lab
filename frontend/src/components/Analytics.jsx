@@ -591,7 +591,7 @@ function Analytics({ theme, userRole = 'public' }) {
                 />
               </div>
               <p className={`text-[10px] mt-1.5 font-sans leading-tight ${isLight ? 'text-amber-800 font-medium' : 'text-amber-300/90'}`}>
-                ✓ <strong>Signifikan</strong>: Peningkatan F1-score (+4,44% s/d +8,83%) dipastikan bernilai positif (rentang CI tidak melewati angka 0).
+                ✓ <strong>Signifikan</strong>: Peningkatan F1-score (+{(testResults.bootstrap_95_ci[0]*100).toFixed(2)}% s/d +{(testResults.bootstrap_95_ci[1]*100).toFixed(2)}%) dipastikan bernilai positif (rentang CI tidak melewati angka 0).
               </p>
             </div>
 
