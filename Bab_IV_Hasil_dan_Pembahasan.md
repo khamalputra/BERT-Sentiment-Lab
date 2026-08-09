@@ -233,7 +233,7 @@ Karena rentang interval kepercayaan bernilai positif murni dan **tidak mencakup 
 Ukuran efek numerik dihitung dari rerata dan variansi gabungan (*pooled standard deviation*) F1-Score dari kedua model:
 $$d = \frac{\mu_B - \mu_A}{\sigma_{\text{pooled}}} = \frac{0{,}9294 - 0{,}8666}{0{,}00641} = \mathbf{9{,}80}$$
 
-Berdasarkan kriteria Cohen (1988, p. 40), nilai $d = 9{,}80 \gg 2.0$ dikategorikan sebagai ***Extremely Large Effect*** (Pengaruh Sangat Kuat). Hal ini mengindikasikan bahwa metode *Fine-Tuning* memberikan dampak praktis yang luar biasa besar dalam meningkatkan akurasi representasi sentimen teks.
+Berdasarkan kriteria standar Cohen (1988, p. 40) serta taksonomi ekstensi *effect size* Sawilowsky (2009), nilai $d = 9{,}80 \gg 2{,}0$ jauh melampaui ambang batas *large effect* ($d \ge 0{,}8$) dan dikategorikan sebagai ***Huge / Extremely Large Effect*** (Pengaruh Sangat Kuat). Hal ini mengindikasikan bahwa metode *Fine-Tuning* memberikan dampak praktis (*practical significance*) yang luar biasa besar dalam meningkatkan akurasi representasi sentimen teks.
 
 ---
 
