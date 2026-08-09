@@ -474,22 +474,37 @@ function App() {
               <span className="font-mono tracking-wide">{serverDeviceStatus}</span>
             </div>
 
-            {/* Theme Toggle Button */}
+            {/* Premium Sliding Theme Toggle Switch */}
             <button
               onClick={toggleTheme}
-              className={`p-2 rounded-full border transition-all flex-shrink-0 cursor-pointer shadow-sm flex items-center justify-center ${
+              className={`relative flex items-center w-14 h-8 rounded-full p-1 border transition-all duration-300 flex-shrink-0 cursor-pointer ${
                 theme === 'light'
-                  ? 'border-indigo-200 bg-indigo-50/90 text-indigo-700 hover:bg-indigo-100 hover:border-indigo-300 hover:text-indigo-900 hover:scale-105'
-                  : 'border-amber-400/30 bg-slate-900/80 text-amber-400 hover:bg-slate-800 hover:border-amber-400 hover:text-amber-300 hover:scale-105 shadow-amber-500/10'
+                  ? 'bg-amber-100/90 border-amber-300 shadow-inner hover:border-amber-400'
+                  : 'bg-slate-900/90 border-blue-900/40 shadow-inner hover:border-amber-400/40'
               }`}
               title={theme === 'dark' ? 'Aktifkan Mode Terang' : 'Aktifkan Mode Gelap'}
               aria-label={theme === 'dark' ? 'Aktifkan Mode Terang' : 'Aktifkan Mode Gelap'}
             >
-              {theme === 'dark' ? (
-                <Sun size={15} className="text-amber-400 fill-amber-400/20" />
-              ) : (
-                <Moon size={15} className="text-indigo-600 fill-indigo-600/20" />
-              )}
+              {/* Sliding Thumb */}
+              <div
+                className={`w-6 h-6 rounded-full flex items-center justify-center transition-all duration-300 shadow-md transform z-10 ${
+                  theme === 'light'
+                    ? 'translate-x-6 bg-indigo-600 text-white shadow-indigo-500/30'
+                    : 'translate-x-0 bg-amber-400 text-slate-950 shadow-amber-500/40'
+                }`}
+              >
+                {theme === 'light' ? (
+                  <Moon size={13} className="fill-white" />
+                ) : (
+                  <Sun size={13} className="fill-slate-950" />
+                )}
+              </div>
+
+              {/* Background Indicator Icons */}
+              <div className="absolute inset-0 flex items-center justify-between px-2 pointer-events-none text-xs">
+                <Sun size={12} className={theme === 'light' ? 'text-amber-500' : 'text-slate-600 opacity-40'} />
+                <Moon size={12} className={theme === 'light' ? 'text-indigo-400/50' : 'text-indigo-400'} />
+              </div>
             </button>
 
             {/* Install PWA Button */}
