@@ -22,7 +22,7 @@ export default function Home({ theme, benchmarkStats, onNavigate }) {
   }
   const statsTests = benchmarkStats?.statistical_tests || {
     mcnemar_p_value: 5.04e-12,
-    wilcoxon_p_value: 0.015625,
+    wilcoxon_p_value: 0.03125,
     bootstrap_95_ci: [0.0548, 0.0964],
     cohens_d: 9.80,
     effect_size_interpretation: "Extremely Large Effect"

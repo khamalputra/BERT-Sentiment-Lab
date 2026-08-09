@@ -222,7 +222,7 @@ def get_benchmark_stats(db: Session = Depends(get_db)):
         # Self-correcting migration for legacy remote database values
         if abs(stat_test.cohens_d - 9.80) > 0.01:
             stat_test.cohens_d = 9.80
-            stat_test.wilcoxon_p_value = 0.015625
+            stat_test.wilcoxon_p_value = 0.03125
             stat_test.bootstrap_ci_lower = 0.0548
             stat_test.bootstrap_ci_upper = 0.0964
             stat_test.mcnemar_both_correct = 735

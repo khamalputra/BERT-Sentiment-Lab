@@ -27,7 +27,7 @@ def init_db():
         if db.query(BenchmarkResult).count() > 0:
             stat = db.query(StatisticalTest).first()
             if stat:
-                stat.wilcoxon_p_value = 0.015625
+                stat.wilcoxon_p_value = 0.03125
                 stat.cohens_d = 9.80
                 stat.bootstrap_ci_lower = 0.0548
                 stat.bootstrap_ci_upper = 0.0964
@@ -78,7 +78,7 @@ def init_db():
         # 3. Seed Statistical Tests (Audited A100 Experiment Values)
         stat_tests = StatisticalTest(
             mcnemar_p_value=5.04e-12,
-            wilcoxon_p_value=0.015625,
+            wilcoxon_p_value=0.03125,
             bootstrap_ci_lower=0.0548,
             bootstrap_ci_upper=0.0964,
             cohens_d=9.80,
