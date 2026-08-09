@@ -6,38 +6,41 @@
 ### **4.1. Lingkungan Eksperimen dan Implementasi Sistem**
 
 #### **4.1.1. Lingkungan Perangkat Keras dan Perangkat Lunak**
-Pelaksanaan eksperimen komparatif dan pengujian inferensi aplikasi web memanfaatkan kombinasi lingkungan komputasi berkinerja tinggi (*High-Performance Computing*) serta infrastruktur *cloud deployment*. Eksperimen utama dieksekusi menggunakan akselerasi GPU NVIDIA A100 Tensor Core (sebagai lingkungan komputasi yang setara dan lebih unggul dibandingkan spesifikasi awal NVIDIA A100 Tensor Core GPU pada proposal) guna menjamin kestabilan *throughput* dan presisi pengukuran waktu eksekusi.
+Pelaksanaan eksperimen komparatif dan pengujian inferensi aplikasi web memanfaatkan kombinasi lingkungan komputasi berkinerja tinggi (*High-Performance Computing*) serta infrastruktur *cloud deployment*. Eksperimen utama dieksekusi menggunakan akselerasi GPU NVIDIA A100 Tensor Core guna menjamin kestabilan *throughput* pelatihan multi-seed dan presisi pengukuran latensi inferensi. 
 
-Spesifikasi lengkap lingkungan eksperimen dan implementasi sistem disajikan pada **Tabel 4.1**:
+Spesifikasi lengkap perangkat keras dan perangkat lunak yang digunakan dalam penelitian ini disajikan pada **Tabel 4.1**:
 
 **Tabel 4.1. Spesifikasi Lingkungan Eksperimen dan Implementasi Sistem**
 
-| Komponen | Spesifikasi / Alat | Fungsi & Klarifikasi Implemetasi |
+| Komponen | Spesifikasi / Alat | Fungsi Utama |
 |---|---|---|
-| **GPU Accelerator** | NVIDIA A100 Tensor Core GPU / NVIDIA A100 GPU | Akselerasi pelatihan multi-epoch & inferensi real-time (*A100 sebagai peningkatan infrastruktur dari NVIDIA A100 GPU*) |
-| **Pustaka Deep Learning** | PyTorch 2.x, Hugging Face `transformers` | Pelatihan model BERT (`bert-base-uncased`) & penanganan tensor |
-| **Pustaka Evaluasi & Statistik** | Scikit-Learn, SciPy, AFINN 0.1, `evaluate` | Uji McNemar, Wilcoxon, Bootstrap CI, & AFINN Lexicon |
+| **GPU Accelerator** | NVIDIA A100 Tensor Core GPU | Akselerasi pelatihan multi-epoch & inferensi real-time |
+| **Pustaka Deep Learning** | PyTorch 2.x, Hugging Face `transformers` | Pelatihan model BERT (`bert-base-uncased`) & manipulasi tensor |
+| **Pustaka Evaluasi & Statistik** | Scikit-Learn, SciPy, AFINN 0.1, `evaluate` | Pengujian statistik McNemar, Wilcoxon, Bootstrap CI, & AFINN |
 | **Backend API Framework** | Python 3.10+, FastAPI, Uvicorn | Pelayanan REST API & manajemen basis data |
-| **Database Engine** | SQLite 3 (`app.db`), SQLAlchemy ORM | Persistensi data *benchmark* & riwayat prediksi |
-| **Frontend Framework** | React 18 (Vite), TailwindCSS, Framer Motion | Antarmuka pengguna PWA interaktif & visualisasi |
-| **Deployment Cloud** | Vercel (Frontend PWA) & Railway (CPU Backend) | Hosting aplikasi web publik dan redundansi server |
+| **Database Engine** | SQLite 3 (`app.db`), SQLAlchemy ORM | Persistensi data *benchmark* empiris & riwayat prediksi |
+| **Frontend Framework** | React 18 (Vite), TailwindCSS, Framer Motion | Antarmuka pengguna PWA interaktif & visualisasi data |
+| **Deployment Cloud** | Vercel (Frontend PWA) & Railway (CPU Backend) | Hosting aplikasi web publik dan redundansi server cadangan |
 
 *Sumber: Data Diolah Peneliti (2026)*
 
-**Metode Pengukuran Alokasi Memori VRAM GPU:**  
-Pengukuran puncak penggunaan memori GPU (*Peak VRAM Allocation*) dilakukan secara transparan pada setiap siklus pelatihan menggunakan fungsi PyTorch CUDA berikut:
+Untuk menjamin objektivitas dan transparansi data konsumsi daya komputasi, alokasi penggunaan memori puncak GPU (*Peak VRAM Allocation*) pada setiap siklus pelatihan dan inferensi diukur secara langsung menggunakan instrumen fungsi PyTorch CUDA berikut:
+
 ```python
-# Kode Pengukuran Puncak Alokasi VRAM GPU (PyTorch)
+# Instrumen Pengukuran Puncak Alokasi Memori VRAM GPU (PyTorch)
 torch.cuda.reset_peak_memory_stats()
 torch.cuda.synchronize()
-# Eksekusi siklus pelatihan / inferensi
+
+# Eksekusi siklus pelatihan / inferensi model
 peak_vram_bytes = torch.cuda.max_memory_allocated()
-peak_vram_mb = peak_vram_bytes / (1024 ** 2)  # Konversi ke Megabyte (MB)
+peak_vram_mb = peak_vram_bytes / (1024 ** 2)  # Konversi dari Byte ke Megabyte (MB)
 ```
+
+Prosedur pengukuran ini dijalankan pada setiap *run random seed* untuk memperoleh data alokasi VRAM puncak secara presisi setelah *CUDA context warm-up* terpenuhi.
 
 #### **4.1.2. Arsitektur Integrasi Dual-Backend Hybrid**
 Untuk menjamin ketersediaan tinggi (*high availability*) dan latensi inferensi yang responsif pada aplikasi web, dikembangkan arsitektur *Dual-Backend Hybrid* dengan alur integrasi sebagai berikut:
-1. **Primary Backend (GPU Server)**: Berjalan di Google Colab menggunakan GPU NVIDIA A100 GPU/A100 yang dihubungkan melalui *Ngrok Static Tunnel* (`irritably-tipper-january.ngrok-free.dev`). Backend ini melayani inferensi real-time dengan latensi ultra-cepat ($\sim 1{,}82\text{ ms}$).
+1. **Primary Backend (GPU Server)**: Berjalan di Google Colab menggunakan GPU NVIDIA A100 Tensor Core yang dihubungkan melalui *Ngrok Static Tunnel* (`irritably-tipper-january.ngrok-free.dev`). Backend ini melayani inferensi real-time dengan latensi ultra-cepat ($\sim 1{,}82\text{ ms}$).
 2. **Fallback Backend (CPU Server)**: Berjalan di Railway Cloud Service sebagai server cadangan otomatis jika runtime GPU Colab dalam keadaan non-aktif (*offline*).
 3. **PWA Offline Storage**: Menggunakan *service worker* `vite-plugin-pwa` untuk melakukan *precaching* 10 aset statis aplikasi web.
 
