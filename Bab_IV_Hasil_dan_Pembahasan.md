@@ -24,7 +24,7 @@ Spesifikasi lengkap perangkat keras dan perangkat lunak yang digunakan dalam pen
 
 *Sumber: Data Diolah Peneliti (2026)*
 
-Untuk menjamin objektivitas dan transparansi data konsumsi daya komputasi, alokasi penggunaan memori puncak GPU (*Peak VRAM Allocation*) pada setiap siklus pelatihan dan inferensi diukur secara konsisten di setiap *run random seed* setelah *CUDA context warm-up* terpenuhi, sesuai dengan instrumen pengukuran PyTorch (`torch.cuda.max_memory_allocated()`) yang telah dirancang pada Bab III.
+Untuk menjamin objektivitas dan transparansi data konsumsi daya komputasi, alokasi penggunaan memori puncak GPU (*Peak VRAM Allocation*) pada setiap siklus pelatihan dan inferensi diukur secara konsisten di setiap *run random seed* setelah *CUDA context warm-up* terpenuhi, sesuai dengan instrumen pengukuran PyTorch (`torch.cuda.max_memory_allocated()`) yang telah dirancang pada Bab III Sub-bab 3.9.2. Selain itu, latensi inferensi diukur menggunakan `torch.cuda.Event(enable_timing=True)` dengan `torch.cuda.synchronize()` untuk menjamin akurasi eksekusi tanpa terdistorsi oleh sifat eksekusi asinkron GPU.
 
 #### **4.1.2. Arsitektur Integrasi Dual-Backend Hybrid**
 Untuk menjamin ketersediaan tinggi (*high availability*) dan latensi inferensi yang responsif pada aplikasi web, dikembangkan arsitektur *Dual-Backend Hybrid* dengan alur integrasi sebagai berikut:
@@ -67,6 +67,14 @@ Untuk meningkatkan kenyamanan pengguna, antarmuka dilengkapi *sliding switch pil
 **Gambar 4.4 Antarmuka Mode Terang (Light Mode) dan Theme Toggle**  
 *Sumber: Hasil Implementasi Antarmuka Aplikasi Web Peneliti (2026)*
 
+#### **4.1.4. Implementasi Fitur Tambahan (Stretch Goals)**
+Selain pemenuhan seluruh fungsionalitas utama (*Minimum Viable Product* / MVP), pengembangan aplikasi web *BERT Sentiment Lab* berhasil mengimplementasikan lima fitur tambahan (*stretch goals*) yang dirancang pada Sub-bab 3.10.12 Bab III:
+1. **Progressive Web App (PWA)**: Penggunaan *service worker* `vite-plugin-pwa` dengan *precaching* 10 aset statis produksi untuk mendukung akses *offline* serta instalasi sebagai aplikasi desktop/seluler *native*.
+2. **Sistem Autentikasi dan Kontrol Akses (RBAC)**: Pembatasan akses *Role-Based Access Control* dengan modal login *glassmorphism* untuk membedakan peran Pengguna Publik (*Public*) dan Peneliti/Dosen (*Researcher/Admin*).
+3. **Arsitektur Dual-Backend Hybrid dengan Automatic Failover**: Pengujian inferensi mencoba server GPU Colab Primary terlebih dahulu, dan secara otomatis melakukan *fallback* ke server CPU Railway jika server GPU non-aktif.
+4. **Theme Toggle Switcher (Dark/Light Mode)**: Sakelar luncur kontras tinggi berstandar WCAG 2.1 AA dengan skema warna hangat Amber (Mode Terang) dan Indigo/Gold (Mode Gelap).
+5. **Pencarian dan Manajemen Riwayat Prediksi**: Tabel riwayat prediksi interaktif dengan fitur pencarian teks (*searchable*), salin ke *clipboard*, hapus per-item, serta modal konfirmasi hapus seluruh riwayat.
+
 ---
 
 ### **4.2. Hasil Evaluasi Empiris dan Benchmark Metrik**
@@ -95,7 +103,8 @@ Hasil performa prediktif dan konsumsi sumber daya komputasi untuk setiap *run se
 | **Rerata $\pm \sigma$** | | **92,78 $\pm$ 0,71** | **92,45 $\pm$ 1,04** | **93,48 $\pm$ 2,16** | **92,94 $\pm$ 0,79** | **1,83 $\pm$ 0,01** | **3173,13 $\pm$ 4,1** | — |
 | **Selisih ($\Delta$)** | | **+6,73** | **+7,94** | **+4,52** | **+6,28** | **+0,01** | **-4,05** | — |
 
-*Sumber: Data Hasil Eksperimen Diproses Peneliti (2026)*
+*Sumber: Data Hasil Eksperimen Diproses Peneliti (2026)*  
+*\*Catatan: VRAM diukur menggunakan torch.cuda.max_memory_allocated() setelah CUDA context warm-up, sesuai metode pada Bab III Sub-bab 3.9.2.*
 
 Berdasarkan **Tabel 4.2**, pendekatan *End-to-End Fine-Tuning* (Model B) mengungguli *Feature Extraction* (Model A) secara konsisten di seluruh metrik prediktif dengan peningkatan rerata akurasi sebesar **$+6{,}73\%$** dan rerata F1-Score sebesar **$+6{,}28\%$**. 
 
