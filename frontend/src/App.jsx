@@ -477,14 +477,19 @@ function App() {
             {/* Theme Toggle Button */}
             <button
               onClick={toggleTheme}
-              className={`p-1.5 rounded-full border transition-all flex-shrink-0 cursor-pointer ${
+              className={`p-2 rounded-full border transition-all flex-shrink-0 cursor-pointer shadow-sm flex items-center justify-center ${
                 theme === 'light'
-                  ? 'border-slate-300 bg-slate-100 text-slate-700 hover:text-amber-600 hover:border-amber-400'
-                  : 'border-blue-900/30 bg-slate-900/60 text-slate-300 hover:text-umsu-gold hover:border-umsu-gold/50'
+                  ? 'border-indigo-200 bg-indigo-50/90 text-indigo-700 hover:bg-indigo-100 hover:border-indigo-300 hover:text-indigo-900 hover:scale-105'
+                  : 'border-amber-400/30 bg-slate-900/80 text-amber-400 hover:bg-slate-800 hover:border-amber-400 hover:text-amber-300 hover:scale-105 shadow-amber-500/10'
               }`}
               title={theme === 'dark' ? 'Aktifkan Mode Terang' : 'Aktifkan Mode Gelap'}
+              aria-label={theme === 'dark' ? 'Aktifkan Mode Terang' : 'Aktifkan Mode Gelap'}
             >
-              {theme === 'dark' ? <Sun size={13} /> : <Moon size={13} />}
+              {theme === 'dark' ? (
+                <Sun size={15} className="text-amber-400 fill-amber-400/20" />
+              ) : (
+                <Moon size={15} className="text-indigo-600 fill-indigo-600/20" />
+              )}
             </button>
 
             {/* Install PWA Button */}
