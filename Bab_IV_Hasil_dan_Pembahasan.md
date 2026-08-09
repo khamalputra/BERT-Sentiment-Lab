@@ -220,10 +220,10 @@ Uji non-parametrik berpasangan pada $n=6$ *random seed* menghasilkan statistik u
 Untuk memverifikasi ketahanan (*robustness*) kesimpulan uji Wilcoxon pada ukuran sampel $n=6$, dilakukan analisis sensitivitas *Jackknife resampling* (prosedur *leave-one-out*) sesuai dengan rancangan pada Bab III Sub-bab 3.9.1. Pengujian statistik dihitung ulang secara independen pada 6 kombinasi subset $5\text{-of-}6$ *seed*. Seluruh 6 subset *Jackknife* menghasilkan statistik uji $W = 15{,}0$ dengan nilai $p\text{-value} = \mathbf{0{,}03125}$ ($p < 0{,}05$). Hasil ini mengonfirmasi bahwa kesimpulan keunggulan Model B bersifat *robust* murni dan sama sekali tidak peka (*insensitive*) terhadap keberadaan pencilan (*outlier*) pada *seed* tunggal mana pun.
 
 #### **4.3.3. Uji Bootstrap 95% Confidence Interval**
-Melalui teknik *bootstrap resampling* sebanyak $10.000$ kali pada data prediktif, diperoleh interval kepercayaan 95% untuk selisih F1-Score ($\Delta\text{F1} = \text{F1}_B - \text{F1}_A$):
+Interval kepercayaan Bootstrap dihitung menggunakan metode *Percentile Bootstrap* dengan $10.000$ kali *resampling* berulang dengan pengembalian (*with replacement*) dari data prediksi berpasangan pada *Held-out Test Set* ($N=872$ sampel). Melalui teknik statistik non-parametrik ini, diperoleh rentang interval kepercayaan 95% untuk selisih F1-Score ($\Delta\text{F1} = \text{F1}_B - \text{F1}_A$):
 $$\text{95\% CI} = [\mathbf{0{,}0548} \quad \text{s.d.} \quad \mathbf{0{,}0964}] \quad \text{atau} \quad [\mathbf{+5{,}48\%} \quad \text{s.d.} \quad \mathbf{+9{,}64\%}]$$
 
-Karena rentang interval kepercayaan bernilai positif murni dan **tidak mencakup angka 0**, maka peningkatan performa Model B terbukti nyata (*robust*) dan signifikan secara statistik pada tingkat kepercayaan 95%.
+Karena rentang interval kepercayaan bernilai positif murni dan **tidak mencakup angka 0** (persilangan nol / *zero-crossing*), maka peningkatan performa prediktif Model B terbukti nyata (*robust*), konsisten, dan signifikan secara statistik pada tingkat kepercayaan 95%.
 
 #### **4.3.4. Uji Ukuran Efek (Cohen's d Effect Size)**
 Ukuran efek numerik dihitung dari rerata dan variansi gabungan (*pooled standard deviation*) F1-Score dari kedua model:
