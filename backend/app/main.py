@@ -77,13 +77,38 @@ def debug_device():
         "model_b_actual_device": model_b_device,
     }
 
-# Comprehensive HTTP Security Headers Middleware
+# Comprehensive HTTP Security Headers & API Rate Limiting Middleware
+rate_limit_store = {}
+
 @app.middleware("http")
-async def add_security_headers(request, call_next):
+async def add_security_headers_and_rate_limit(request, call_next):
     if request.method == "OPTIONS":
         response = Response(status_code=200)
     else:
+        # API Rate Limiting (max 10 req/min per IP on /api/predict per Bab III Sub-bab 3.10.6)
+        if request.url.path == "/api/predict" and request.method == "POST":
+            client_ip = request.client.host if request.client else "127.0.0.1"
+            now = datetime.now().timestamp()
+            window = 60.0
+            max_requests = 10
+            
+            timestamps = rate_limit_store.get(client_ip, [])
+            timestamps = [ts for ts in timestamps if now - ts < window]
+            
+            if len(timestamps) >= max_requests:
+                response = Response(
+                    content='{"detail": "API Rate Limit Exceeded (Maksimal 10 request/menit). Silakan tunggu sejenak."}',
+                    status_code=429,
+                    media_type="application/json",
+                    headers={"Access-Control-Allow-Origin": "*", "Retry-After": "60"}
+                )
+                return response
+            
+            timestamps.append(now)
+            rate_limit_store[client_ip] = timestamps
+
         response = await call_next(request)
+
     response.headers["Access-Control-Allow-Origin"] = "*"
     response.headers["Access-Control-Allow-Methods"] = "*"
     response.headers["Access-Control-Allow-Headers"] = "*"

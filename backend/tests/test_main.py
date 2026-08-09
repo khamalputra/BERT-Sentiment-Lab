@@ -55,3 +55,15 @@ def test_login_invalid_credentials():
     }
     response = client.post("/api/login", json=payload)
     assert response.status_code == 401
+
+def test_rate_limiting_exceeded():
+    from backend.app.main import rate_limit_store
+    rate_limit_store.clear()
+    payload = {"text": "Test rate limit"}
+    for _ in range(10):
+        res = client.post("/api/predict", json=payload)
+        assert res.status_code == 200
+    res_exceeded = client.post("/api/predict", json=payload)
+    assert res_exceeded.status_code == 429
+    rate_limit_store.clear()
+

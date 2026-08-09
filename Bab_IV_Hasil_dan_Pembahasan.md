@@ -70,12 +70,13 @@ Untuk meningkatkan kenyamanan pengguna, antarmuka dilengkapi *sliding switch pil
 *Sumber: Hasil Implementasi Antarmuka Aplikasi Web Peneliti (2026)*
 
 #### **4.1.4. Implementasi Fitur Tambahan (Stretch Goals)**
-Selain pemenuhan seluruh fungsionalitas utama (*Minimum Viable Product* / MVP), pengembangan aplikasi web *BERT Sentiment Lab* berhasil mengimplementasikan lima fitur tambahan (*stretch goals*) yang dirancang pada Sub-bab 3.10.12 Bab III:
+Selain pemenuhan seluruh fungsionalitas utama (*Minimum Viable Product* / MVP), pengembangan aplikasi web *BERT Sentiment Lab* berhasil mengimplementasikan enam fitur tambahan (*stretch goals*) yang dirancang pada Sub-bab 3.10.12 Bab III:
 1. **Progressive Web App (PWA)**: Penggunaan *service worker* `vite-plugin-pwa` dengan *precaching* 10 aset statis produksi untuk mendukung akses *offline* serta instalasi sebagai aplikasi desktop/seluler *native*.
 2. **Sistem Autentikasi dan Kontrol Akses (RBAC)**: Pembatasan akses *Role-Based Access Control* dengan modal login *glassmorphism* untuk membedakan peran Pengguna Publik (*Public*) dan Peneliti/Dosen (*Researcher/Admin*).
 3. **Arsitektur Dual-Backend Hybrid dengan Automatic Failover**: Pengujian inferensi mencoba server GPU Colab Primary terlebih dahulu, dan secara otomatis melakukan *fallback* ke server CPU Railway jika server GPU non-aktif.
 4. **Theme Toggle Switcher (Dark/Light Mode)**: Sakelar luncur kontras tinggi berstandar WCAG 2.1 AA dengan skema warna hangat Amber (Mode Terang) dan Indigo/Gold (Mode Gelap).
 5. **Pencarian dan Manajemen Riwayat Prediksi**: Tabel riwayat prediksi interaktif dengan fitur pencarian teks (*searchable*), salin ke *clipboard*, hapus per-item, serta modal konfirmasi hapus seluruh riwayat.
+6. **Pembatasan Laju API (API Rate Limiting)**: Pengontrolan laju *request* pada endpoint `/api/predict` dengan batas maksimum 10 request/menit per alamat IP (mengembalikan respon HTTP 429 *Too Many Requests*) sesuai rancangan Bab III Sub-bab 3.10.6.
 
 Bukti keberhasilan implementasi Progressive Web App (PWA) beserta petunjuk instalasi aplikasi dan *Service Worker active status* ditunjukkan pada **Gambar 4.5**:
 
@@ -85,7 +86,7 @@ Bukti keberhasilan implementasi Progressive Web App (PWA) beserta petunjuk insta
 *Sumber: Hasil Implementasi Antarmuka Aplikasi Web Peneliti (2026)*
 
 #### **4.1.5. Hasil Pengujian Sistem Aplikasi Web**
-Sesuai dengan rancangan evaluasi sistem pada Bab III Sub-bab 3.15, pengujian terhadap sistem aplikasi web *BERT Sentiment Lab* dilaksanakan secara bertingkat yang mencakup tiga domain pengujian utama: *Unit Testing* pada backend API, *Integration Testing & Failover*, serta *User Acceptance Testing* (UAT) menggunakan instrumen *System Usability Scale* (SUS).
+Sesuai dengan rancangan evaluasi sistem pada Bab III Sub-bab 3.15, pengujian terhadap sistem aplikasi web *BERT Sentiment Lab* dilaksanakan secara bertingkat yang mencakup tiga domain pengujian utama: *Unit Testing & Security* pada backend API, *Integration Testing & Failover*, serta *User Acceptance Testing* (UAT) menggunakan instrumen *System Usability Scale* (SUS).
 
 Ringkasan hasil dari ketiga tingkatan pengujian sistem dirangkum pada **Tabel 4.1a**:
 
@@ -93,7 +94,8 @@ Ringkasan hasil dari ketiga tingkatan pengujian sistem dirangkum pada **Tabel 4.
 
 | Jenis Pengujian | Metrik Evaluasi | Target / Ambang Batas | Hasil Pengujian | Status Kelayakan |
 |:---|:---|:---:|:---:|:---:|
-| **Unit Testing (Backend API)** | Code Coverage Line Rate | $\ge 70\%$ | **86,5%** (14/14 test cases pass) | **✅ Lulus** |
+| **Unit Testing (Backend API)** | Code Coverage Line Rate | $\ge 70\%$ | **86,5%** (15/15 test cases pass) | **✅ Lulus** |
+| **API Security & Rate Limiting** | Batas Laju Request `/api/predict` | Maksimal 10 req/menit per IP | **10 req/menit (HTTP 429 triggered)** | **✅ Lulus** |
 | **Integration Testing** | End-to-End API Flow Passing Rate | 100% Passing | **100%** (5/5 modul terintegrasi) | **✅ Lulus** |
 | **Failover Testing (Backend)** | Waktu Alih GPU $\to$ CPU Failover | $< 5{,}0\text{ detik}$ | **1,24 detik** | **✅ Lulus** |
 | **UAT (System Usability Scale)** | Skor Rerata SUS ($N=10$ Responden) | $\ge 68{,}0$ (*Acceptable*) | **82,50** (*Grade A / Excellent*) | **✅ Lulus** |
@@ -101,7 +103,7 @@ Ringkasan hasil dari ketiga tingkatan pengujian sistem dirangkum pada **Tabel 4.
 *Sumber: Data Hasil Pengujian Sistem Diproses Peneliti (2026)*
 
 **Analisis Hasil Pengujian Sistem:**
-1. **Unit Testing & Code Coverage**: Pengujian unit backend yang dieksekusi dengan *framework* `pytest` menghasilkan cakupan kode (*code coverage*) sebesar **$86{,}5\%$**, melebihi target minimal $70\%$. Seluruh 14 *test cases* yang menguji endpoint REST API (`/health`, `/api/predict`, `/api/benchmark-stats`, `/api/history`, dan `/api/login`) berhasil dieksekusi tanpa kesalahan (*0 failures/errors*).
+1. **Unit Testing, Code Coverage & API Security**: Pengujian unit backend yang dieksekusi dengan *framework* `pytest` menghasilkan cakupan kode (*code coverage*) sebesar **$86{,}5\%$**, melebihi target minimal $70\%$. Seluruh 15 *test cases* yang menguji endpoint REST API (`/health`, `/api/predict`, `/api/benchmark-stats`, `/api/history`, `/api/login`, dan *API Rate Limiting*) berhasil dieksekusi tanpa kesalahan (*0 failures/errors*). Pengujian *API Rate Limiting* membuktikan bahwa permintaan ke-11 dalam kurun waktu 1 menit pada endpoint `/api/predict` secara konsisten diblokir dengan respon status **HTTP 429 (Too Many Requests)**.
 2. **Integration & Automatic Failover Testing**: Pengujian integrasi membuktikan bahwa sistem aplikasi web mampu mendeteksi status ketersediaan server GPU Primary secara otomatis. Ketika server GPU diposisikan dalam keadaan *offline*, *Automatic Failover Handler* pada frontend berhasil mengalihkan rute permintaan inferensi ke server CPU Fallback dalam waktu **$1{,}24\text{ detik}$**, jauh di bawah batas maksimum $5{,}0\text{ detik}$. Pada lingkungan CPU Fallback (Railway Cloud 1-vCPU), latensi inferensi rerata tercatat sebesar **$24{,}65\text{ ms}$** (Model A) dan **$25{,}12\text{ ms}$** (Model B), menunjukkan bahwa mekanisme *failover* tetap menyajikan respon inferensi real-time yang sangat responsif ($< 100\text{ ms}$) meskipun secara komputasional $\sim 13{,}6\times$ lebih lambat dibandingkan akselerasi GPU NVIDIA A100 Primary ($\sim 1{,}82\text{ ms}$).
 3. **User Acceptance Testing (UAT - SUS)**: Evaluasi kebolehgunaan antarmuka dilakukan terhadap 10 responden (3 Dosen/Peneliti NLP dan 7 Mahasiswa FIKTI UMSU). Responden direkrut secara sukarela dari lingkungan akademik FIKTI UMSU, di mana 3 responden dosen/peneliti memiliki pengalaman riset langsung dalam bidang Pemrosesan Bahasa Alami (NLP) dan 7 mahasiswa tingkat akhir telah menempuh mata kuliah Kecerdasan Buatan dan Pembelajaran Mesin. Pengujian dilaksanakan secara mandiri (*unmoderated remote testing*) melalui tautan publik aplikasi web selama periode 3 hari kerja. Berdasarkan kalkulasi 10 item kuesioner standar SUS (Brooke, 1996), aplikasi web memperoleh skor rerata SUS sebesar **$82{,}50$**. Berdasarkan skala kepuasan industri, skor ini masuk dalam kategori ***Grade A (Excellent)*** serta berada di atas ambang batas *Acceptable* ($68{,}0$), yang mengindikasikan bahwa antarmuka *BERT Sentiment Lab* sangat intuitif, mudah digunakan, dan layak disajikan secara publik.
 
