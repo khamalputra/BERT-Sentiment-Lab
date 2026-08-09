@@ -86,7 +86,7 @@ Bukti keberhasilan implementasi Progressive Web App (PWA) beserta petunjuk insta
 *Sumber: Hasil Implementasi Antarmuka Aplikasi Web Peneliti (2026)*
 
 #### **4.1.5. Hasil Pengujian Sistem Aplikasi Web**
-Sesuai dengan rancangan evaluasi sistem pada Bab III Sub-bab 3.15, pengujian terhadap sistem aplikasi web *BERT Sentiment Lab* dilaksanakan secara bertingkat yang mencakup tiga domain pengujian utama: *Unit Testing & Security* pada backend API, *Integration Testing & Failover*, serta *User Acceptance Testing* (UAT) menggunakan instrumen *System Usability Scale* (SUS).
+Sesuai dengan rancangan evaluasi sistem pada Bab III Sub-bab 3.15, pengujian terhadap sistem aplikasi web *BERT Sentiment Lab* dilaksanakan secara bertingkat yang mencakup tiga domain pengujian utama: *Unit Testing & Security* pada backend API, *Integration Testing & Failover*, serta *User Acceptance Testing* (UAT) menggunakan instrumen *System Usability Scale* (SUS) (Brooke, 1996, p. 189).
 
 Ringkasan hasil dari ketiga tingkatan pengujian sistem dirangkum pada **Tabel 4.1a**:
 
@@ -105,7 +105,7 @@ Ringkasan hasil dari ketiga tingkatan pengujian sistem dirangkum pada **Tabel 4.
 **Analisis Hasil Pengujian Sistem:**
 1. **Unit Testing, Code Coverage & API Security**: Pengujian unit backend yang dieksekusi dengan *framework* `pytest` menghasilkan cakupan kode (*code coverage*) sebesar **$86{,}5\%$**, melebihi target minimal $70\%$. Seluruh 15 *test cases* yang menguji endpoint REST API (`/health`, `/api/predict`, `/api/benchmark-stats`, `/api/history`, `/api/login`, dan *API Rate Limiting*) berhasil dieksekusi tanpa kesalahan (*0 failures/errors*). Pengujian *API Rate Limiting* membuktikan bahwa permintaan ke-11 dalam kurun waktu 1 menit pada endpoint `/api/predict` secara konsisten diblokir dengan respon status **HTTP 429 (Too Many Requests)**.
 2. **Integration & Automatic Failover Testing**: Pengujian integrasi membuktikan bahwa sistem aplikasi web mampu mendeteksi status ketersediaan server GPU Primary secara otomatis. Ketika server GPU diposisikan dalam keadaan *offline*, *Automatic Failover Handler* pada frontend berhasil mengalihkan rute permintaan inferensi ke server CPU Fallback dalam waktu **$1{,}24\text{ detik}$**, jauh di bawah batas maksimum $5{,}0\text{ detik}$. Pada lingkungan CPU Fallback (Railway Cloud 1-vCPU), latensi inferensi rerata tercatat sebesar **$24{,}65\text{ ms}$** (Model A) dan **$25{,}12\text{ ms}$** (Model B), menunjukkan bahwa mekanisme *failover* tetap menyajikan respon inferensi real-time yang sangat responsif ($< 100\text{ ms}$) meskipun secara komputasional $\sim 13{,}6\times$ lebih lambat dibandingkan akselerasi GPU NVIDIA A100 Primary ($\sim 1{,}82\text{ ms}$).
-3. **User Acceptance Testing (UAT - SUS)**: Evaluasi kebolehgunaan antarmuka dilakukan terhadap 10 responden (3 Dosen/Peneliti NLP dan 7 Mahasiswa FIKTI UMSU). Responden direkrut secara sukarela dari lingkungan akademik FIKTI UMSU, di mana 3 responden dosen/peneliti memiliki pengalaman riset langsung dalam bidang Pemrosesan Bahasa Alami (NLP) dan 7 mahasiswa tingkat akhir telah menempuh mata kuliah Kecerdasan Buatan dan Pembelajaran Mesin. Pengujian dilaksanakan secara mandiri (*unmoderated remote testing*) melalui tautan publik aplikasi web selama periode 3 hari kerja. Berdasarkan kalkulasi 10 item kuesioner standar SUS (Brooke, 1996), aplikasi web memperoleh skor rerata SUS sebesar **$82{,}50$**. Berdasarkan skala kepuasan industri, skor ini masuk dalam kategori ***Grade A (Excellent)*** serta berada di atas ambang batas *Acceptable* ($68{,}0$), yang mengindikasikan bahwa antarmuka *BERT Sentiment Lab* sangat intuitif, mudah digunakan, dan layak disajikan secara publik.
+3. **User Acceptance Testing (UAT - SUS)**: Evaluasi kebolehgunaan antarmuka dilakukan terhadap 10 responden (3 Dosen/Peneliti NLP dan 7 Mahasiswa FIKTI UMSU). Responden direkrut secara sukarela dari lingkungan akademik FIKTI UMSU, di mana 3 responden dosen/peneliti memiliki pengalaman riset langsung dalam bidang Pemrosesan Bahasa Alami (NLP) dan 7 mahasiswa tingkat akhir telah menempuh mata kuliah Kecerdasan Buatan dan Pembelajaran Mesin. Pengujian dilaksanakan secara mandiri (*unmoderated remote testing*) melalui tautan publik aplikasi web selama periode 3 hari kerja. Berdasarkan kalkulasi 10 item kuesioner standar SUS (Brooke, 1996, p. 189), aplikasi web memperoleh skor rerata SUS sebesar **$82{,}50$**. Berdasarkan skala kepuasan industri, skor ini masuk dalam kategori ***Grade A (Excellent)*** serta berada di atas ambang batas *Acceptable* ($68{,}0$), yang mengindikasikan bahwa antarmuka *BERT Sentiment Lab* sangat intuitif, mudah digunakan, dan layak disajikan secara publik.
 
 ---
 
@@ -213,18 +213,18 @@ Uji McNemar mengevaluasi perbedaan proporsi kesalahan klasifikasi biner pada dat
 
 *Sumber: Data Hasil Eksperimen Diproses Peneliti (2026)*
 
-Statistik uji McNemar dihitung menggunakan koreksi kontinuitas Edwards:
+Statistik uji McNemar (McNemar, 1947; Dror et al., 2018) dihitung menggunakan koreksi kontinuitas Edwards:
 $$\chi^2 = \frac{(|b - c| - 1)^2}{b + c} = \frac{(|83 - 14| - 1)^2}{83 + 14} = \frac{(68)^2}{97} = \mathbf{47{,}6701}$$
 
 Dengan derajat kebebasan $df = 1$, diperoleh nilai $p\text{-value} = \mathbf{5{,}04 \times 10^{-12}}$ ($p < 0{,}0001$). Karena $p\text{-value} < 0{,}05$, hipotesis nol ($H_0$) ditolak. Hal ini membuktikan bahwa terdapat perbedaan yang **sangat signifikan secara statistik** dalam tingkat kesalahan prediktif antara Model A dan Model B.
 
 #### **4.3.2. Uji Wilcoxon Signed-Rank dan Uji Sensitivitas Jackknife**
-Uji non-parametrik berpasangan pada $n=6$ *random seed* menghasilkan statistik uji $W = \mathbf{21{,}0}$ dengan $p\text{-value} = \mathbf{0{,}015625}$ ($p < 0{,}05$). Hasil ini mengonfirmasi bahwa keunggulan F1-Score Model B terbukti konsisten dan stabil secara statistik di seluruh variasi inisialisasi bobot dan pengocokan data.
+Uji non-parametrik berpasangan Wilcoxon Signed-Rank (Wilcoxon, 1945; Dror et al., 2018) pada $n=6$ *random seed* menghasilkan statistik uji $W = \mathbf{21{,}0}$ dengan $p\text{-value} = \mathbf{0{,}015625}$ ($p < 0{,}05$). Hasil ini mengonfirmasi bahwa keunggulan F1-Score Model B terbukti konsisten dan stabil secara statistik di seluruh variasi inisialisasi bobot dan pengocokan data.
 
 Untuk memverifikasi ketahanan (*robustness*) kesimpulan uji Wilcoxon pada ukuran sampel $n=6$, dilakukan analisis sensitivitas *Jackknife resampling* (prosedur *leave-one-out*) sesuai dengan rancangan pada Bab III Sub-bab 3.9.1. Pengujian statistik dihitung ulang secara independen pada 6 kombinasi subset $5\text{-of-}6$ *seed*. Seluruh 6 subset *Jackknife* menghasilkan statistik uji $W = 15{,}0$ dengan nilai $p\text{-value} = \mathbf{0{,}03125}$ ($p < 0{,}05$). Hasil ini mengonfirmasi bahwa kesimpulan keunggulan Model B bersifat *robust* murni dan sama sekali tidak peka (*insensitive*) terhadap keberadaan pencilan (*outlier*) pada *seed* tunggal mana pun.
 
 #### **4.3.3. Uji Bootstrap 95% Confidence Interval**
-Interval kepercayaan Bootstrap dihitung menggunakan metode *Percentile Bootstrap* dengan $10.000$ kali *resampling* berulang dengan pengembalian (*with replacement*) dari data prediksi berpasangan pada *Held-out Test Set* ($N=872$ sampel). Melalui teknik statistik non-parametrik ini, diperoleh rentang interval kepercayaan 95% untuk selisih F1-Score ($\Delta\text{F1} = \text{F1}_B - \text{F1}_A$):
+Interval kepercayaan Bootstrap dihitung menggunakan metode *Percentile Bootstrap* (Efron, 1979) dengan $10.000$ kali *resampling* berulang dengan pengembalian (*with replacement*) dari data prediksi berpasangan pada *Held-out Test Set* ($N=872$ sampel). Melalui teknik statistik non-parametrik ini, diperoleh rentang interval kepercayaan 95% untuk selisih F1-Score ($\Delta\text{F1} = \text{F1}_B - \text{F1}_A$):
 $$\text{95\% CI} = [\mathbf{0{,}0548} \quad \text{s.d.} \quad \mathbf{0{,}0964}] \quad \text{atau} \quad [\mathbf{+5{,}48\%} \quad \text{s.d.} \quad \mathbf{+9{,}64\%}]$$
 
 Karena rentang interval kepercayaan bernilai positif murni dan **tidak mencakup angka 0** (persilangan nol / *zero-crossing*), maka peningkatan performa prediktif Model B terbukti nyata (*robust*), konsisten, dan signifikan secara statistik pada tingkat kepercayaan 95%.
@@ -233,7 +233,7 @@ Karena rentang interval kepercayaan bernilai positif murni dan **tidak mencakup 
 Ukuran efek numerik dihitung dari rerata dan variansi gabungan (*pooled standard deviation*) F1-Score dari kedua model:
 $$d = \frac{\mu_B - \mu_A}{\sigma_{\text{pooled}}} = \frac{0{,}9294 - 0{,}8666}{0{,}00641} = \mathbf{9{,}80}$$
 
-Berdasarkan kriteria Cohen (1988), nilai $d = 9{,}80 \gg 2.0$ dikategorikan sebagai ***Extremely Large Effect*** (Pengaruh Sangat Kuat). Hal ini mengindikasikan bahwa metode *Fine-Tuning* memberikan dampak praktis yang luar biasa besar dalam meningkatkan akurasi representasi sentimen teks.
+Berdasarkan kriteria Cohen (1988, p. 40), nilai $d = 9{,}80 \gg 2.0$ dikategorikan sebagai ***Extremely Large Effect*** (Pengaruh Sangat Kuat). Hal ini mengindikasikan bahwa metode *Fine-Tuning* memberikan dampak praktis yang luar biasa besar dalam meningkatkan akurasi representasi sentimen teks.
 
 ---
 
@@ -249,7 +249,7 @@ Untuk memahami karakteristik kegagalan prediktif masing-masing model, dilakukan 
 | **2. Negasi Biner** | Mengandung 1 kata negasi (`not, n't, no`, dll.) | 173 | 79,8 | **93,1** | **$+13,3\%$** |
 | **3. Ironi / Sarkasme** | Negasi $>1$ ATAU *contrastive marker* (`but, however`, dll.) | 149 | 81,2 | **91,3** | **$+10,1\%$** |
 | **4. Review Panjang** | Panjang token BERT $> 40$ token | 50 | 78,0 | **94,0** | **$+16,0\%$** |
-| **5. Ambiguitas Tinggi** | Skor AFINN memuat kata positif $\ge +3$ DAN negatif $\le -3$ | 29 | 79,3 | **89,7** | **$+10,4\%$** |
+| **5. Ambiguitas Tinggi** | Skor AFINN (Nielsen, 2011) memuat kata positif $\ge +3$ DAN negatif $\le -3$ | 29 | 79,3 | **89,7** | **$+10,4\%$** |
 
 *Sumber: Data Hasil Eksperimen Diproses Peneliti (2026)*
 
@@ -263,7 +263,7 @@ Hasil pengujian pada **Tabel 4.4** mengungkapkan dua temuan utama terkait kegaga
 
 Sub-bab ini menyajikan sintesis pembahasan komparatif secara mendalam untuk mengaitkan secara utuh temuan empiris pada **RQ1, RQ2, RQ3, dan RQ4** dengan kerangka teoritis adaptasi domain dan rekayasa perangkat lunak NLP.
 
-1. **Efektivitas Adaptasi Domain (Sintesis RQ1 & RQ2)**: Hasil eksperimen empiris mengonfirmasi temuan Devlin et al. (2019) dan Sun et al. (2019), di mana penyesuaian bobot secara *end-to-end* (Model B) memungkinkan pergeseran ruang representasi vektor (*embedding space*) dari domain umum Wikipedia/BookCorpus ke domain spesifik ulasan film (*informal movie reviews*).
+1. **Efektivitas Adaptasi Domain (Sintesis RQ1 & RQ2)**: Hasil eksperimen empiris mengonfirmasi temuan Devlin et al. (2019, Section 3.2) dan Sun et al. (2019, Table 2), di mana penyesuaian bobot secara *end-to-end* (Model B) memungkinkan pergeseran ruang representasi vektor (*embedding space*) dari domain umum Wikipedia/BookCorpus ke domain spesifik ulasan film (*informal movie reviews*).
 2. **Kompromi Sumber Daya Komputasi (Sintesis RQ3 & RQ4)**: Meskipun Model B mengungguli Model A secara signifikan dalam metrik prediktif ($92{,}78\%$ vs $86{,}05\%$), Model B membutuhkan alokasi memori VRAM yang seimbang ($3173\text{ MB}$ vs $3177\text{ MB}$) serta waktu pelatihan per-epoch yang lebih lama. Pada tahap inferensi GPU A100 Primary, latensi kedua model hampir setara ($\sim 1{,}82\text{ ms}$ vs $1{,}83\text{ ms}$). Sementara pada lingkungan CPU Fallback Server (Railway Cloud 1-vCPU), latensi inferensi rerata tercatat sebesar $24{,}65\text{ ms}$ (Model A) dan $25{,}12\text{ ms}$ (Model B) (rerata gabungan $\sim 24{,}88\text{ ms}$). Hasil perbandingan ini mengonfirmasi bahwa penyiapan server cadangan berbasis CPU tetap mampu melayani inferensi pengguna secara responsif ($< 100\text{ ms}$) ketika server GPU utama mengalami kendala konektivitas.
 
 ---
