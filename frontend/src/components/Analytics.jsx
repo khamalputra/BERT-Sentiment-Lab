@@ -142,21 +142,21 @@ function Analytics({ theme, userRole = 'public' }) {
         status: "success",
         summary: {
           model_a: {
-            accuracy_mean: 0.8515, accuracy_std: 0.0093,
-            f1_mean: 0.8601, f1_std: 0.0047,
-            avg_latency_ms: 7.64, peak_vram_mb: 2034.52
+            accuracy_mean: 0.8603, accuracy_std: 0.0069,
+            f1_mean: 0.8666, f1_std: 0.0043,
+            avg_latency_ms: 1.82, peak_vram_mb: 2814.50
           },
           model_b: {
-            accuracy_mean: 0.9178, accuracy_std: 0.0058,
-            f1_mean: 0.9214, f1_std: 0.0050,
-            avg_latency_ms: 7.76, peak_vram_mb: 2324.72
+            accuracy_mean: 0.9278, accuracy_std: 0.0071,
+            f1_mean: 0.9294, f1_std: 0.0079,
+            avg_latency_ms: 1.83, peak_vram_mb: 3173.10
           }
         },
         statistical_tests: {
-          mcnemar_p_value: 5.74e-10,
+          mcnemar_p_value: 5.04e-12,
           wilcoxon_p_value: 0.015625,
-          bootstrap_95_ci: [0.0501, 0.0927],
-          cohens_d: 12.72,
+          bootstrap_95_ci: [0.0548, 0.0964],
+          cohens_d: 9.80,
           effect_size_interpretation: "Extremely Large Effect"
         }
       })
@@ -178,32 +178,31 @@ function Analytics({ theme, userRole = 'public' }) {
   const { model_a, model_b } = stats.summary
   const testResults = stats.statistical_tests
 
-  // Calculate Delta (improvement ratio)
-  const deltaF1 = ((model_b.f1_mean - model_a.f1_mean) / model_a.f1_mean * 100).toFixed(2)
-  const deltaAcc = ((model_b.accuracy_mean - model_a.accuracy_mean) / model_a.accuracy_mean * 100).toFixed(2)
+  const deltaAcc = ((model_b.accuracy_mean - model_a.accuracy_mean) * 100).toFixed(2)
+  const deltaF1 = ((model_b.f1_mean - model_a.f1_mean) * 100).toFixed(2)
 
-  // Chart Data: 3 Distinct modes for 100% scale precision, clarity, and visual elegance
+  // Chart Data: Multi-seed Performance Metrics (%)
   const performanceChartData = [
     {
-      name: 'Model A (Frozen)',
-      'F1-Score (%)': Number((model_a.f1_mean * 100).toFixed(2)),
-      'Akurasi (%)': Number((model_a.accuracy_mean * 100).toFixed(2)),
+      metric: 'Accuracy (%)',
+      'Model A (Frozen)': Number((model_a.accuracy_mean * 100).toFixed(2)),
+      'Model B (Fine-Tuned)': Number((model_b.accuracy_mean * 100).toFixed(2)),
     },
     {
-      name: 'Model B (Fine-Tuned)',
-      'F1-Score (%)': Number((model_b.f1_mean * 100).toFixed(2)),
-      'Akurasi (%)': Number((model_b.accuracy_mean * 100).toFixed(2)),
+      metric: 'F1-Score (%)',
+      'Model A (Frozen)': Number((model_a.f1_mean * 100).toFixed(2)),
+      'Model B (Fine-Tuned)': Number((model_b.f1_mean * 100).toFixed(2)),
     }
   ]
 
   const latencyChartData = [
     {
       name: 'Model A (Frozen)',
-      'Latensi (ms)': Number(model_a.avg_latency_ms.toFixed(2)),
+      'Latency (ms)': model_a.avg_latency_ms,
     },
     {
       name: 'Model B (Fine-Tuned)',
-      'Latensi (ms)': Number(model_b.avg_latency_ms.toFixed(2)),
+      'Latency (ms)': model_b.avg_latency_ms,
     }
   ]
 
@@ -227,25 +226,25 @@ function Analytics({ theme, userRole = 'public' }) {
         fullMark: 100
       }))
     : [
-        { subject: 'Tanpa Negasi', 'Model A (Frozen)': 86.5, 'Model B (FT)': 93.9, fullMark: 100 },
-        { subject: 'Negasi Biner', 'Model A (Frozen)': 78.3, 'Model B (FT)': 86.4, fullMark: 100 },
-        { subject: 'Ironi / Sarkasme', 'Model A (Frozen)': 79.7, 'Model B (FT)': 91.2, fullMark: 100 },
-        { subject: 'Review Panjang', 'Model A (Frozen)': 83.4, 'Model B (FT)': 91.8, fullMark: 100 },
-        { subject: 'Ambiguitas Tinggi', 'Model A (Frozen)': 77.1, 'Model B (FT)': 89.6, fullMark: 100 },
+        { subject: 'Tanpa Negasi', 'Model A (Frozen)': 87.8, 'Model B (FT)': 94.4, fullMark: 100 },
+        { subject: 'Negasi Biner', 'Model A (Frozen)': 79.8, 'Model B (FT)': 93.1, fullMark: 100 },
+        { subject: 'Ironi / Sarkasme', 'Model A (Frozen)': 81.2, 'Model B (FT)': 91.3, fullMark: 100 },
+        { subject: 'Review Panjang', 'Model A (Frozen)': 78.0, 'Model B (FT)': 94.0, fullMark: 100 },
+        { subject: 'Ambiguitas Tinggi', 'Model A (Frozen)': 79.3, 'Model B (FT)': 89.7, fullMark: 100 },
       ]
 
   // McNemar Contingency Matrix Data - Dynamic from API/Database
   const mcnemarMatrix = stats.mcnemar_matrix || {
-    both_correct: 717,
-    a_correct_b_wrong: 22,
-    b_correct_a_wrong: 88,
-    both_wrong: 45,
-    chi2: 38.4091
+    both_correct: 735,
+    a_correct_b_wrong: 14,
+    b_correct_a_wrong: 83,
+    both_wrong: 40,
+    chi2: 47.6701
   }
 
   // Explanatory Tooltip Texts for Academic UX - Dynamic Templating
   const tooltips = {
-    mcnemar: `Uji McNemar adalah uji statistik berpasangan non-parametrik pada tabel kontingensi 2x2 (N=872). Chi2 = ${mcnemarMatrix.chi2?.toFixed(2) || '38.41'}, p-value < 0.0001 membuktikan ketimpangan kesalahan Model A (${mcnemarMatrix.b_correct_a_wrong} salah) vs Model B (${mcnemarMatrix.a_correct_b_wrong} salah) sangat signifikan.`,
+    mcnemar: `Uji McNemar adalah uji statistik berpasangan non-parametrik pada tabel kontingensi 2x2 (N=872). Chi2 = ${mcnemarMatrix.chi2?.toFixed(2) || '47.67'}, p-value < 0.0001 membuktikan ketimpangan kesalahan Model A (${mcnemarMatrix.b_correct_a_wrong} salah) vs Model B (${mcnemarMatrix.a_correct_b_wrong} salah) sangat signifikan.`,
     wilcoxon: `Uji Wilcoxon Signed-Rank adalah uji non-parametrik berpasangan pada 6 random seeds. Nilai statistik W = 21.0, p = ${testResults.wilcoxon_p_value} (< 0.05) membuktikan keunggulan F1-Score Model B terbukti stabil di seluruh seed.`,
     bootstrap: `Bootstrap Confidence Interval (95%) dihitung dengan 10.000 kali resampling. Rentang [${(testResults.bootstrap_95_ci[0]*100).toFixed(2)}% s/d ${(testResults.bootstrap_95_ci[1]*100).toFixed(2)}%] bernilai positif dan tidak melewati 0.0, membuktikan peningkatan F1-Score nyata.`,
     cohen: `Cohen's d mengukur ukuran efek (Effect Size). Nilai d = ${testResults.cohens_d.toFixed(2)} mengindikasikan dampak yang luar biasa kuat (${testResults.effect_size_interpretation || 'Extremely Large Effect'}) dari metode Fine-Tuning dibanding Feature Extraction.`
