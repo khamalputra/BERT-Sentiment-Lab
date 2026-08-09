@@ -35,7 +35,7 @@ Untuk menjamin ketersediaan tinggi (*high availability*) dan latensi inferensi y
 3. **PWA Offline Storage**: Menggunakan *service worker* `vite-plugin-pwa` untuk melakukan *precaching* 10 aset statis aplikasi web.
 
 #### **4.1.3. Implementasi Antarmuka Web Application**
-Aplikasi web *BERT Sentiment Lab* dikembangkan untuk membuktikan efektivitas rancangan serta memberikan bukti nyata (*evidence of implementation*) atas hasil eksperimen komparatif. Antarmuka aplikasi terdiri dari tiga modul utama dan sistem keamanan berbasis peran:
+Aplikasi web *BERT Sentiment Lab* dikembangkan untuk membuktikan efektivitas rancangan serta memberikan bukti nyata (*evidence of implementation*) atas hasil eksperimen komparatif. Aplikasi ini telah di-deploy secara publik dan dapat diakses secara *live* melalui tautan berikut: **[https://bert-sentiment-lab.vercel.app](https://bert-sentiment-lab.vercel.app/)** (Frontend PWA) dengan backend REST API yang berjalan terintegrasi pada server GPU Primary dan CPU Fallback. Antarmuka aplikasi terdiri dari tiga modul utama dan sistem keamanan berbasis peran:
 
 ##### **a. Modul Beranda (Home Page)**
 Modul Beranda menampilkan identitas akademik institusi (FIKTI UMSU), identitas peneliti (*Syafiq Hasan, NPM: 2209010182*), serta kartu perbandingan dasar antara Model A (*Feature Extraction*) dan Model B (*Fine-Tuning*). Tampilan Halaman Beranda ditunjukkan pada **Gambar 4.1**:
