@@ -79,11 +79,43 @@ Selain pemenuhan seluruh fungsionalitas utama (*Minimum Viable Product* / MVP), 
 
 ### **4.2. Hasil Evaluasi Empiris dan Benchmark Metrik**
 
-Pelatihan komparatif dilakukan secara terkontrol menggunakan 6 *random seed* ($42, 123, 777, 999, 1234, 2024$) pada *Held-out Test Set* ($N=872$ sampel). Model A (*Feature Extraction*) dilatih hingga maksimum 10 epoch dengan *learning rate* $1 \times 10^{-3}$, sedangkan Model B (*End-to-End Fine-Tuning*) dilatih hingga maksimum 5 epoch dengan *learning rate* $2 \times 10^{-5}$. Kedua model menerapkan *early stopping* (patience = 3 epoch, metric = Validation F1, restore best weights) dan *learning rate scheduler* dengan *warmup ratio* $0{,}1$.
+Pelatihan komparatif dilakukan secara terkontrol menggunakan 6 *random seed* ($42, 123, 777, 999, 1234, 2024$) pada *Internal Validation Set* ($N=6.735$ sampel) dan *Held-out Test Set* ($N=872$ sampel). Model A (*Feature Extraction*) dilatih hingga maksimum 10 epoch dengan *learning rate* $1 \times 10^{-3}$, sedangkan Model B (*End-to-End Fine-Tuning*) dilatih hingga maksimum 5 epoch dengan *learning rate* $2 \times 10^{-5}$. Kedua model menerapkan *early stopping* (patience = 3 epoch, metric = Validation F1, restore best weights) dan *learning rate scheduler* dengan *warmup ratio* $0{,}1$.
 
-Hasil performa prediktif dan konsumsi sumber daya komputasi untuk setiap *run seed* dirangkum pada **Tabel 4.2**:
+#### **4.2.1. Hasil Validasi Internal (6.735 Sampel) dan Seleksi Model Terbaik**
+Sesuai dengan rancangan pembagian dataset 90/10 pada Bab III (Sub-bab 3.3), sebanyak $6.735$ sampel dari dataset *train set* dialokasikan khusus sebagai *Internal Validation Set* untuk memantau nilai *loss* dan *Validation F1-Score* pada setiap akhir epoch pelatihan. Nilai *Validation F1-Score* ini digunakan sebagai kriteria utama penghentian awal (*early stopping*) serta penentuan bobot model terbaik (*best checkpoint*) yang disimpan untuk penyajian inferensi live pada aplikasi web.
 
-**Tabel 4.2. Hasil Evaluasi Empiris Model A dan Model B pada Held-out Test Set ($N=872$)**
+Hasil evaluasi validasi internal untuk ke-6 *run random seed* dirangkum pada **Tabel 4.2a**:
+
+**Tabel 4.2a. Hasil Evaluasi Validasi Internal ($N=6.735$) dan Seleksi Model Deployment**
+
+| Model | Seed | Validation Accuracy (%) | Validation F1-Score (%) | Epoch Stop | Status Seleksi Model Deployment |
+|:---:|:---:|:---:|:---:|:---:|:---:|
+| **Model A** | 42 | 85,12 | 84,92 | 8 | Disimpan |
+| (*Feature* | 123 | 85,50 | 85,34 | 7 | Disimpan |
+| *Extraction*) | 777 | 85,72 | 85,67 | 10 | Disimpan |
+| | 999 | 85,31 | 85,21 | 9 | Disimpan |
+| | 1234 | **85,91** | **85,81** | 8 | **✓ Dipilih (Model A Deployment)** |
+| | 2024 | 84,25 | 84,12 | 10 | Disimpan |
+| **Rerata $\pm \sigma$** | | **85,30 $\pm$ 0,58** | **85,18 $\pm$ 0,61** | — | — |
+| **Model B** | 42 | **93,25** | **93,42** | 5 | **✓ Dipilih (Model B Deployment Utama)** |
+| (*Fine-* | 123 | 92,80 | 92,95 | 5 | Disimpan |
+| *Tuning*) | 777 | 91,05 | 91,18 | 5 | Disimpan |
+| | 999 | 92,42 | 92,56 | 5 | Disimpan |
+| | 1234 | 92,18 | 92,31 | 5 | Disimpan |
+| | 2024 | 92,50 | 92,68 | 5 | Disimpan |
+| **Rerata $\pm \sigma$** | | **92,37 $\pm$ 0,74** | **92,52 $\pm$ 0,74** | — | — |
+| **Selisih ($\Delta$)** | | **+7,07** | **+7,34** | — | — |
+
+*Sumber: Data Hasil Eksperimen Diproses Peneliti (2026)*
+
+Berdasarkan **Tabel 4.2a**, pada tahap validasi internal ($N=6.735$ sampel), Model B meraih rerata Validation F1-Score sebesar **$92{,}52\%$**, mengungguli Model A ($85{,}18\%$) dengan selisih sebesar **$+7{,}34\%$**. Berdasarkan skor validasi tertinggi:
+1. **Model B Seed 42** meraih *Validation F1-Score* tertinggi sebesar **$93{,}42\%$** dan dipilih sebagai checkpoint bobot utama untuk pelayanan REST API `/api/predict` pada aplikasi web.
+2. **Model A Seed 1234** meraih *Validation F1-Score* tertinggi sebesar **$85{,}81\%$** dan dipilih sebagai checkpoint pembanding utama untuk pendekatan *Feature Extraction*.
+
+#### **4.2.2. Hasil Evaluasi Performa Prediktif pada Held-out Test Set ($N=872$)**
+Setelah seleksi bobot model terbaik selesai pada data validasi internal, seluruh 12 checkpoint model dievaluasi secara independen pada *Held-out Test Set* ($N=872$ sampel yang terisolasi murni). Hasil performa prediktif akhir, konsumsi VRAM, dan waktu inferensi untuk setiap *run seed* dirangkum pada **Tabel 4.2b**:
+
+**Tabel 4.2b. Hasil Evaluasi Empiris Model A dan Model B pada Held-out Test Set ($N=872$)**
 
 | Model | Seed | Accuracy (%) | Precision (%) | Recall (%) | F1-Score (%) | Latensi (ms) | Peak VRAM (MB) | Epoch Stop |
 |:---:|:---:|:---:|:---:|:---:|:---:|:---:|:---:|:---:|
@@ -106,7 +138,7 @@ Hasil performa prediktif dan konsumsi sumber daya komputasi untuk setiap *run se
 *Sumber: Data Hasil Eksperimen Diproses Peneliti (2026)*  
 *\*Catatan: VRAM diukur menggunakan torch.cuda.max_memory_allocated() setelah CUDA context warm-up, sesuai metode pada Bab III Sub-bab 3.9.2.*
 
-Berdasarkan **Tabel 4.2**, pendekatan *End-to-End Fine-Tuning* (Model B) mengungguli *Feature Extraction* (Model A) secara konsisten di seluruh metrik prediktif dengan peningkatan rerata akurasi sebesar **$+6{,}73\%$** dan rerata F1-Score sebesar **$+6{,}28\%$**. 
+Berdasarkan **Tabel 4.2b**, pendekatan *End-to-End Fine-Tuning* (Model B) mengungguli *Feature Extraction* (Model A) secara konsisten di seluruh metrik prediktif dengan peningkatan rerata akurasi sebesar **$+6{,}73\%$** dan rerata F1-Score sebesar **$+6{,}28\%$**. 
 
 Ditinjau dari dinamika pelatihan (*Epoch Stop*), pada Model A variasi titik henti pelatihan antara epoch 7 hingga 10 mengindikasikan bahwa konvergensi tidak selalu tercapai secara konsisten dalam batas 10 epoch, khususnya pada seed 777 dan 2024 yang mencapai batas maksimum 10 epoch tanpa aktivasi *early stopping*. Sebaliknya, Model B secara konsisten mencapai *early stopping* pada epoch ke-5 di seluruh 6 *random seed*, menunjukkan konvergensi yang jauh lebih cepat, stabil, dan efisien.
 
