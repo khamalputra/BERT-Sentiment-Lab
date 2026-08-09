@@ -5,6 +5,8 @@
 
 ### **4.1. Lingkungan Eksperimen dan Implementasi Sistem**
 
+Sub-bab ini menyajikan deskripsi lingkungan komputasi, arsitektur integrasi *Dual-Backend Hybrid*, implementasi modul antarmuka pengguna, serta hasil pengujian kelayakan sistem yang dikembangkan guna menjawab **Pertanyaan Penelitian ke-4 (RQ4)** mengenai perancangan dan pembangunan produk aplikasi web komparator sentimen real-time.
+
 #### **4.1.1. Lingkungan Perangkat Keras dan Perangkat Lunak**
 Pelaksanaan eksperimen komparatif dan pengujian inferensi aplikasi web memanfaatkan kombinasi lingkungan komputasi berkinerja tinggi (*High-Performance Computing*) serta infrastruktur *cloud deployment*. Eksperimen utama dieksekusi menggunakan akselerasi GPU NVIDIA A100 Tensor Core guna menjamin kestabilan *throughput* pelatihan multi-seed dan presisi pengukuran latensi inferensi. 
 
@@ -107,6 +109,8 @@ Ringkasan hasil dari ketiga tingkatan pengujian sistem dirangkum pada **Tabel 4.
 
 ### **4.2. Hasil Evaluasi Empiris dan Benchmark Metrik**
 
+Sub-bab ini menyajikan hasil evaluasi eksperimental komparatif pada *Internal Validation Set* ($N=6.735$ sampel) dan *Held-out Test Set* ($N=872$ sampel) untuk menjawab **Pertanyaan Penelitian ke-1 (RQ1)** mengenai perbedaan performa prediktif antara *Feature Extraction* (Model A) dan *Fine-Tuning* (Model B), serta **Pertanyaan Penelitian ke-3 (RQ3)** mengenai kompromi (*trade-off*) penggunaan sumber daya komputasi memori VRAM GPU dan latensi inferensi.
+
 Pelatihan komparatif dilakukan secara terkontrol menggunakan 6 *random seed* ($42, 123, 777, 999, 1234, 2024$) pada *Internal Validation Set* ($N=6.735$ sampel) dan *Held-out Test Set* ($N=872$ sampel). Model A (*Feature Extraction*) dilatih hingga maksimum 10 epoch dengan *learning rate* $1 \times 10^{-3}$, sedangkan Model B (*End-to-End Fine-Tuning*) dilatih hingga maksimum 5 epoch dengan *learning rate* $2 \times 10^{-5}$. Kedua model menerapkan *early stopping* (patience = 3 epoch, metric = Validation F1, restore best weights) dan *learning rate scheduler* dengan *warmup ratio* $0{,}1$.
 
 #### **4.2.1. Hasil Validasi Internal (6.735 Sampel) dan Seleksi Model Terbaik**
@@ -188,6 +192,8 @@ Berdasarkan **Tabel 4.2c**, *Peak Reserved Memory* untuk kedua model bernilai ko
 
 ### **4.3. Hasil Uji Statistik Inferensial**
 
+Sub-bab ini menyajikan pengujian statistik inferensial komprehensif (*McNemar's Test*, *Wilcoxon Signed-Rank Test*, *Bootstrap 95% Confidence Interval*, dan *Cohen's d Effect Size*) serta Uji Sensitivitas Jackknife untuk menjawab **Pertanyaan Penelitian ke-2 (RQ2)** mengenai signifikansi statistik inferensial dan ukuran efek (*effect size*) dari peningkatan performa Model B.
+
 Untuk menguji signifikansi statistik dari peningkatan performa Model B serta membuktikan bahwa hasil eksperimen bebas dari fluktuasi acak, dilakukan empat tahapan uji statistik inferensial:
 
 #### **4.3.1. Uji McNemar (McNemar's Test)**
@@ -251,5 +257,7 @@ Hasil pengujian pada **Tabel 4.4** mengungkapkan dua temuan utama terkait kegaga
 
 ### **4.5. Pembahasan dan Diskusi Komparatif**
 
-1. **Efektivitas Adaptasi Domain**: Hasil eksperimen empiris mengonfirmasi temuan Devlin et al. (2019) dan Sun et al. (2019), di mana penyesuaian bobot secara *end-to-end* (Model B) memungkinkan pergeseran ruang representasi vektor (*embedding space*) dari domain umum Wikipedia/BookCorpus ke domain spesifik ulasan film (*informal movie reviews*).
-2. **Kompromi Sumber Daya Komputasi (Trade-off)**: Meskipun Model B mengungguli Model A secara signifikan dalam metrik prediktif ($92{,}78\%$ vs $86{,}05\%$), Model B membutuhkan alokasi memori VRAM yang seimbang ($3173\text{ MB}$ vs $3177\text{ MB}$) serta waktu pelatihan per-epoch yang lebih lama. Pada tahap inferensi GPU A100 Primary, latensi kedua model hampir setara ($\sim 1{,}82\text{ ms}$ vs $1{,}83\text{ ms}$). Sementara pada lingkungan CPU Fallback Server (Railway Cloud 1-vCPU), latensi inferensi rerata tercatat sebesar $24{,}65\text{ ms}$ (Model A) dan $25{,}12\text{ ms}$ (Model B). Hasil perbandingan ini mengonfirmasi bahwa penyiapan server cadangan berbasis CPU tetap mampu melayani inferensi pengguna secara responsif ($< 100\text{ ms}$) ketika server GPU utama mengalami kendala konektivitas.
+Sub-bab ini menyajikan sintesis pembahasan komparatif secara mendalam untuk mengaitkan secara utuh temuan empiris pada **RQ1, RQ2, RQ3, dan RQ4** dengan kerangka teoritis adaptasi domain dan rekayasa perangkat lunak NLP.
+
+1. **Efektivitas Adaptasi Domain (Sintesis RQ1 & RQ2)**: Hasil eksperimen empiris mengonfirmasi temuan Devlin et al. (2019) dan Sun et al. (2019), di mana penyesuaian bobot secara *end-to-end* (Model B) memungkinkan pergeseran ruang representasi vektor (*embedding space*) dari domain umum Wikipedia/BookCorpus ke domain spesifik ulasan film (*informal movie reviews*).
+2. **Kompromi Sumber Daya Komputasi (Sintesis RQ3 & RQ4)**: Meskipun Model B mengungguli Model A secara signifikan dalam metrik prediktif ($92{,}78\%$ vs $86{,}05\%$), Model B membutuhkan alokasi memori VRAM yang seimbang ($3173\text{ MB}$ vs $3177\text{ MB}$) serta waktu pelatihan per-epoch yang lebih lama. Pada tahap inferensi GPU A100 Primary, latensi kedua model hampir setara ($\sim 1{,}82\text{ ms}$ vs $1{,}83\text{ ms}$). Sementara pada lingkungan CPU Fallback Server (Railway Cloud 1-vCPU), latensi inferensi rerata tercatat sebesar $24{,}65\text{ ms}$ (Model A) dan $25{,}12\text{ ms}$ (Model B). Hasil perbandingan ini mengonfirmasi bahwa penyiapan server cadangan berbasis CPU tetap mampu melayani inferensi pengguna secara responsif ($< 100\text{ ms}$) ketika server GPU utama mengalami kendala konektivitas.
