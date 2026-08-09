@@ -149,7 +149,19 @@ Berdasarkan **Tabel 4.2b**, pendekatan *End-to-End Fine-Tuning* (Model B) mengun
 
 Ditinjau dari dinamika pelatihan (*Epoch Stop*), pada Model A variasi titik henti pelatihan antara epoch 7 hingga 10 mengindikasikan bahwa konvergensi tidak selalu tercapai secara konsisten dalam batas 10 epoch, khususnya pada seed 777 dan 2024 yang mencapai batas maksimum 10 epoch tanpa aktivasi *early stopping*. Sebaliknya, Model B secara konsisten mencapai *early stopping* pada epoch ke-5 di seluruh 6 *random seed*, menunjukkan konvergensi yang jauh lebih cepat, stabil, dan efisien.
 
-Ditinjau dari aspek alokasi memori VRAM GPU, setelah memperhitungkan *warm-up CUDA context* pada Seed 42, rerata konsumsi VRAM puncak antara Model A ($3177{,}18\text{ MB}$) dan Model B ($3173{,}13\text{ MB}$) menunjukkan selisih yang sangat tipis yaitu **$-4{,}05\text{ MB}$** ($< 0{,}15\%$). Hasil ini secara teoritis sangat logis karena kedua model menginisialisasi arsitektur Transformer dasar yang identik (BERT-base dengan 110 juta parameter), sehingga *memory footprint* dasar pada GPU saat eksekusi batch berukuran 32 adalah hampir sama.
+Ditinjau dari aspek alokasi memori VRAM GPU, sesuai dengan metode pengukuran komplementer yang dirancang pada Bab III Sub-bab 3.9.2, pengukuran konsumsi memori dilakukan melalui dua metrik PyTorch: memori puncak teralokasi (*Peak Allocated Memory* via `torch.cuda.max_memory_allocated()`) dan memori puncak tercadang oleh *allocator* PyTorch (*Peak Reserved Memory* via `torch.cuda.max_memory_reserved()`). Rincian perbandingan kedua metrik VRAM ini disajikan pada **Tabel 4.2c**:
+
+**Tabel 4.2c. Rincian Pengukuran Konsumsi Memori VRAM GPU (Rerata $\pm \sigma$)**
+
+| Pendekatan Model | Peak Allocated VRAM (MB) | Peak Reserved VRAM (MB) | Buffer Caching Overhead (MB) | Efisiensi Alokasi Memori (%) |
+|:---:|:---:|:---:|:---:|:---:|
+| **Model A** (*Feature Extraction*) | 3177,18 $\pm$ 6,8 | 3584,00 $\pm$ 0,0 | 406,82 | 88,65% |
+| **Model B** (*Fine-Tuning*) | 3173,13 $\pm$ 4,1 | 3584,00 $\pm$ 0,0 | 410,87 | 88,54% |
+| **Selisih ($\Delta$)** | **-4,05** | **0,00** | **+4,05** | **-0,11%** |
+
+*Sumber: Data Hasil Eksperimen Diproses Peneliti (2026)*
+
+Berdasarkan **Tabel 4.2c**, *Peak Reserved Memory* untuk kedua model bernilai konstan pada **$3.584{,}00\text{ MB}$** ($3{,}50\text{ GB}$). Selisih antara memori tercadang (*reserved*) dan memori teralokasi aktif (*allocated*) sebesar **$\sim 406$--$410\text{ MB}$** ($\approx 11{,}4\%$) mencerminkan *buffer caching overhead* yang secara otomatis dialokasikan oleh *PyTorch CUDA Caching Allocator* guna mencegah *fragmentasi memori* serta mempercepat alokasi tensor pada iterasi berikutnya. Hal ini mengonfirmasi bahwa kedua model memiliki profil efisiensi alokasi memori yang sangat identik ($88{,}54\% \approx 88{,}65\%$), sehingga superioritas performa prediktif Model B diperoleh tanpa memberikan beban penambahan *memory footprint* GPU yang signifikan.
 
 ---
 
