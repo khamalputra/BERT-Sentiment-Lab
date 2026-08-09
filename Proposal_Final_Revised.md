@@ -598,7 +598,7 @@ Pustaka *Transformers* menyediakan akses ke model BERT yang telah di-*pre-train*
 Dataset yang digunakan adalah SST-2 yang merupakan bagian dari *benchmark* GLUE. Dataset ini terdiri dari kalimat berbahasa Inggris yang diklasifikasikan ke dalam dua label sentimen, yaitu positif dan negatif (Socher et al., 2013). Untuk menghindari kebocoran data (*data leakage*) serta kebingungan akibat tidak tersedianya label publik pada data uji resmi GLUE SST-2, penelitian ini menerapkan skema *re-partitioning* yang ketat:
 
 1. Data latih resmi SST-2 (67.349 sampel) dibagi secara acak terstrata menjadi **Data Latih Internal** (60.614 sampel / 90%) untuk pembaruan bobot model, dan **Data Validasi Internal** (6.735 sampel / 10%) untuk validasi performa iterasi dan penalaan *hyperparameter*.
-2. Data validasi resmi SST-2 (872 sampel) difungsikan murni sebagai **Held-out Test Set** (data uji terisolasi) yang hanya diuji satu kali pada tahap evaluasi akhir untuk mengukur kemampuan generalisasi model.
+2. Data validasi resmi SST-2 (872 sampel) difungsikan murni sebagai **Held-out Test Set** (data uji terisolasi) tanpa *backpropagation autograd* yang dievaluasi pada ke-6 *trained checkpoint* ($n=6$) pada tahap evaluasi akhir untuk mengukur kemampuan generalisasi model, memperoleh metrik agregat ($Mean \pm \sigma$), serta menyediakan data pasangan untuk pengujian statistik inferensial.
 
 Jumlah data pada masing-masing subset ditunjukkan pada Tabel 3.3. 
 
@@ -765,12 +765,12 @@ Prosedur eksperimen dilaksanakan secara sistematis mengikuti tahapan-tahapan seb
 *Sumber: Alur Prosedur Eksperimen Peneliti (2026)*
 
 Rincian alur prosedur eksperimen dilaksanakan melalui langkah-langkah berikut:
-1. **Seleksi Model Terbaik**
-   Pilih model dengan *validation F1-score* tertinggi dari 6 *seed*.
-2. **Evaluasi Final**
-   Uji model terpilih pada *held-out test set* (872 sampel) satu kali saja.
-3. **Ekspor Model**
-   Simpan model terpilih untuk *deployment* aplikasi web.
+1. **Seleksi Checkpoint Model Deployment**
+   Pilih *checkpoint* model dengan *validation F1-score* tertinggi pada Data Validasi Internal dari 6 *seed* untuk disimpan sebagai artefak bobot produksi yang di-*deploy* ke aplikasi web.
+2. **Evaluasi Held-out Test Set Multi-Seed ($n=6$)**
+   Evaluasi ke-6 *trained checkpoint* ($n=6$ *seed*) pada *Held-out Test Set* (872 sampel) secara terisolasi murni tanpa *gradient update/backpropagation* untuk mengukur kemampuan generalisasi, menghitung rerata metrik ($Mean \pm \sigma$), serta menyediakan distribusi data berpasangan untuk Uji Wilcoxon dan Bootstrap 95% CI.
+3. **Ekspor Model & Data Benchmark**
+   Simpan *checkpoint* terbaik terpilih untuk *deployment* aplikasi web dan ekspor seluruh log metrik *benchmark* ke basis data.
 
 ## **3.9. Teknik Analisis Data** 
 
@@ -893,17 +893,15 @@ Backend REST API dirancang untuk menyediakan 7 *endpoint* utama sebagaimana dira
 |6|`DELETE`|`/api/history/{log*id}`|Menghapus satu entri riwayat pengujian berdasarkan *ID* spesifik.|
 |7|`POST`|`/api/login`|Memvalidasi kredensial pengguna (nama pengguna dan kata sandi) dan mengembalikan token autentikasi beserta peran akses (*role*) apabila kredensial valid.|
 
-### **3.10.2a. Strategi Seleksi Model untuk Deployment**
+### **3.10.2a. Strategi Evaluasi Held-out Test Set dan Seleksi Model Deployment**
 
-Model yang akan di-*deploy* ke aplikasi web dipilih melalui prosedur berikut:
-1. Dari 6 *seed* yang dievaluasi, dipilih model dengan *validation F1-score* tertinggi pada data validasi internal (6.735 sampel).
-2. Model terpilih kemudian dievaluasi satu kali pada *held-out test set* (872 sampel) untuk pengukuran final.
-3. Hasil evaluasi pada *held-out test set* ini digunakan untuk:
- a. Perbandingan performa antar model (RQ1)
- b. Pengujian statistik inferensial (RQ2)
- c. *Deployment* ke aplikasi web (RQ4)
+Prosedur evaluasi pada data uji dan pemilahan model untuk *deployment* dilakukan melalui dua tahap yang terpisah secara transparan:
+1. **Evaluasi Held-out Test Set Multi-Seed ($n=6$)**: Seluruh *trained checkpoint* dari 6 *seed* dievaluasi secara terisolasi murni pada *Held-out Test Set* (872 sampel) tanpa *gradient update/backpropagation* (`with torch.no_grad()`). Hasil evaluasi ke-6 *seed* ini digunakan khusus untuk:
+ a. Perbandingan performa agregat prediktif ($Mean \pm \sigma$) antar model (RQ1).
+ b. Penyediaan distribusi metrik F1-score berpasangan untuk pengujian statistik inferensial (*McNemar's Test*, *Wilcoxon Signed-Rank Test*, *Bootstrap* 95% CI, dan *Cohen's d*) (RQ2).
+2. **Seleksi Checkpoint Model Deployment**: Dari 6 *seed* yang dievaluasi, *checkpoint* dengan *validation F1-score* tertinggi pada data validasi internal (6.735 sampel) dipilih secara khusus sebagai model utama yang disimpan dan di-*deploy* ke aplikasi web (RQ4) (Model B Seed 42 & Model A Seed 1234).
 
-Pendekatan ini memastikan tidak terjadi kebocoran data (*data leakage*) karena *held-out test set* tidak digunakan sama sekali selama proses pelatihan dan validasi model. Evaluasi akhir pada *held-out test set* hanya dilakukan satu kali setelah model terbaik dipilih.
+Pendekatan ini memastikan tidak terjadi kebocoran data (*data leakage*) karena *Held-out Test Set* tidak pernah digunakan dalam iterasi pelatihan (*backpropagation*) maupun penalaan *hyperparameter*. Evaluasi pada *Held-out Test Set* dilakukan secara murni dalam mode inferensi pasif untuk keperluan verifikasi generalisasi dan uji statistik inferensial.
 
 ### **3.10.3. Rancangan Antarmuka Pengguna (*User Interface*)**
 
