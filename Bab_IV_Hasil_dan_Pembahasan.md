@@ -208,8 +208,10 @@ $$\chi^2 = \frac{(|b - c| - 1)^2}{b + c} = \frac{(|83 - 14| - 1)^2}{83 + 14} = \
 
 Dengan derajat kebebasan $df = 1$, diperoleh nilai $p\text{-value} = \mathbf{5{,}04 \times 10^{-12}}$ ($p < 0{,}0001$). Karena $p\text{-value} < 0{,}05$, hipotesis nol ($H_0$) ditolak. Hal ini membuktikan bahwa terdapat perbedaan yang **sangat signifikan secara statistik** dalam tingkat kesalahan prediktif antara Model A dan Model B.
 
-#### **4.3.2. Uji Wilcoxon Signed-Rank**
+#### **4.3.2. Uji Wilcoxon Signed-Rank dan Uji Sensitivitas Jackknife**
 Uji non-parametrik berpasangan pada $n=6$ *random seed* menghasilkan statistik uji $W = \mathbf{21{,}0}$ dengan $p\text{-value} = \mathbf{0{,}015625}$ ($p < 0{,}05$). Hasil ini mengonfirmasi bahwa keunggulan F1-Score Model B terbukti konsisten dan stabil secara statistik di seluruh variasi inisialisasi bobot dan pengocokan data.
+
+Untuk memverifikasi ketahanan (*robustness*) kesimpulan uji Wilcoxon pada ukuran sampel $n=6$, dilakukan analisis sensitivitas *Jackknife resampling* (prosedur *leave-one-out*) sesuai dengan rancangan pada Bab III Sub-bab 3.9.1. Pengujian statistik dihitung ulang secara independen pada 6 kombinasi subset $5\text{-of-}6$ *seed*. Seluruh 6 subset *Jackknife* menghasilkan statistik uji $W = 15{,}0$ dengan nilai $p\text{-value} = \mathbf{0{,}03125}$ ($p < 0{,}05$). Hasil ini mengonfirmasi bahwa kesimpulan keunggulan Model B bersifat *robust* murni dan sama sekali tidak peka (*insensitive*) terhadap keberadaan pencilan (*outlier*) pada *seed* tunggal mana pun.
 
 #### **4.3.3. Uji Bootstrap 95% Confidence Interval**
 Melalui teknik *bootstrap resampling* sebanyak $10.000$ kali pada data prediktif, diperoleh interval kepercayaan 95% untuk selisih F1-Score ($\Delta\text{F1} = \text{F1}_B - \text{F1}_A$):
