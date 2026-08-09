@@ -731,8 +731,8 @@ Prosedur eksperimen dilaksanakan secara sistematis mengikuti tahapan-tahapan seb
 +-----------------------------------------------------------------------------------+
 | Multi-Seed Training Loop (n=6) |
 | Seeds: [42, 123, 777, 999, 1.234, 2024] |
-| Model A: Freeze BERT Encoder + Train Linear Classifier (1 Epoch) |
-| Model B: End-to-End Fine-Tune BERT + Classifier (1 Epoch) |
+| Model A: Freeze BERT Encoder + Train Classifier Head (Maks. 10 Epochs) |
+| Model B: End-to-End Fine-Tune BERT + Classifier (Maks. 5 Epochs, Early Stopping) |
 +-----------------------------------------+-----------------------------------------+
  |
  v
