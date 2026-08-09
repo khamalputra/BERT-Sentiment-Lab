@@ -75,6 +75,13 @@ Selain pemenuhan seluruh fungsionalitas utama (*Minimum Viable Product* / MVP), 
 4. **Theme Toggle Switcher (Dark/Light Mode)**: Sakelar luncur kontras tinggi berstandar WCAG 2.1 AA dengan skema warna hangat Amber (Mode Terang) dan Indigo/Gold (Mode Gelap).
 5. **Pencarian dan Manajemen Riwayat Prediksi**: Tabel riwayat prediksi interaktif dengan fitur pencarian teks (*searchable*), salin ke *clipboard*, hapus per-item, serta modal konfirmasi hapus seluruh riwayat.
 
+Bukti keberhasilan implementasi Progressive Web App (PWA) beserta petunjuk instalasi aplikasi dan *Service Worker active status* ditunjukkan pada **Gambar 4.5**:
+
+![Gambar 4.5 Antarmuka Prompt Instalasi Progressive Web App (PWA) dan Status Service Worker](images/screenshot_pwa_installation.png)
+
+**Gambar 4.5 Antarmuka Prompt Instalasi Progressive Web App (PWA) dan Status Service Worker**  
+*Sumber: Hasil Implementasi Antarmuka Aplikasi Web Peneliti (2026)*
+
 ---
 
 ### **4.2. Hasil Evaluasi Empiris dan Benchmark Metrik**
