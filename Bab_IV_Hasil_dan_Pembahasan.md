@@ -6,7 +6,7 @@
 ### **4.1. Lingkungan Eksperimen dan Implementasi Sistem**
 
 #### **4.1.1. Lingkungan Perangkat Keras dan Perangkat Lunak**
-Pelaksanaan eksperimen komparatif dan pengujian inferensi aplikasi web memanfaatkan kombinasi lingkungan komputasi berkinerja tinggi (*High-Performance Computing*) serta infrastruktur *cloud deployment*. Eksperimen utama dieksekusi menggunakan akselerasi GPU NVIDIA A100 Tensor Core (sebagai lingkungan komputasi yang setara dan lebih unggul dibandingkan spesifikasi awal NVIDIA Tesla T4 pada proposal) guna menjamin kestabilan *throughput* dan presisi pengukuran waktu eksekusi.
+Pelaksanaan eksperimen komparatif dan pengujian inferensi aplikasi web memanfaatkan kombinasi lingkungan komputasi berkinerja tinggi (*High-Performance Computing*) serta infrastruktur *cloud deployment*. Eksperimen utama dieksekusi menggunakan akselerasi GPU NVIDIA A100 Tensor Core (sebagai lingkungan komputasi yang setara dan lebih unggul dibandingkan spesifikasi awal NVIDIA A100 Tensor Core GPU pada proposal) guna menjamin kestabilan *throughput* dan presisi pengukuran waktu eksekusi.
 
 Spesifikasi lengkap lingkungan eksperimen dan implementasi sistem disajikan pada **Tabel 4.1**:
 
@@ -14,7 +14,7 @@ Spesifikasi lengkap lingkungan eksperimen dan implementasi sistem disajikan pada
 
 | Komponen | Spesifikasi / Alat | Fungsi & Klarifikasi Implemetasi |
 |---|---|---|
-| **GPU Accelerator** | NVIDIA A100 Tensor Core GPU / Tesla T4 | Akselerasi pelatihan multi-epoch & inferensi real-time (*A100 sebagai peningkatan infrastruktur dari T4*) |
+| **GPU Accelerator** | NVIDIA A100 Tensor Core GPU / NVIDIA A100 GPU | Akselerasi pelatihan multi-epoch & inferensi real-time (*A100 sebagai peningkatan infrastruktur dari NVIDIA A100 GPU*) |
 | **Pustaka Deep Learning** | PyTorch 2.x, Hugging Face `transformers` | Pelatihan model BERT (`bert-base-uncased`) & penanganan tensor |
 | **Pustaka Evaluasi & Statistik** | Scikit-Learn, SciPy, AFINN 0.1, `evaluate` | Uji McNemar, Wilcoxon, Bootstrap CI, & AFINN Lexicon |
 | **Backend API Framework** | Python 3.10+, FastAPI, Uvicorn | Pelayanan REST API & manajemen basis data |
@@ -37,7 +37,7 @@ peak_vram_mb = peak_vram_bytes / (1024 ** 2)  # Konversi ke Megabyte (MB)
 
 #### **4.1.2. Arsitektur Integrasi Dual-Backend Hybrid**
 Untuk menjamin ketersediaan tinggi (*high availability*) dan latensi inferensi yang responsif pada aplikasi web, dikembangkan arsitektur *Dual-Backend Hybrid* dengan alur integrasi sebagai berikut:
-1. **Primary Backend (GPU Server)**: Berjalan di Google Colab menggunakan GPU Tesla T4/A100 yang dihubungkan melalui *Ngrok Static Tunnel* (`irritably-tipper-january.ngrok-free.dev`). Backend ini melayani inferensi real-time dengan latensi ultra-cepat ($\sim 1{,}82\text{ ms}$).
+1. **Primary Backend (GPU Server)**: Berjalan di Google Colab menggunakan GPU NVIDIA A100 GPU/A100 yang dihubungkan melalui *Ngrok Static Tunnel* (`irritably-tipper-january.ngrok-free.dev`). Backend ini melayani inferensi real-time dengan latensi ultra-cepat ($\sim 1{,}82\text{ ms}$).
 2. **Fallback Backend (CPU Server)**: Berjalan di Railway Cloud Service sebagai server cadangan otomatis jika runtime GPU Colab dalam keadaan non-aktif (*offline*).
 3. **PWA Offline Storage**: Menggunakan *service worker* `vite-plugin-pwa` untuk melakukan *precaching* 10 aset statis aplikasi web.
 
