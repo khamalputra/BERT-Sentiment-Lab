@@ -809,15 +809,15 @@ Evaluasi *trade-off* komputasi dirancang untuk mengukur efisiensi penggunaan sum
 2. **Waktu Inferensi Lingkungan CPU (Fallback Server / Cloud CPU)**
  Diukur menggunakan rata-rata *wall-clock time* dari 50 iterasi inferensi setelah 5 iterasi *warm-up* untuk menghilangkan *cold-start penalty* alokasi *thread* CPU, sebagai *baseline* efisiensi saat terjadi *failover* ke server pencadangan.
 3. **Penggunaan Memori VRAM GPU (MB)**
- Pengukuran VRAM dilakukan dengan dua pendekatan komplementer:
+ Pengukuran VRAM dilakukan dengan dua pendekatan komplementer pada dua fase komputasi utama (Fase Pelatihan / *Training Phase* dan Fase Inferensi / *Production Inference Phase*):
 
  a. **Peak Allocated Memory**
- Menggunakan `torch.cuda.max*memory*allocated()` untuk mencatat puncak alokasi memori dinamis oleh PyTorch selama inferensi batch (`batch*size = 32`). Metrik ini mengukur memori yang benar-benar dialokasikan oleh tensor PyTorch.
+ Menggunakan `torch.cuda.max_memory_allocated()` untuk mencatat puncak alokasi memori dinamis oleh PyTorch selama fase pelatihan batch (*backpropagation autograd* & pembaruan bobot AdamW) dan fase inferensi batch (`batch_size = 32`). Metrik ini mengukur memori yang benar-benar dialokasikan oleh tensor PyTorch pada kedua fase tersebut untuk menganalisis pembebasan *gradient buffer* dan *optimizer state*.
 
  b. **Peak Reserved Memory**
- Menggunakan `torch.cuda.max*memory*reserved()` untuk mencatat puncak memori yang dicadangkan (*reserved*) oleh *CUDA caching allocator*. Metrik ini mencakup memori yang belum dialokasikan tetapi telah direservasi.
+ Menggunakan `torch.cuda.max_memory_reserved()` untuk mencatat puncak memori yang dicadangkan (*reserved*) oleh *CUDA caching allocator*. Metrik ini mencakup memori yang belum dialokasikan tetapi telah direservasi.
 
- Kedua nilai dicatat menggunakan fungsi `torch.cuda.reset*peak*memory*stats()` sebelum setiap pengukuran batch untuk memastikan *reset* yang akurat. Perbedaan antara *allocated* dan *reserved* memberikan indikasi efisiensi *caching* PyTorch.
+ Kedua nilai dicatat menggunakan fungsi `torch.cuda.reset_peak_memory_stats()` sebelum setiap pengukuran batch untuk memastikan *reset* yang akurat. Perbedaan antara *allocated* dan *reserved* memberikan indikasi efisiensi *caching* PyTorch.
 
  Kode implementasi yang digunakan:
  ```python torch.cuda.reset*peak*memory*stats()
