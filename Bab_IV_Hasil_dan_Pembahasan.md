@@ -70,13 +70,19 @@ Untuk meningkatkan kenyamanan pengguna, antarmuka dilengkapi *sliding switch pil
 *Sumber: Hasil Implementasi Antarmuka Aplikasi Web Peneliti (2026)*
 
 #### **4.1.4. Implementasi Fitur Tambahan (Stretch Goals)**
-Selain pemenuhan seluruh fungsionalitas utama (*Minimum Viable Product* / MVP), pengembangan aplikasi web *BERT Sentiment Lab* berhasil mengimplementasikan enam fitur tambahan (*stretch goals*) yang dirancang pada Sub-bab 3.10.12 Bab III:
-1. **Progressive Web App (PWA)**: Penggunaan *service worker* `vite-plugin-pwa` dengan *precaching* 10 aset statis produksi untuk mendukung akses *offline* serta instalasi sebagai aplikasi desktop/seluler *native*.
+Selain pemenuhan seluruh fungsionalitas utama (*Minimum Viable Product* / MVP), pengembangan aplikasi web *BERT Sentiment Lab* berhasil mengimplementasikan secara utuh **seluruh 7 fitur tambahan (*stretch goals*)** yang dirancang pada Sub-bab 3.10.12.B Proposal, ditambah dua fitur penyempurnaan sistem pendukung:
+
+1. **Progressive Web App (PWA) & Offline Caching**: Penggunaan *service worker* `vite-plugin-pwa` dengan *precaching* 10 aset statis produksi untuk mendukung akses *offline* serta instalasi aplikasi desktop/seluler *native*.
 2. **Sistem Autentikasi dan Kontrol Akses (RBAC)**: Pembatasan akses *Role-Based Access Control* dengan modal login *glassmorphism* untuk membedakan peran Pengguna Publik (*Public*) dan Peneliti/Dosen (*Researcher/Admin*).
-3. **Arsitektur Dual-Backend Hybrid dengan Automatic Failover**: Pengujian inferensi mencoba server GPU Colab Primary terlebih dahulu, dan secara otomatis melakukan *fallback* ke server CPU Railway jika server GPU non-aktif.
-4. **Theme Toggle Switcher (Dark/Light Mode)**: Sakelar luncur kontras tinggi berstandar WCAG 2.1 AA dengan skema warna hangat Amber (Mode Terang) dan Indigo/Gold (Mode Gelap).
-5. **Pencarian dan Manajemen Riwayat Prediksi**: Tabel riwayat prediksi interaktif dengan fitur pencarian teks (*searchable*), salin ke *clipboard*, hapus per-item, serta modal konfirmasi hapus seluruh riwayat.
-6. **Pembatasan Laju API (API Rate Limiting)**: Pengontrolan laju *request* pada endpoint `/api/predict` dengan batas maksimum 10 request/menit per alamat IP (mengembalikan respon HTTP 429 *Too Many Requests*) sesuai rancangan Bab III Sub-bab 3.10.6.
+3. **Arsitektur Dual-Backend Hybrid dengan Automatic Failover**: Pengalihan rute *failover* otomatis dari server GPU Colab Primary ke server CPU Railway Fallback ($1{,}24\text{ detik}$) jika server utama non-aktif.
+4. **Visualisasi Interaktif Radar Chart 5 Kategori Linguistik**: Modul visualisasi grafik jaring (*Radar Chart*) interaktif pada Dashboard Analitik untuk membandingkan akurasi kedua model pada 5 kategori kompleksitas linguistik.
+5. **Visualisasi Interaktif Matriks Kontingensi McNemar 2x2**: Tampilan matriks frekuensi $2 \times 2$ interaktif dengan *tooltip* penjelas parameter statistik $a, b, c, d$ dan $\chi^2$.
+6. **Mikro-Animasi Transisi Halus (Framer Motion)**: Penerapan perpindahan antar-halaman, *loading skeleton*, serta efek *hover pill/cards* berbasis pustaka `framer-motion` untuk meningkatkan kenyamanan UI/UX.
+7. **Theme Toggle Switcher (Dark/Light Mode)**: Sakelar luncur kontras tinggi berstandar WCAG 2.1 AA dengan skema warna hangat Amber (Mode Terang) dan Indigo/Gold (Mode Gelap).
+
+*Fitur Bonus Penyempurnaan Tambahan:*
+- **Pencarian dan Manajemen Riwayat Prediksi**: Tabel riwayat prediksi interaktif dengan pencarian teks, salin ke *clipboard*, dan hapus riwayat.
+- **Pembatasan Laju API (API Rate Limiting)**: Pengontrolan laju *request* pada endpoint `/api/predict` dengan batas maksimum 10 request/menit per IP (HTTP 429) sesuai rancangan Bab III Sub-bab 3.10.6.
 
 Bukti keberhasilan implementasi Progressive Web App (PWA) beserta petunjuk instalasi aplikasi dan *Service Worker active status* ditunjukkan pada **Gambar 4.5**:
 
@@ -278,4 +284,4 @@ Meskipun hasil eksperimen komparatif dan pengujian sistem aplikasi web *BERT Sen
 4. **Ruang Eksplorasi Hyperparameter Terbatas**: Pelatihan kedua model mengacu pada konfigurasi *hyperparameter* standar yang ditetapkan dalam proposal (Tabel 3.4) tanpa melakukan pencarian *hyperparameter* secara ekstensif (*Grid Search* atau *Bayesian Optimization*). Peluang diketemukannya kombinasi *hyperparameter* alternatif (misal variasi *learning rate* dan *batch size*) yang dapat menghasilkan performa lebih tinggi masih terbuka untuk riset mendatang.
 5. **Generalisasi Domain Bahasa**: Evaluasi prediktif dilaksanakan secara eksklusif menggunakan dataset standar berbahasa Inggris. Generalisasi performa terhadap domain Bahasa Indonesia (*low-resource language*) dengan pola sintaksis dan bahasa gaul (*slang*) yang berbeda memerlukan pengujian eksperimental terpisah.
 6. **Durasi dan Beban Pengujian UAT**: Pengujian *System Usability Scale* (SUS) dilaksanakan dalam rentang waktu 3 hari kerja terhadap 10 responden terpilih. Meskipun menghasilkan skor *Grade A (Excellent, 82,50)*, pengujian ini belum mencakup variasi konteks penggunaan jangka panjang serta pengujian beban puncak (*stress testing*) akibat lonjakan trafik pengguna secara simultan.
-7. **Kapasitas Throughput Server Cadangan (CPU Fallback)**: Arsitektur *Dual-Backend Hybrid* terbukti sukses menjamin *High Availability* aplikasi web dengan pengalihan failover otomatis ($1{,}24\text{ detik}$). Meskipun latensi inferensi sampel tunggal pada CPU Fallback Railway Cloud tercatat sangat responsif ($24{,}65\text{ ms}$ untuk Model A dan $25{,}12\text{ ms}$ untuk Model B, jauh di bawah $100\text{ ms}$), *throughput* pemrosesan batch data berukuran besar pada CPU tetap memiliki keterbatasan kapasitas komputasi dibandingkan akselerasi GPU NVIDIA A100 Primary.
+7. **Kapasitas Throughput Server Cadangan (CPU Fallback)**: Arsitektur *Dual-Backend Hybrid* terbukti sukses menjamin *High Availability* aplikasi web dengan pengalihan failover otomatis ($1{,}24\text{ detik}$). Meskipun latensi inferensi sampel tunggal pada CPU Fallback Railway Cloud tercatat sangat responsif ($24{,}65\text{ ms}$ for Model A dan $25{,}12\text{ ms}$ for Model B, jauh di bawah $100\text{ ms}$), *throughput* pemrosesan batch data berukuran besar pada CPU tetap memiliki keterbatasan kapasitas komputasi dibandingkan akselerasi GPU NVIDIA A100 Primary.
