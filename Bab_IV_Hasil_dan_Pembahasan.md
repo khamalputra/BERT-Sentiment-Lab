@@ -114,7 +114,7 @@ Sub-bab ini menyajikan hasil evaluasi eksperimental komparatif pada *Internal Va
 Pelatihan komparatif dilakukan secara terkontrol menggunakan 6 *random seed* ($42, 123, 777, 999, 1234, 2024$) pada *Internal Validation Set* ($N=6.735$ sampel) dan *Held-out Test Set* ($N=872$ sampel). Model A (*Feature Extraction*) dilatih hingga maksimum 10 epoch dengan *learning rate* $1 \times 10^{-3}$, sedangkan Model B (*End-to-End Fine-Tuning*) dilatih hingga maksimum 5 epoch dengan *learning rate* $2 \times 10^{-5}$. Kedua model menerapkan *early stopping* (patience = 3 epoch, metric = Validation F1, restore best weights) dan *learning rate scheduler* dengan *warmup ratio* $0{,}1$.
 
 #### **4.2.1. Hasil Validasi Internal (6.735 Sampel) dan Seleksi Model Terbaik**
-Sesuai dengan rancangan pembagian dataset 90/10 pada Bab III (Sub-bab 3.3), sebanyak $6.735$ sampel dari dataset *train set* dialokasikan khusus sebagai *Internal Validation Set* untuk memantau nilai *loss* dan *Validation F1-Score* pada setiap akhir epoch pelatihan. Nilai *Validation F1-Score* ini digunakan sebagai kriteria utama penghentian awal (*early stopping*) serta penentuan bobot model terbaik (*best checkpoint*) yang disimpan untuk penyajian inferensi live pada aplikasi web.
+Sesuai dengan rancangan pembagian dataset 90/10 pada Bab III (Sub-bab 3.3), sebanyak $6.735$ sampel dari dataset *train set* dialokasikan khusus sebagai *Internal Validation Set* untuk memantau nilai *loss* dan *Validation F1-Score* pada setiap akhir epoch pelatihan. Nilai *Validation F1-Score* ini digunakan sebagai kriteria utama penghentian awal (*early stopping*) serta penentuan bobot model terbaik (*best checkpoint*) yang disimpan untuk penyajikan inferensi live pada aplikasi web.
 
 Hasil evaluasi validasi internal untuk ke-6 *run random seed* dirangkum pada **Tabel 4.2a**:
 
@@ -145,7 +145,7 @@ Berdasarkan **Tabel 4.2a**, pada tahap validasi internal ($N=6.735$ sampel), Mod
 2. **Model A Seed 1234** meraih *Validation F1-Score* tertinggi sebesar **$85{,}81\%$** dan dipilih sebagai checkpoint pembanding utama untuk pendekatan *Feature Extraction*.
 
 #### **4.2.2. Hasil Evaluasi Performa Prediktif pada Held-out Test Set ($N=872$)**
-Setelah seleksi bobot model terbaik selesai pada data validasi internal, seluruh 12 checkpoint model dievaluasi secara independen pada *Held-out Test Set* ($N=872$ sampel yang terisolasi murni). Hasil performa prediktif akhir, konsumsi VRAM, dan waktu inferensi untuk setiap *run seed* dirangkum pada **Tabel 4.2b**:
+Sesuai dengan rancangan eksperimen pada Bab III (Sub-bab 3.3 & 3.8), evaluasi pada *Held-out Test Set* ($N=872$ sampel) dilakukan secara terisolasi murni dan **hanya diuji satu kali** setelah proses pelatihan, *hyperparameter tuning*, dan seleksi model terbaik pada *Internal Validation Set* selesai secara utuh. Prosedur ini diterapkan untuk menjamin tidak terjadinya kebocoran data (*data leakage*) serta memastikan pengukuran kemampuan generalisasi model yang sepenuhnya valid dan objektif. Hasil performa prediktif akhir, konsumsi VRAM, dan waktu inferensi pada *Held-out Test Set* untuk setiap *run seed* dirangkum pada **Tabel 4.2b**:
 
 **Tabel 4.2b. Hasil Evaluasi Empiris Model A dan Model B pada Held-out Test Set ($N=872$)**
 
