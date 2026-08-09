@@ -8,7 +8,7 @@
 Sub-bab ini menyajikan deskripsi lingkungan komputasi, arsitektur integrasi *Dual-Backend Hybrid*, implementasi modul antarmuka pengguna, serta hasil pengujian kelayakan sistem yang dikembangkan guna menjawab **Pertanyaan Penelitian ke-4 (RQ4)** mengenai perancangan dan pembangunan produk aplikasi web komparator sentimen real-time.
 
 #### **4.1.1. Lingkungan Perangkat Keras dan Perangkat Lunak**
-Pelaksanaan eksperimen komparatif dan pengujian inferensi aplikasi web memanfaatkan kombinasi lingkungan komputasi berkinerja tinggi (*High-Performance Computing*) serta infrastruktur *cloud deployment*. Eksperimen utama dieksekusi menggunakan akselerasi GPU NVIDIA A100 Tensor Core guna menjamin kestabilan *throughput* pelatihan multi-seed dan presisi pengukuran latensi inferensi. 
+Pelaksanaan eksperimen komparatif dan pengujian inferensi aplikasi web memanfaatkan kombinasi lingkungan komputasi berkinerja tinggi (*High-Performance Computing*) serta infrastruktur *cloud deployment*. Eksperimen utama dieksekusi menggunakan akselerasi GPU NVIDIA A100 Tensor Core (varian 40 GB VRAM pada Google Colab High-RAM) guna menjamin kestabilan *throughput* pelatihan multi-seed dan presisi pengukuran latensi inferensi. 
 
 Spesifikasi lengkap perangkat keras dan perangkat lunak yang digunakan dalam penelitian ini disajikan pada **Tabel 4.1**:
 
@@ -16,7 +16,7 @@ Spesifikasi lengkap perangkat keras dan perangkat lunak yang digunakan dalam pen
 
 | Komponen | Spesifikasi / Alat | Fungsi Utama |
 |---|---|---|
-| **GPU Accelerator** | NVIDIA A100 Tensor Core GPU | Akselerasi pelatihan multi-epoch & inferensi real-time |
+| **GPU Accelerator** | NVIDIA A100 Tensor Core GPU (40 GB VRAM) | Akselerasi pelatihan multi-epoch & inferensi real-time |
 | **Pustaka Deep Learning** | PyTorch 2.x, Hugging Face `transformers` | Pelatihan model BERT (`bert-base-uncased`) & manipulasi tensor |
 | **Pustaka Evaluasi & Statistik** | Scikit-Learn, SciPy, AFINN 0.1, `evaluate` | Pengujian statistik McNemar, Wilcoxon, Bootstrap CI, & AFINN |
 | **Backend API Framework** | Python 3.10+, FastAPI, Uvicorn | Pelayanan REST API & manajemen basis data |
@@ -30,7 +30,7 @@ Untuk menjamin objektivitas dan transparansi data konsumsi daya komputasi, aloka
 
 #### **4.1.2. Arsitektur Integrasi Dual-Backend Hybrid**
 Untuk menjamin ketersediaan tinggi (*high availability*) dan latensi inferensi yang responsif pada aplikasi web, dikembangkan arsitektur *Dual-Backend Hybrid* dengan alur integrasi sebagai berikut:
-1. **Primary Backend (GPU Server)**: Berjalan di Google Colab menggunakan GPU NVIDIA A100 Tensor Core yang dihubungkan melalui *Ngrok Static Tunnel* (`irritably-tipper-january.ngrok-free.dev`). Backend ini melayani inferensi real-time dengan latensi ultra-cepat ($\sim 1{,}82\text{ ms}$).
+1. **Primary Backend (GPU Server)**: Berjalan di Google Colab menggunakan GPU NVIDIA A100 Tensor Core (40 GB VRAM) yang dihubungkan melalui *Ngrok Static Tunnel* (`irritably-tipper-january.ngrok-free.dev`). Backend ini melayani inferensi real-time dengan latensi ultra-cepat ($\sim 1{,}82\text{ ms}$).
 2. **Fallback Backend (CPU Server)**: Berjalan di Railway Cloud Service (1-vCPU Server) sebagai server cadangan otomatis jika runtime GPU Colab dalam keadaan non-aktif (*offline*), melayani inferensi dengan latensi rerata $24{,}65\text{ ms}$ (Model A) dan $25{,}12\text{ ms}$ (Model B) (rerata gabungan $\sim 24{,}88\text{ ms}$). Mekanisme *failover* terpicu secara otomatis ketika koneksi HTTP ke server GPU mengalami *timeout* ($> 2{,}0\text{ detik}$) atau mengembalikan status eror 5xx.
 3. **PWA Offline Storage**: Menggunakan *service worker* `vite-plugin-pwa` untuk melakukan *precaching* 10 aset statis aplikasi web untuk akses *offline* serta mendukung penginstalan aplikasi *native*.
 
@@ -233,7 +233,7 @@ Karena rentang interval kepercayaan bernilai positif murni dan **tidak mencakup 
 Ukuran efek numerik dihitung dari rerata dan variansi gabungan (*pooled standard deviation*) F1-Score dari kedua model:
 $$d = \frac{\mu_B - \mu_A}{\sigma_{\text{pooled}}} = \frac{0{,}9294 - 0{,}8666}{0{,}00641} = \mathbf{9{,}80}$$
 
-Berdasarkan kriteria Cohen (1988, p. 40), nilai $d = 9{,}80 \gg 2.0$ dikategorikan sebagai ***Extremely Large Effect*** (Pengaruh Sangat Kuat). Hal ini mengindikasikan bahwa metode *Fine-Tuning* memberikan dampak practical yang luar biasa besar dalam meningkatkan akurasi representasi sentimen teks.
+Berdasarkan kriteria Cohen (1988, p. 40), nilai $d = 9{,}80 \gg 2.0$ dikategorikan sebagai ***Extremely Large Effect*** (Pengaruh Sangat Kuat). Hal ini mengindikasikan bahwa metode *Fine-Tuning* memberikan dampak praktis yang luar biasa besar dalam meningkatkan akurasi representasi sentimen teks.
 
 ---
 
