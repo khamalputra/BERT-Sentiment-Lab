@@ -779,7 +779,7 @@ Rincian alur prosedur eksperimen dilaksanakan melalui langkah-langkah berikut:
 Uji statistik digunakan untuk menentukan apakah perbedaan performa antara Model A dan Model B signifikan secara statistik atau sekadar variasi acak:
 
 1. ***McNemar’s Test***
- Digunakan pada level prediksi sampel individu pada *Held-out Test Set* (872 sampel) untuk menguji apakah perbedaan proporsi kesalahan klasifikasi bersifat simetris atau asimetris (McNemar, 1947; Dror et al., 2018). Matriks kontingensi $2 \times 2$ dibangun secara khusus dari pasangan prediksi sampel pada *seed* acuan utama (*Seed 42*), yang menghasilkan statistik $\chi^2$ dan nilai $p$-value.
+ Digunakan pada level prediksi sampel individu pada *Held-out Test Set* (872 sampel) untuk menguji apakah perbedaan proporsi kesalahan klasifikasi bersifat simetris atau asimetris (McNemar, 1947; Dror et al., 2018). Matriks kontingensi $2 \times 2$ dibangun secara khusus dari pasangan prediksi sampel pada *seed* acuan utama (*Seed 42*), yang dipilih secara transparan karena merupakan *standard baseline seed* dalam eksperimen pembelajaran mesin serta memiliki profil performa prediktif yang paling representatif terhadap rerata agregat kedua model tanpa mengaburkan pasangan sampel individual. Uji ini menghasilkan statistik $\chi^2$ dan nilai $p$-value.
 2. ***Wilcoxon Signed-Rank Test***
  Digunakan pada level agregat untuk membandingkan distribusi F1-score yang diperoleh dari 6 run *random seed* ($n=6$) (Wilcoxon, 1945; Dror et al., 2018). Dengan $n=6$, nilai $p$-value secara teoritis dapat mencapai $p < 0,05$ (nilai minimum $p = 0,03125$), sehingga uji signifikansi statistik non-parametrik berpasangan menjadi valid.
 3. ***Bootstrap Confidence Interval***
