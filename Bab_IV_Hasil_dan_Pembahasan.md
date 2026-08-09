@@ -108,8 +108,7 @@ Hasil performa prediktif dan konsumsi sumber daya komputasi untuk setiap *run se
 
 Berdasarkan **Tabel 4.2**, pendekatan *End-to-End Fine-Tuning* (Model B) mengungguli *Feature Extraction* (Model A) secara konsisten di seluruh metrik prediktif dengan peningkatan rerata akurasi sebesar **$+6{,}73\%$** dan rerata F1-Score sebesar **$+6{,}28\%$**. 
 
-**Analisis Alokasi Memori VRAM GPU:**  
-Setelah memperhitungkan *warm-up CUDA context* pada Seed 42, rerata konsumsi VRAM puncak antara Model A ($3177{,}18\text{ MB}$) dan Model B ($3173{,}13\text{ MB}$) menunjukkan selisih yang sangat tipis yaitu **$-4{,}05\text{ MB}$** ($< 0{,}15\%$). Hasil ini secara teoritis sangat logis karena kedua model menginisialisasi arsitektur Transformer dasar yang identik (BERT-base dengan 110 juta parameter), sehingga *memory footprint* dasar pada GPU saat eksekusi batch berukuran 32 adalah hampir sama.
+Ditinjau dari aspek alokasi memori VRAM GPU, setelah memperhitungkan *warm-up CUDA context* pada Seed 42, rerata konsumsi VRAM puncak antara Model A ($3177{,}18\text{ MB}$) dan Model B ($3173{,}13\text{ MB}$) menunjukkan selisih yang sangat tipis yaitu **$-4{,}05\text{ MB}$** ($< 0{,}15\%$). Hasil ini secara teoritis sangat logis karena kedua model menginisialisasi arsitektur Transformer dasar yang identik (BERT-base dengan 110 juta parameter), sehingga *memory footprint* dasar pada GPU saat eksekusi batch berukuran 32 adalah hampir sama.
 
 ---
 
@@ -168,7 +167,7 @@ Untuk memahami karakteristik kegagalan prediktif masing-masing model, dilakukan 
 
 *Sumber: Data Hasil Eksperimen Diproses Peneliti (2026)*
 
-**Temuan Utama Analisis Linguistik:**
+Hasil pengujian pada **Tabel 4.4** mengungkapkan dua temuan utama terkait kegagalan dan ketahanan prediktif masing-masing model:
 1. **Ketahanan Terhadap Negasi Biner ($\Delta = +13{,}3\%$)**: Model A sering mengalami kesalahan pembalikan polaritas ketika menemukan kata negasi seperti *"not bad"*, karena bobot representasi vektor BERT statisnya terfokus pada kata sifat positif *"bad"*. Sebaliknya, Model B mampu menyesuaikan seluruh bobot perantian *attention* untuk memahami konstruksi negasi secara kontekstual.
 2. **Kinerja pada Review Panjang ($\Delta = +16{,}0\%$)**: Peningkatan terbesar terjadi pada kalimat panjang ($>40$ token). Model B memanfaatkan lapisan *Self-Attention* secara penuh untuk mempertahankan ketergantungan jarak jauh (*long-range dependencies*), sementara Model A kehilangan informasi spasial akibat kompresi langsung vektor `[CLS]`.
 
