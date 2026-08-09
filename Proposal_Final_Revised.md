@@ -981,7 +981,7 @@ Alur integrasi operasional dari tahap eksplorasi komputasional hingga pemuatan p
 Pendekatan *dual-backend* dengan *failover* otomatis dirancang untuk mengatasi tantangan operasional yang diidentifikasi oleh Sculley et al. (2015), yaitu ketergantungan pada infrastruktur komputasi yang dapat menjadi titik kegagalan (*single point of failure*) dalam sistem produksi. Dengan menyediakan server pencadangan berbasis CPU, sistem tetap dapat beroperasi meskipun server GPU utama mengalami *downtime*.
 
 1. **Tahap Eksplorasi dan Pelatihan di Google Colab**:
- 1. Pelatihan Model A (*Feature Extraction*) dan Model B (*Fine-Tuning*) dilakukan pada *Google Colab* GPU NVIDIA A100 GPU (16 GB VRAM).
+ 1. Pelatihan Model A (*Feature Extraction*) dan Model B (*Fine-Tuning*) dilakukan pada *Google Colab* GPU NVIDIA A100 GPU (40 GB VRAM).
  2. Proses pelatihan dieksekusi secara *multi-seed* ($n=6$) untuk menghasilkan log performa dan evaluasi statistik.
 
 2. **Tahap Ekspor dan Penyimpanan Artefak Model**:
@@ -990,7 +990,7 @@ Pendekatan *dual-backend* dengan *failover* otomatis dirancang untuk mengatasi t
 
 3. **Tahap Pemuatan Model & Deployment Server Web (Arsitektur Dual-Backend)**:
  1. **Server GPU Utama (Google Colab NVIDIA A100 GPU)**
- Server *FastAPI* dirancang untuk berjalan di *Google Colab* dengan akselerasi GPU NVIDIA A100 GPU (16 GB VRAM) dan dihubungkan ke publik melalui *Ngrok Static Tunnel*, ditargetkan mampu menyajikan inferensi *real-time* dengan latensi orde milidetik.
+ Server *FastAPI* dirancang untuk berjalan di *Google Colab* dengan akselerasi GPU NVIDIA A100 GPU (40 GB VRAM) dan dihubungkan ke publik melalui *Ngrok Static Tunnel*, ditargetkan mampu menyajikan inferensi *real-time* dengan latensi orde milidetik.
  2. **Server CPU Pencadangan (Railway Cloud)**
  Server *FastAPI* pencadangan dirancang untuk di-*deploy* pada *platform Railway* sebagai penopang redundansi saat server GPU Colab mengalami *downtime* atau *restart*.
  3. **Konfigurasi Sentral Terpisahkan (`config.js`)**
