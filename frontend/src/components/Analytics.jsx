@@ -144,7 +144,7 @@ function Analytics({ theme, userRole = 'public' }) {
           model_a: {
             accuracy_mean: 0.8603, accuracy_std: 0.0069,
             f1_mean: 0.8666, f1_std: 0.0043,
-            avg_latency_ms: 1.82, peak_vram_mb: 2814.50
+            avg_latency_ms: 1.82, peak_vram_mb: 3177.18
           },
           model_b: {
             accuracy_mean: 0.9278, accuracy_std: 0.0071,

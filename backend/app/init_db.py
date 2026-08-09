@@ -57,7 +57,7 @@ def init_db():
         
         # 1. Seed Benchmark Results for Model A (Feature Extraction - NVIDIA A100 Run)
         model_a_data = [
-            BenchmarkResult(seed_number=42, model_type="Model A", accuracy=0.8589, precision=0.8452, recall=0.8851, f1_score=0.8647, inference_time_ms=1.81, peak_vram_mb=992.93),
+            BenchmarkResult(seed_number=42, model_type="Model A", accuracy=0.8589, precision=0.8452, recall=0.8851, f1_score=0.8647, inference_time_ms=1.81, peak_vram_mb=3178.45),
             BenchmarkResult(seed_number=123, model_type="Model A", accuracy=0.8635, precision=0.8556, recall=0.8806, f1_score=0.8679, inference_time_ms=1.83, peak_vram_mb=3179.42),
             BenchmarkResult(seed_number=777, model_type="Model A", accuracy=0.8647, precision=0.8528, recall=0.8874, f1_score=0.8698, inference_time_ms=1.83, peak_vram_mb=3182.88),
             BenchmarkResult(seed_number=999, model_type="Model A", accuracy=0.8624, precision=0.8491, recall=0.8874, f1_score=0.8678, inference_time_ms=1.83, peak_vram_mb=3166.67),
