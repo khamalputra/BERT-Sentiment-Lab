@@ -560,7 +560,7 @@ Untuk menjaga konsistensi dan validitas eksperimen, beberapa variabel dikontrol,
 |Variabel Kontrol|Dataset & Skema Partitioning|Dataset SST-2 dari GLUE benchmark dengan pembagian data latih internal (60.614), validasi internal (6.735), dan *held-out test set* terisolasi (872).|
 |Variabel Kontrol|Pengaturan Multi-Seed|Penggunaan 6 *random seed* yang terkontrol ($n=6$, yaitu 42, 123, 777, 999, 1234, dan 2024).|
 |Variabel Kontrol|Batch Size & Hyperparameter|Batch size pelatihan dan inferensi dijaga seragam pada nilai 32 untuk kedua konfigurasi model.|
-|Variabel Kontrol|Lingkungan Komputasi|Eksperimen dijalankan pada GPU NVIDIA A100 40GB/80GB GPU pada Google Colab untuk perbandingan yang adil.|
+|Variabel Kontrol|Lingkungan Komputasi|Eksperimen dijalankan pada GPU NVIDIA A100 (40 GB VRAM) pada Google Colab untuk perbandingan yang adil.|
 
 *Sumber: Operasionalisasi Variabel Peneliti (2026)*
 
@@ -589,7 +589,7 @@ Waktu penelitian direncanakan berlangsung selama tiga bulan, yang mencakup tahap
 
 ## **3.4. Lingkungan Penelitian** 
 
-Eksperimen dalam penelitian ini dijalankan menggunakan GPU NVIDIA A100 Tensor Core GPU dengan kapasitas memori 16 GB yang tersedia pada *platform Google Colab*. Pemilihan akselerasi komputasi GPU ini penting untuk mempercepat proses pelatihan dan evaluasi model Transformer berskala besar. *Pipeline* penelitian dibangun menggunakan bahasa pemrograman Python 3.x dengan *framework* utama PyTorch dan pustaka Hugging Face *Transformers* (Wolf et al., 2020). Pemilihan lingkungan ini didasarkan pada kebutuhan komputasi model *deep learning* yang tinggi serta dukungan ekosistem yang luas untuk implementasi model berbasis Transformer, sebagaimana ditekankan pada riset optimasi komputasi dan pengenalan pola di FIKTI UMSU (Al-Khowarizmi et al., 2023).
+Eksperimen dalam penelitian ini dijalankan menggunakan GPU NVIDIA A100 Tensor Core GPU dengan kapasitas memori 40 GB yang tersedia pada *platform Google Colab*. Pemilihan akselerasi komputasi GPU ini penting untuk mempercepat proses pelatihan dan evaluasi model Transformer berskala besar. *Pipeline* penelitian dibangun menggunakan bahasa pemrograman Python 3.x dengan *framework* utama PyTorch dan pustaka Hugging Face *Transformers* (Wolf et al., 2020). Pemilihan lingkungan ini didasarkan pada kebutuhan komputasi model *deep learning* yang tinggi serta dukungan ekosistem yang luas untuk implementasi model berbasis Transformer, sebagaimana ditekankan pada riset optimasi komputasi dan pengenalan pola di FIKTI UMSU (Al-Khowarizmi et al., 2023).
 
 Pustaka *Transformers* menyediakan akses ke model BERT yang telah di-*pre-train* serta *utilities* untuk tokenisasi, *fine-tuning*, dan evaluasi secara terstandar. Untuk tahap integrasi dan *deployment* produk, pengembangan aplikasi web menggunakan *FastAPI* sebagai *framework REST API* pada *backend* dan *React / Vite* sebagai *framework* antarmuka pengguna pada *frontend*.
 
@@ -1359,9 +1359,11 @@ Ribeiro, M. T., Wu, T., Guestrin, C., & Singh, S. (2020). Beyond accuracy: Behav
 
 Ruder, S., Peters, M. E., Swayamdipta, S., & Wolf, T. (2019). Transfer learning in natural language processing. In *Proceedings of NAACL-HLT 2019 Tutorials* (pp. 15–18). Association for Computational Linguistics. 
 
-Shadish, W. R., Cook, T. D., & Campbell, D. T. (2002). *Experimental and quasi-experimental designs for generalized causal inference*. Houghton, Mifflin and Company. 
+Sawilowsky, S. S. (2009). New effect size rules of thumb. *Journal of Modern Applied Statistical Methods*, 8(2), 597–599. https://doi.org/10.22237/jmasm/1257035100
 
 Sculley, D., Holt, G., Golovin, D., Davydov, E., Phillips, T., Ebner, D., Chaudhary, V., Young, M., Crespo, J. F., & Dennison, D. (2015). Hidden technical debt in machine learning systems. In *Advances in Neural Information Processing Systems 28 (NeurIPS 2015)* (pp. 2503–2511). Curran Associates, Inc. 
+
+Shadish, W. R., Cook, T. D., & Campbell, D. T. (2002). *Experimental and quasi-experimental designs for generalized causal inference*. Houghton, Mifflin and Company. 
 
 Socher, R., Perelygin, A., Wu, J., Chuang, J., Manning, C. D., Ng, A., & Potts, C. (2013). Recursive deep models for semantic compositionality over a sentiment treebank. In *Proceedings of EMNLP 2013* (pp. 1631–1642). https://doi.org/10.18653/v1/D13-1170 
 
