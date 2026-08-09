@@ -122,8 +122,11 @@ def startup_event():
 
 @app.get("/api/health")
 def health_check():
-    import torch
-    is_gpu = (model_engine and model_engine.device.type == "cuda") or torch.cuda.is_available()
+    try:
+        import torch
+        is_gpu = (model_engine and hasattr(model_engine.device, 'type') and model_engine.device.type == "cuda") or torch.cuda.is_available()
+    except ImportError:
+        is_gpu = False
     return {
         "status": "healthy",
         "device": "GPU" if is_gpu else "CPU",
