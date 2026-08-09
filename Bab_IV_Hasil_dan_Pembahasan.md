@@ -24,19 +24,7 @@ Spesifikasi lengkap perangkat keras dan perangkat lunak yang digunakan dalam pen
 
 *Sumber: Data Diolah Peneliti (2026)*
 
-Untuk menjamin objektivitas dan transparansi data konsumsi daya komputasi, alokasi penggunaan memori puncak GPU (*Peak VRAM Allocation*) pada setiap siklus pelatihan dan inferensi diukur secara langsung menggunakan instrumen fungsi PyTorch CUDA berikut:
-
-```python
-# Instrumen Pengukuran Puncak Alokasi Memori VRAM GPU (PyTorch)
-torch.cuda.reset_peak_memory_stats()
-torch.cuda.synchronize()
-
-# Eksekusi siklus pelatihan / inferensi model
-peak_vram_bytes = torch.cuda.max_memory_allocated()
-peak_vram_mb = peak_vram_bytes / (1024 ** 2)  # Konversi dari Byte ke Megabyte (MB)
-```
-
-Prosedur pengukuran ini dijalankan pada setiap *run random seed* untuk memperoleh data alokasi VRAM puncak secara presisi setelah *CUDA context warm-up* terpenuhi.
+Untuk menjamin objektivitas dan transparansi data konsumsi daya komputasi, alokasi penggunaan memori puncak GPU (*Peak VRAM Allocation*) pada setiap siklus pelatihan dan inferensi diukur secara konsisten di setiap *run random seed* setelah *CUDA context warm-up* terpenuhi, sesuai dengan instrumen pengukuran PyTorch (`torch.cuda.max_memory_allocated()`) yang telah dirancang pada Bab III.
 
 #### **4.1.2. Arsitektur Integrasi Dual-Backend Hybrid**
 Untuk menjamin ketersediaan tinggi (*high availability*) dan latensi inferensi yang responsif pada aplikasi web, dikembangkan arsitektur *Dual-Backend Hybrid* dengan alur integrasi sebagai berikut:
