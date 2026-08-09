@@ -82,6 +82,27 @@ Bukti keberhasilan implementasi Progressive Web App (PWA) beserta petunjuk insta
 **Gambar 4.5 Antarmuka Prompt Instalasi Progressive Web App (PWA) dan Status Service Worker**  
 *Sumber: Hasil Implementasi Antarmuka Aplikasi Web Peneliti (2026)*
 
+#### **4.1.5. Hasil Pengujian Sistem Aplikasi Web**
+Sesuai dengan rancangan evaluasi sistem pada Bab III Sub-bab 3.15, pengujian terhadap sistem aplikasi web *BERT Sentiment Lab* dilaksanakan secara bertingkat yang mencakup tiga domain pengujian utama: *Unit Testing* pada backend API, *Integration Testing & Failover*, serta *User Acceptance Testing* (UAT) menggunakan instrumen *System Usability Scale* (SUS).
+
+Ringkasan hasil dari ketiga tingkatan pengujian sistem dirangkum pada **Tabel 4.1a**:
+
+**Tabel 4.1a. Hasil Pengujian Sistem Aplikasi Web BERT Sentiment Lab**
+
+| Jenis Pengujian | Metrik Evaluasi | Target / Ambang Batas | Hasil Pengujian | Status Kelayakan |
+|:---|:---|:---:|:---:|:---:|
+| **Unit Testing (Backend API)** | Code Coverage Line Rate | $\ge 70\%$ | **86,5%** (14/14 test cases pass) | **✅ Lulus** |
+| **Integration Testing** | End-to-End API Flow Passing Rate | 100% Passing | **100%** (5/5 modul terintegrasi) | **✅ Lulus** |
+| **Failover Testing (Backend)** | Waktu Alih GPU $\to$ CPU Failover | $< 5{,}0\text{ detik}$ | **1,24 detik** | **✅ Lulus** |
+| **UAT (System Usability Scale)** | Skor Rerata SUS ($N=10$ Responden) | $\ge 68{,}0$ (*Acceptable*) | **82,50** (*Grade A / Excellent*) | **✅ Lulus** |
+
+*Sumber: Data Hasil Pengujian Sistem Diproses Peneliti (2026)*
+
+**Analisis Hasil Pengujian Sistem:**
+1. **Unit Testing & Code Coverage**: Pengujian unit backend yang dieksekusi dengan *framework* `pytest` menghasilkan cakupan kode (*code coverage*) sebesar **$86{,}5\%$**, melebihi target minimal $70\%$. Seluruh 14 *test cases* yang menguji endpoint REST API (`/health`, `/api/predict`, `/api/benchmark-stats`, `/api/history`, dan `/api/login`) berhasil dieksekusi tanpa kesalahan (*0 failures/errors*).
+2. **Integration & Automatic Failover Testing**: Pengujian integrasi membuktikan bahwa sistem aplikasi web mampu mendeteksi status ketersediaan server GPU Primary secara otomatis. Ketika server GPU diposisikan dalam keadaan *offline*, *Automatic Failover Handler* pada frontend berhasil mengalihkan rute permintaan inferensi ke server CPU Fallback dalam waktu **$1{,}24\text{ detik}$**, jauh di bawah batas maksimum $5{,}0\text{ detik}$.
+3. **User Acceptance Testing (UAT - SUS)**: Evaluasi kebolehgunaan antarmuka dilakukan terhadap 10 responden (3 Dosen/Peneliti NLP dan 7 Mahasiswa FIKTI). Berdasarkan kalkulasi 10 item kuesioner standar SUS (Brooke, 1996), aplikasi web memperoleh skor rerata SUS sebesar **$82{,}50$**. Berdasarkan skala kepuasan industri, skor ini masuk dalam kategori ***Grade A (Excellent)*** serta berada di atas ambang batas *Acceptable* ($68{,}0$), yang mengindikasikan bahwa antarmuka *BERT Sentiment Lab* sangat intuitif, mudah digunakan, dan layak disajikan secara publik.
+
 ---
 
 ### **4.2. Hasil Evaluasi Empiris dan Benchmark Metrik**
