@@ -1,0 +1,25 @@
+name: bert-sentiment-lab
+channels:
+  - pytorch
+  - nvidia
+  - defaults
+  - conda-forge
+dependencies:
+  - python=3.10
+  - pytorch>=2.0.0
+  - torchvision
+  - torchaudio
+  - pytorch-cuda=11.8
+  - numpy>=1.24.0
+  - pandas>=1.5.0
+  - scikit-learn>=1.2.0
+  - scipy>=1.10.0
+  - pip:
+      - transformers>=4.30.0
+      - datasets>=2.12.0
+      - nltk>=3.8.0
+      - afinn>=0.1.0
+      - fastapi>=0.95.0
+      - uvicorn>=0.22.0
+      - sqlalchemy>=2.0.0
+      - tensorboard>=2.12.0
