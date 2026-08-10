@@ -2,31 +2,31 @@
   {
     "category_name": "Tanpa Negasi",
     "sample_count": 674,
-    "model_a_accuracy": 87.7,
-    "model_b_accuracy": 92.9
+    "model_a_accuracy": 87.8,
+    "model_b_accuracy": 94.4
   },
   {
     "category_name": "Negasi Biner",
     "sample_count": 173,
-    "model_a_accuracy": 80.3,
-    "model_b_accuracy": 91.3
+    "model_a_accuracy": 79.8,
+    "model_b_accuracy": 93.1
   },
   {
     "category_name": "Ironi / Sarkasme",
-    "sample_count": 142,
-    "model_a_accuracy": 82.4,
-    "model_b_accuracy": 91.5
+    "sample_count": 149,
+    "model_a_accuracy": 81.2,
+    "model_b_accuracy": 91.3
   },
   {
     "category_name": "Review Panjang",
-    "sample_count": 105,
-    "model_a_accuracy": 83.8,
-    "model_b_accuracy": 94.3
+    "sample_count": 76,
+    "model_a_accuracy": 80.3,
+    "model_b_accuracy": 93.4
   },
   {
     "category_name": "Ambiguitas Tinggi",
     "sample_count": 29,
-    "model_a_accuracy": 75.9,
+    "model_a_accuracy": 79.3,
     "model_b_accuracy": 89.7
   }
 ]
