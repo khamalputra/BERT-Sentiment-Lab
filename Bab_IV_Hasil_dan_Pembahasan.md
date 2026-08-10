@@ -145,7 +145,7 @@ Hasil evaluasi validasi internal untuk ke-6 *run random seed* dirangkum pada **T
 | (*Feature* | 123 | 86,83 | 88,12 | 7 | Disimpan |
 | *Extraction*) | 777 | 87,01 | 88,25 | 10 | Disimpan (Val F1 Tertinggi) |
 | | 999 | 86,79 | 88,10 | 9 | Disimpan |
-| | 1234 | **86,92** | **88,13** | 8 | **✓ Dipilih (Model A Deployment)** |
+| | 1234 | 86,92 | 88,13 | 8 | Disimpan |
 | | 2024 | 86,70 | 88,14 | 9 | Disimpan |
 | **Rerata $\pm \sigma$** | | **86,87 $\pm$ 0,12** | **88,15 $\pm$ 0,05** | — | — |
 | **Model B** | 42 | **95,52** | **95,91** | 5 | **✓ Dipilih (Model B Deployment Utama)** |
@@ -162,10 +162,10 @@ Hasil evaluasi validasi internal untuk ke-6 *run random seed* dirangkum pada **T
 
 Berdasarkan **Tabel 4.2a**, pada tahap validasi internal ($N=6.735$ sampel), Model B meraih rerata Validation F1-Score sebesar **$95{,}83\%$**, mengungguli Model A ($88{,}15\%$) dengan selisih sebesar **$+7{,}68\%$**. Berdasarkan skor validasi tertinggi:
 1. **Model B Seed 42** meraih *Validation F1-Score* tertinggi sebesar **$95{,}91\%$** (Validation Accuracy **$95{,}52\%$**) dan dipilih sebagai checkpoint bobot utama untuk pelayanan REST API `/api/predict` pada aplikasi web.
-2. **Model A Seed 1234** meraih *Validation F1-Score* sebesar **$88{,}13\%$** (dan meraih performa prediktif tertinggi pada *Held-out Test Set* dengan Test F1 **$87{,}07\%$**) dan dipilih sebagai checkpoint pembanding utama untuk pendekatan *Feature Extraction*.
+2. **Model A Seed 777** meraih *Validation F1-Score* tertinggi sebesar **$88{,}25\%$** (dengan performa prediktif pada *Held-out Test Set* sebesar Test F1 **$86{,}98\%$**) dan dipilih sebagai checkpoint pembanding utama untuk pendekatan *Feature Extraction*.
 
 #### **4.2.2. Hasil Evaluasi Performa Prediktif pada Held-out Test Set ($N=872$)**
-Sesuai dengan rancangan eksperimen pada metodologi eksperimen, evaluasi pada *Held-out Test Set* ($N=872$ sampel) dilakukan secara terisolasi murni tanpa *backpropagation autograd* (`with torch.no_grad()`) pada seluruh ke-6 *trained checkpoint* ($n=6$) setelah proses pelatihan dan penalaan *hyperparameter* pada data latih dan validasi internal selesai secara utuh. Prosedur ini diterapkan untuk menjamin tidak terjadinya kebocoran data (*data leakage*), mengukur kemampuan generalisasi model secara agregat ($Mean \pm \sigma$), serta menyediakan distribusi data F1-Score berpasangan yang dibutuhkan untuk pengujian statistik inferensial (Uji Wilcoxon dan Bootstrap 95% CI). Sementara itu, *checkpoint* dengan skor validasi tertinggi pada Data Validasi Internal (Model B Seed 42 & Model A Seed 1234) dipilih secara transparan sebagai model utama yang disimpan untuk *deployment* pada aplikasi web (RQ4). Hasil performa prediktif akhir, konsumsi VRAM, dan waktu inferensi pada *Held-out Test Set* untuk setiap *run seed* dirangkum pada **Tabel 4.2b**:
+Sesuai dengan rancangan eksperimen pada metodologi eksperimen, evaluasi pada *Held-out Test Set* ($N=872$ sampel) dilakukan secara terisolasi murni tanpa *backpropagation autograd* (`with torch.no_grad()`) pada seluruh ke-6 *trained checkpoint* ($n=6$) setelah proses pelatihan dan penalaan *hyperparameter* pada data latih dan validasi internal selesai secara utuh. Prosedur ini diterapkan untuk menjamin tidak terjadinya kebocoran data (*data leakage*), mengukur kemampuan generalisasi model secara agregat ($Mean \pm \sigma$), serta menyediakan distribusi data F1-Score berpasangan yang dibutuhkan untuk pengujian statistik inferensial (Uji Wilcoxon dan Bootstrap 95% CI). Sementara itu, *checkpoint* dengan skor validasi tertinggi pada Data Validasi Internal (Model B Seed 42 & Model A Seed 777) dipilih secara transparan sebagai model utama yang disimpan untuk *deployment* pada aplikasi web (RQ4). Hasil performa prediktif akhir, konsumsi VRAM, dan waktu inferensi pada *Held-out Test Set* untuk setiap *run seed* dirangkum pada **Tabel 4.2b**:
 
 **Tabel 4.2b. Hasil Evaluasi Empiris Model A dan Model B pada Held-out Test Set ($N=872$)**
 
