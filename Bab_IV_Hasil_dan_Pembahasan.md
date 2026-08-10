@@ -217,27 +217,27 @@ Rincian hasil pengukuran empiris konsumsi VRAM puncak selama fase pelatihan (*Tr
 
 | Pendekatan Model | Seed | Peak Allocated Training VRAM (MB) | Peak Reserved Training VRAM (MB) | Parameter Terlatih (*Trainable Params*) | Status Optimizer State Storage |
 |:---:|:---:|:---:|:---:|:---:|:---:|
-| **Model A** | 42 | 3885,12 | 4480,00 | 1.538 | Head Only (~0,01 MB) |
-| (*Feature* | 123 | 3892,45 | 4480,00 | 1.538 | Head Only (~0,01 MB) |
-| *Extraction*) | 777 | 3905,80 | 4480,00 | 1.538 | Head Only (~0,01 MB) |
-| | 999 | 3878,90 | 4480,00 | 1.538 | Head Only (~0,01 MB) |
-| | 1234 | 3889,50 | 4480,00 | 1.538 | Head Only (~0,01 MB) |
-| | 2024 | 3895,68 | 4480,00 | 1.538 | Head Only (~0,01 MB) |
-| **Rerata $\pm \sigma$** | | **3891,24 $\pm$ 8,9** | **4480,00 $\pm$ 0,0** | **1.538** | — |
-| **Model B** | 42 | 8388,50 | 9216,00 | 109.483.778 | Full 110M Params (~880 MB $m_t, v_t$) |
-| (*Fine-* | 123 | 8402,15 | 9216,00 | 109.483.778 | Full 110M Params (~880 MB $m_t, v_t$) |
-| *Tuning*) | 777 | 8415,60 | 9216,00 | 109.483.778 | Full 110M Params (~880 MB $m_t, v_t$) |
-| | 999 | 8382,40 | 9216,00 | 109.483.778 | Full 110M Params (~880 MB $m_t, v_t$) |
-| | 1234 | 8398,90 | 9216,00 | 109.483.778 | Full 110M Params (~880 MB $m_t, v_t$) |
-| | 2024 | 8391,45 | 9216,00 | 109.483.778 | Full 110M Params (~880 MB $m_t, v_t$) |
-| **Rerata $\pm \sigma$** | | **8396,50 $\pm$ 11,6** | **9216,00 $\pm$ 0,0** | **109.483.778** | — |
-| **Selisih ($\Delta$)** | | **+4505,26** | **+4736,00** | **+109.482.240** | — |
+| **Model A** | 42 | 1283,60 | 1362,00 | 1.538 | Head Only (~0,01 MB) |
+| (*Feature* | 123 | 3449,46 | 3574,00 | 1.538 | Head Only (~0,01 MB) |
+| *Extraction*) | 777 | 3460,71 | 3552,00 | 1.538 | Head Only (~0,01 MB) |
+| | 999 | 3453,04 | 3612,00 | 1.538 | Head Only (~0,01 MB) |
+| | 1234 | 3458,04 | 3598,00 | 1.538 | Head Only (~0,01 MB) |
+| | 2024 | 3459,04 | 3534,00 | 1.538 | Head Only (~0,01 MB) |
+| **Rerata $\pm \sigma$** | | **3093,98 $\pm$ 886,9** | **3372,67 $\pm$ 986,2** | **1.538** | — |
+| **Model B** | 42 | 5484,15 | 5678,00 | 109.483.778 | Full 110M Params (~880 MB $m_t, v_t$) |
+| (*Fine-* | 123 | 5487,32 | 5746,00 | 109.483.778 | Full 110M Params (~880 MB $m_t, v_t$) |
+| *Tuning*) | 777 | 5483,40 | 5662,00 | 109.483.778 | Full 110M Params (~880 MB $m_t, v_t$) |
+| | 999 | 5483,94 | 5644,00 | 109.483.778 | Full 110M Params (~880 MB $m_t, v_t$) |
+| | 1234 | 5478,27 | 5646,00 | 109.483.778 | Full 110M Params (~880 MB $m_t, v_t$) |
+| | 2024 | 5483,90 | 5654,00 | 109.483.778 | Full 110M Params (~880 MB $m_t, v_t$) |
+| **Rerata $\pm \sigma$** | | **5483,50 $\pm$ 2,9** | **5671,67 $\pm$ 38,2** | **109.483.778** | — |
+| **Selisih ($\Delta$)** | | **+2389,52** | **+2299,00** | **+109.482.240** | — |
 
 *Sumber: Data Hasil Pengukuran Empiris GPU Diproses Peneliti (2026)*  
 *\*Catatan: VRAM pelatihan diukur menggunakan torch.cuda.max_memory_allocated() selama siklus backpropagation pelatihan batch per epoch.*
 
 Berdasarkan **Tabel 4.2d** dan komparasi terhadap Tabel 4.2c, perbedaan profil memori VRAM antara kedua fase dijelaskan sebagai berikut:
-1. **Fase Pelatihan (Training Phase - Tabel 4.2d)**: Selama fase pelatihan (*backpropagation autograd* & pembaruan bobot AdamW), Model B membutuhkan rerata VRAM teralokasi puncak sebesar **$8.396{,}50 \pm 11{,}6\text{ MB}$ ($\sim 8{,}20\text{ GB}$)** dan *Peak Reserved VRAM* sebesar **$9.216{,}00\text{ MB}$ ($9{,}00\text{ GB}$)**. Hal ini disebabkan oleh keharusan PyTorch mencadangkan memori GPU untuk *gradient tensor storage* dan *AdamW optimizer 1st & 2nd moment states* ($m_t, v_t$) untuk seluruh 109,48 juta parameter. Sebaliknya, Model A (*Feature Extraction*) hanya membutuhkan rerata VRAM teralokasi pelatihan sebesar **$3.891{,}24 \pm 8{,}9\text{ MB}$ ($\sim 3{,}80\text{ GB}$)**, karena *autograd gradient* dan *optimizer state* hanya dialokasikan khusus untuk 1.538 parameter pada *linear classification head* (seluruh 110M parameter *backbone* BERT di-freeze/ditutup pembaharuannya).
+1. **Fase Pelatihan (Training Phase - Tabel 4.2d)**: Selama fase pelatihan (*backpropagation autograd* & pembaruan bobot AdamW), Model B membutuhkan rerata VRAM teralokasi puncak sebesar **$5.483{,}50 \pm 2{,}9\text{ MB}$ ($\sim 5{,}35\text{ GB}$)** dan *Peak Reserved VRAM* sebesar **$5.671{,}67\text{ MB}$ ($5{,}54\text{ GB}$)**. Hal ini disebabkan oleh keharusan PyTorch mencadangkan memori GPU untuk *gradient tensor storage* dan *AdamW optimizer 1st & 2nd moment states* ($m_t, v_t$) untuk seluruh 109,48 juta parameter. Sebaliknya, Model A (*Feature Extraction*) hanya membutuhkan rerata VRAM teralokasi pelatihan sebesar **$3.093{,}98 \pm 886{,}9\text{ MB}$ ($\sim 3{,}02\text{ GB}$)** (atau $3.456{,}06 \pm 4{,}8\text{ MB}$ saat mengabaikan run inisialisasi awal), karena *autograd gradient* dan *optimizer state* hanya dialokasikan khusus untuk 1.538 parameter pada *linear classification head* (seluruh 110M parameter *backbone* BERT di-freeze/ditutup pembaharuannya).
 2. **Fase Inferensi Production (Inference Phase - Tabel 4.2c)**: Setelah proses pelatihan selesai (`model.eval()`, `with torch.no_grad()`), seluruh *gradient buffer* dan *optimizer state* dibebaskan. Pada tahap inferensi production, Model A membuktikan efisiensi VRAM yang lebih baik dengan rerata memori teralokasi sebesar **$2.812{,}93 \pm 891{,}6\text{ MB}$** (lebih hemat **$360{,}20\text{ MB}$** atau **$\sim 11{,}4\%$** dibanding Model B sebesar $3.173{,}13 \pm 4{,}4\text{ MB}$). Pada pengujian awal (*clean GPU state* Seed 42), Model A bahkan menghemat hingga **$2.177{,}70\text{ MB}$ ($\sim 68{,}7\%$)** ($992{,}93\text{ MB}$ vs $3.170{,}63\text{ MB}$), sebelum *PyTorch CUDA Caching Allocator* menumpuk *memory pool* hingga batas *Peak Reserved VRAM* ($3.584{,}00\text{ MB}$) pada run berikutnya.
 
 ---
