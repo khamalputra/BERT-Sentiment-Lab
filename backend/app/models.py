@@ -28,6 +28,11 @@ class BenchmarkResult(Base):
     f1_score = Column(Float, nullable=False)
     inference_time_ms = Column(Float, nullable=False)
     peak_vram_mb = Column(Float, nullable=False)
+    reserved_vram = Column(Float, nullable=True)
+    train_peak_vram = Column(Float, nullable=True)
+    train_reserved_vram = Column(Float, nullable=True)
+    stopped_epoch = Column(Integer, nullable=True)
+    best_val_f1 = Column(Float, nullable=True)
 
 class StatisticalTest(Base):
     __tablename__ = "statistical_tests"

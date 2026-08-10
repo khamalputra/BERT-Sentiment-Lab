@@ -50,6 +50,11 @@ class ModelSummaryStats(BaseModel):
     f1_std: float
     avg_latency_ms: float
     peak_vram_mb: float
+    reserved_vram: Optional[float] = None
+    train_peak_vram: Optional[float] = None
+    train_reserved_vram: Optional[float] = None
+    stopped_epoch: Optional[int] = None
+    best_val_f1: Optional[float] = None
 
 # Statistical test metrics in benchmark stats API
 class StatisticalTestDetails(BaseModel):

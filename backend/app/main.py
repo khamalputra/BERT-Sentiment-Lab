@@ -259,13 +259,24 @@ def get_benchmark_stats(db: Session = Depends(get_db)):
                 m = mean(lst)
                 return math.sqrt(sum((x - m) ** 2 for x in lst) / (len(lst) - 1))
                 
+            res_vrams = [r.reserved_vram for r in runs if getattr(r, 'reserved_vram', None) is not None]
+            tr_peaks = [r.train_peak_vram for r in runs if getattr(r, 'train_peak_vram', None) is not None]
+            tr_res = [r.train_reserved_vram for r in runs if getattr(r, 'train_reserved_vram', None) is not None]
+            epochs = [r.stopped_epoch for r in runs if getattr(r, 'stopped_epoch', None) is not None]
+            val_f1s = [r.best_val_f1 for r in runs if getattr(r, 'best_val_f1', None) is not None]
+
             return ModelSummaryStats(
                 accuracy_mean=round(mean(accs), 4),
                 accuracy_std=round(std(accs), 4),
                 f1_mean=round(mean(f1s), 4),
                 f1_std=round(std(f1s), 4),
                 avg_latency_ms=round(mean(lats), 2),
-                peak_vram_mb=round(mean(vrams), 2)
+                peak_vram_mb=round(mean(vrams), 2),
+                reserved_vram=round(mean(res_vrams), 2) if res_vrams else None,
+                train_peak_vram=round(mean(tr_peaks), 2) if tr_peaks else None,
+                train_reserved_vram=round(mean(tr_res), 2) if tr_res else None,
+                stopped_epoch=int(mean(epochs)) if epochs else None,
+                best_val_f1=round(mean(val_f1s), 4) if val_f1s else None
             )
             
         summary = {
