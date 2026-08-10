@@ -22,7 +22,7 @@ Berdasarkan hasil eksperimen empiris, pengujian statistik inferensial, analisis 
 
 ### **5.2. Saran**
 
-Berdasarkan pengalaman eksperimen dan keterbatasan penelitian yang dirumuskan pada Sub-bab 4.6, disarankan beberapa hal terarah yang terpetakan secara 1-to-1 untuk pengembangan penelitian selanjutnya:
+Berdasarkan pengalaman eksperimen dan keterbatasan penelitian yang dirumuskan pada keterbatasan penelitian, disarankan beberapa hal terarah yang terpetakan secara 1-to-1 untuk pengembangan penelitian selanjutnya:
 
 1. **Ekspansi Jumlah Random Seed Pelatihan (Pemetaan Keterbatasan 1)**: Penelitian selanjutnya disarankan untuk memperluas jumlah *random seed* pelatihan menjadi minimal $n = 15$ atau $n = 30$ guna meningkatkan kekuatan statistik (*statistical power*) uji non-parametrik serta memungkinkan analisis kurva estimasi parametrik yang lebih representatif terhadap variasi stokastik inisialisasi bobot deep learning.
 2. **Eksplorasi Arsitektur Model Transformer Terkini (Pemetaan Keterbatasan 2)**: Penelitian selanjutnya disarankan untuk membandingkan arsitektur BERT dengan model Transformer yang lebih baru seperti RoBERTa dan DeBERTa-v3, atau model berukuran ringkas (*compact models*) seperti DistilBERT dan ALBERT untuk mengevaluasi kompromi efisiensi latensi vs akurasi pada perangkat bersumber daya terbatas.
