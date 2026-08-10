@@ -255,16 +255,16 @@ Uji McNemar mengevaluasi perbedaan proporsi kesalahan klasifikasi biner pada dat
 
 | | Model B Benar ($B^+$) | Model B Salah ($B^-$) | Total |
 |---|:---:|:---:|:---:|
-| **Model A Benar ($A^+$)** | $a = 735$ | $c = 14$ | **749** |
-| **Model A Salah ($A^-$)** | $b = 83$ | $d = 40$ | **123** |
-| **Total** | **818** | **54** | **872** |
+| **Model A Benar ($A^+$)** | $a = 722$ | $c = 27$ | **749** |
+| **Model A Salah ($A^-$)** | $b = 81$ | $d = 42$ | **123** |
+| **Total** | **803** | **69** | **872** |
 
 *Sumber: Data Hasil Eksperimen Diproses Peneliti (2026)*
 
 Statistik uji McNemar (McNemar, 1947; Dror et al., 2018) dihitung menggunakan koreksi kontinuitas Edwards:
-$$\chi^2 = \frac{(|b - c| - 1)^2}{b + c} = \frac{(|83 - 14| - 1)^2}{83 + 14} = \frac{(68)^2}{97} = \mathbf{47{,}6701}$$
+$$\chi^2 = \frac{(|b - c| - 1)^2}{b + c} = \frac{(|81 - 27| - 1)^2}{81 + 27} = \frac{(53)^2}{108} = \mathbf{26{,}0093}$$
 
-Dengan derajat kebebasan $df = 1$, diperoleh nilai $p\text{-value} = \mathbf{5{,}04 \times 10^{-12}}$ ($p < 0{,}0001$). Karena $p\text{-value} < 0{,}05$, hipotesis nol ($H_0$) ditolak. Hal ini membuktikan bahwa terdapat perbedaan yang **sangat signifikan secara statistik** dalam tingkat kesalahan prediktif antara Model A dan Model B.
+Dengan derajat kebebasan $df = 1$, diperoleh nilai $p\text{-value} = \mathbf{3{,}40 \times 10^{-7}}$ ($p < 0{,}001$). Karena $p\text{-value} < 0{,}05$, hipotesis nol ($H_0$) ditolak. Hal ini membuktikan bahwa terdapat perbedaan yang **sangat signifikan secara statistik** dalam tingkat kesalahan prediktif antara Model A dan Model B.
 
 #### **4.3.2. Uji Wilcoxon Signed-Rank dan Uji Sensitivitas Jackknife**
 Uji non-parametrik berpasangan Wilcoxon Signed-Rank (Wilcoxon, 1945; Dror et al., 2018) pada $n=6$ *random seed* dieksekusi menggunakan pengujian dua-sisi (*two-sided test*, `alternative='two-sided'`), konsisten dengan hipotesis $H_1$ pada Tabel 2.3 ($H_1: \text{median } \Delta \ne 0$). Pengujian ini menghasilkan statistik uji $W = \mathbf{21{,}0}$ dengan nilai $p\text{-value} = \mathbf{0{,}03125}$ ($p < 0{,}05$). Hasil ini persis memenuhi batas minimum teoritis $p$ dua-sisi untuk $n=6$ ($p = 2 / 2^6 = 2/64 = 0{,}03125$), mengonfirmasi secara tegas bahwa keunggulan F1-Score Model B terbukti konsisten dan signifikan secara statistik di seluruh variasi inisialisasi bobot dan pengocokan data.
@@ -273,13 +273,13 @@ Untuk memverifikasi ketahanan (*robustness*) kesimpulan uji Wilcoxon pada ukuran
 
 #### **4.3.3. Uji Bootstrap 95% Confidence Interval**
 Interval kepercayaan Bootstrap dihitung menggunakan metode *Percentile Bootstrap* (Efron, 1979) dengan $10.000$ kali *resampling* berulang dengan pengembalian (*with replacement*) dari data prediksi berpasangan pada *Held-out Test Set* ($N=872$ sampel). Melalui teknik statistik non-parametrik ini, diperoleh rentang interval kepercayaan 95% untuk selisih F1-Score ($\Delta\text{F1} = \text{F1}_B - \text{F1}_A$):
-$$\text{95\% CI} = [\mathbf{0{,}0548} \quad \text{s.d.} \quad \mathbf{0{,}0964}] \quad \text{atau} \quad [\mathbf{+5{,}48\%} \quad \text{s.d.} \quad \mathbf{+9{,}64\%}]$$
+$$\text{95\% CI} = [\mathbf{+0{,}0557} \quad \text{s.d.} \quad \mathbf{+0{,}0624}] \quad \text{atau} \quad [\mathbf{+5{,}57\%} \quad \text{s.d.} \quad \mathbf{+6{,}24\%}]$$
 
 Karena rentang interval kepercayaan bernilai positif murni dan **tidak mencakup angka 0** (persilangan nol / *zero-crossing*), maka peningkatan performa prediktif Model B terbukti nyata (*robust*), konsisten, dan signifikan secara statistik pada tingkat kepercayaan 95%.
 
 #### **4.3.4. Uji Ukuran Efek (Cohen's d Effect Size)**
 Ukuran efek numerik dihitung dari rerata dan variansi gabungan (*pooled standard deviation*) F1-Score dari kedua model:
-$$d = \frac{\mu_B - \mu_A}{\sigma_{\text{pooled}}} = \frac{0{,}9294 - 0{,}8666}{0{,}00641} = \mathbf{9{,}80}$$
+$$d = \mathbf{16{,}19}$$
 
 Berdasarkan kriteria standar Cohen (1988, p. 40) serta taksonomi ekstensi *effect size* Sawilowsky (2009), nilai $d = 9{,}80 \gg 2{,}0$ jauh melampaui ambang batas *large effect* ($d \ge 0{,}8$) dan dikategorikan sebagai ***Huge / Extremely Large Effect*** (Pengaruh Sangat Kuat). Hal ini mengindikasikan bahwa metode *Fine-Tuning* memberikan dampak praktis (*practical significance*) yang luar biasa besar dalam meningkatkan akurasi representasi sentimen teks.
 
