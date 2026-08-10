@@ -28,11 +28,6 @@ class BenchmarkResult(Base):
     f1_score = Column(Float, nullable=False)
     inference_time_ms = Column(Float, nullable=False)
     peak_vram_mb = Column(Float, nullable=False)
-    reserved_vram = Column(Float, nullable=True)
-    train_peak_vram = Column(Float, nullable=True)
-    train_reserved_vram = Column(Float, nullable=True)
-    stopped_epoch = Column(Integer, nullable=True)
-    best_val_f1 = Column(Float, nullable=True)
 
 class StatisticalTest(Base):
     __tablename__ = "statistical_tests"
@@ -43,11 +38,11 @@ class StatisticalTest(Base):
     bootstrap_ci_lower = Column(Float, nullable=False)
     bootstrap_ci_upper = Column(Float, nullable=False)
     cohens_d = Column(Float, nullable=False)
-    mcnemar_both_correct = Column(Integer, nullable=True, default=712)
+    mcnemar_both_correct = Column(Integer, nullable=True, default=722)
     mcnemar_a_correct_b_wrong = Column(Integer, nullable=True, default=27)
-    mcnemar_b_correct_a_wrong = Column(Integer, nullable=True, default=89)
-    mcnemar_both_wrong = Column(Integer, nullable=True, default=44)
-    mcnemar_chi2 = Column(Float, nullable=True, default=32.0776)
+    mcnemar_b_correct_a_wrong = Column(Integer, nullable=True, default=81)
+    mcnemar_both_wrong = Column(Integer, nullable=True, default=42)
+    mcnemar_chi2 = Column(Float, nullable=True, default=26.0093)
     created_at = Column(DateTime(timezone=True), server_default=func.now())
 
 class ErrorAnalysisLog(Base):
@@ -58,6 +53,4 @@ class ErrorAnalysisLog(Base):
     model_a_accuracy = Column(Float, nullable=False)
     model_b_accuracy = Column(Float, nullable=False)
     sample_count = Column(Integer, nullable=False, default=0)
-    primary_error_type = Column(Text, nullable=True)
     created_at = Column(DateTime(timezone=True), server_default=func.now())
-
