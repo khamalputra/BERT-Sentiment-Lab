@@ -17,8 +17,8 @@ BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 MODELS_DIR = os.path.join(BASE_DIR, "models")
 
 # Google Drive File IDs from NVIDIA A100 GPU Experiment Folder
-MODEL_A_FILE_ID = "1geStR3TALgnI3-TaWU4umsP0V5Yaxdun"
-MODEL_B_FILE_ID = "12Iwo2PdFdKOAk0LaUwpQp5t_tDGndH99"
+MODEL_A_FILE_ID = os.environ.get("MODEL_A_FILE_ID", "1geStR3TALgnI3-TaWU4umsP0V5Yaxdun")
+MODEL_B_FILE_ID = os.environ.get("MODEL_B_FILE_ID", "12Iwo2PdFdKOAk0LaUwpQp5t_tDGndH99")
 
 def download_from_gdrive(file_id: str, output_path: str):
     """Downloads a file from Google Drive using gdown."""
