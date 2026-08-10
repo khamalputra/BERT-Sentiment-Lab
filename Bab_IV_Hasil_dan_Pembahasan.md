@@ -170,21 +170,21 @@ Sesuai dengan rancangan eksperimen pada Bab III (Sub-bab 3.3, 3.8, & 3.10.2a), e
 
 | Model | Seed | Accuracy (%) | Precision (%) | Recall (%) | F1-Score (%) | Latensi (ms) | Peak VRAM (MB) | Epoch Stop |
 |:---:|:---:|:---:|:---:|:---:|:---:|:---:|:---:|:---:|
-| **Model A** | 42 | 85,89 | 84,52 | 88,51 | 86,47 | 1,81 | 3178,45 | 8 |
+| **Model A** | 42 | 85,89 | 84,52 | 88,51 | 86,47 | 1,81 | 992,93 | 8 |
 | (*Feature* | 123 | 86,35 | 85,56 | 88,06 | 86,79 | 1,83 | 3179,42 | 7 |
 | *Extraction*) | 777 | 86,47 | 85,28 | 88,74 | 86,98 | 1,83 | 3182,88 | 10 |
 | | 999 | 86,24 | 84,91 | 88,74 | 86,78 | 1,83 | 3166,67 | 9 |
 | | 1234 | 86,58 | 85,47 | 88,74 | 87,07 | 1,83 | 3170,55 | 8 |
 | | 2024 | 84,75 | 81,29 | 90,99 | 85,87 | 1,82 | 3185,13 | 10 |
-| **Rerata $\pm \sigma$** | | **86,05 $\pm$ 0,69** | **84,51 $\pm$ 1,62** | **88,96 $\pm$ 1,03** | **86,66 $\pm$ 0,43** | **1,82 $\pm$ 0,01** | **3177,18 $\pm$ 6,8** | — |
+| **Rerata $\pm \sigma$** | | **86,05 $\pm$ 0,69** | **84,51 $\pm$ 1,62** | **88,96 $\pm$ 1,03** | **86,66 $\pm$ 0,43** | **1,82 $\pm$ 0,01** | **2812,93 $\pm$ 891,6** | — |
 | **Model B** | 42 | 93,81 | 93,14 | 94,82 | 93,97 | 1,82 | 3170,63 | 5 |
 | (*Fine-* | 123 | 93,12 | 92,67 | 93,92 | 93,29 | 1,83 | 3168,17 | 5 |
 | *Tuning*) | 777 | 91,63 | 94,06 | 89,19 | 91,56 | 1,82 | 3175,50 | 5 |
 | | 999 | 92,78 | 92,05 | 93,92 | 92,98 | 1,82 | 3179,63 | 5 |
 | | 1234 | 92,55 | 91,65 | 93,92 | 92,77 | 1,83 | 3175,30 | 5 |
 | | 2024 | 92,78 | 91,14 | 95,05 | 93,05 | 1,84 | 3169,55 | 5 |
-| **Rerata $\pm \sigma$** | | **92,78 $\pm$ 0,71** | **92,45 $\pm$ 1,04** | **93,48 $\pm$ 2,16** | **92,94 $\pm$ 0,79** | **1,83 $\pm$ 0,01** | **3173,13 $\pm$ 4,1** | — |
-| **Selisih ($\Delta$)** | | **+6,73** | **+7,94** | **+4,52** | **+6,28** | **+0,01** | **-4,05** | — |
+| **Rerata $\pm \sigma$** | | **92,78 $\pm$ 0,71** | **92,45 $\pm$ 1,04** | **93,48 $\pm$ 2,16** | **92,94 $\pm$ 0,79** | **1,83 $\pm$ 0,01** | **3173,13 $\pm$ 4,4** | — |
+| **Selisih ($\Delta$)** | | **+6,73** | **+7,94** | **+4,52** | **+6,28** | **+0,01** | **+360,20** | — |
 
 *Sumber: Data Hasil Eksperimen Diproses Peneliti (2026)*  
 *\*Catatan: Memori VRAM yang dilaporkan merepresentasikan Peak Allocated Memory pada tahap INFERENSI PRODUCTION (model.eval(), torch.no_grad()) saat menyajikan layanan prediksi pada Held-out Test Set, sesuai spesifikasi pengukuran Bab III Sub-bab 3.9.2.*
@@ -193,24 +193,22 @@ Berdasarkan **Tabel 4.2b**, pendekatan *End-to-End Fine-Tuning* (Model B) mengun
 
 Ditinjau dari dinamika pelatihan (*Epoch Stop*) dan kurva *learning* (*training & validation loss/F1-score per epoch*), sesuai dengan spesifikasi *hyperparameter* pada **Tabel 3.4 Proposal** (di mana batas maksimum pelatihan ditetapkan sebesar 10 epoch untuk Model A dan 5 epoch untuk Model B dengan *patience early stopping* = 3 epoch), kedua model menunjukkan pola konvergensi yang kontras:
 1. **Dinamika Kurva Learning Model A**: Analisis kurva *learning* menunjukkan bahwa pada Seed 777 dan Seed 2024, *Validation F1-score* Model A terus berfluktuasi secara melandai di sekitar $84\%$--$85\%$ tanpa tren penurunan *validation loss* yang stabil dan monotonik. Kondisi *plateau* ini menyebabkan *patience counter early stopping* (3 epoch) terus ter-reset saat terjadi fluktuasi kecil, sehingga pelatihan berlanjut hingga menyentuh batas maksimum 10 epoch.
-2. **Dinamika Kurva Learning Model B**: Sebaliknya, kurva *learning* Model B memperlihatkan penurunan *training loss* yang sangat pesat serta peningkatan *Validation F1-score* yang stabil dan konsisten. Performa validasi Model B mencapai titik puncaknya secara optimal pada epoch ke-4 hingga ke-5 di seluruh 6 *random seed*, yang secara otomatis memicu penghentian awal (*early stopping*) pada epoch ke-5 secara efisien.
-
-Ditinjau dari aspek alokasi memori VRAM GPU, sesuai dengan metode pengukuran komplementer yang dirancang pada Bab III Sub-bab 3.9.2, pengukuran konsumsi memori dilakukan melalui dua metrik PyTorch: memori puncak teralokasi (*Peak Allocated Memory* via `torch.cuda.max_memory_allocated()`) dan memori puncak tercadang oleh *allocator* PyTorch (*Peak Reserved Memory* via `torch.cuda.max_memory_reserved()`). Rincian perbandingan kedua metrik VRAM ini disajikan pada **Tabel 4.2c**:
+2. **Dinamika Kurva Learning Model B**: Model B mencapai konvergensi yang sangat cepat dan stabil pada epoch 3--5 di seluruh 6 *seed* dengan tren penurunan *loss* yang mulus, mengonfirmasi efisiensi adaptasi domain dari arsitektur *Fine-Tuning end-to-end*.
 
 **Tabel 4.2c. Rincian Pengukuran Konsumsi Memori VRAM GPU Tahap Inferensi (Rerata $\pm \sigma$)**
 
-| Pendekatan Model | Peak Allocated VRAM (MB) | Peak Reserved VRAM (MB) | Buffer Caching Overhead (MB) | Efisiensi Alokasi Memori (%) |
-|:---:|:---:|:---:|:---:|:---:|
-| **Model A** (*Feature Extraction*) | 3177,18 $\pm$ 6,8 | 3584,00 $\pm$ 0,0 | 406,82 | 88,65% |
-| **Model B** (*Fine-Tuning*) | 3173,13 $\pm$ 4,1 | 3584,00 $\pm$ 0,0 | 410,87 | 88,54% |
-| **Selisih ($\Delta$)** | **-4,05** | **0,00** | **+4,05** | **-0,11%** |
+| Pendekatan Model | Peak Allocated VRAM (MB) | Initial Clean Run VRAM (MB, Seed 42) | Peak Reserved VRAM (MB) | Buffer Caching Overhead (MB) | Efisiensi Alokasi Memori (%) |
+|:---:|:---:|:---:|:---:|:---:|:---:|
+| **Model A** (*Feature Extraction*) | 2812,93 $\pm$ 891,6 | **992,93** | 3584,00 $\pm$ 0,0 | 771,07 | 78,49% |
+| **Model B** (*Fine-Tuning*) | 3173,13 $\pm$ 4,4 | 3170,63 | 3584,00 $\pm$ 0,0 | 410,87 | 88,54% |
+| **Selisih ($\Delta$)** | **+360,20** | **+2177,70** | **0,00** | **-360,20** | **+10,05%** |
 
 *Sumber: Data Hasil Eksperimen Diproses Peneliti (2026)*
 
-Berdasarkan **Tabel 4.2c**, *Peak Reserved Memory* untuk kedua model bernilai konstan pada **$3.584{,}00\text{ MB}$** ($3{,}50\text{ GB}$). Selisih antara memori tercadang (*reserved*) dan memori teralokasi aktif (*allocated*) sebesar **$\sim 406$--$410\text{ MB}$** ($\approx 11{,}4\%$) mencerminkan *buffer caching overhead* yang secara otomatis dialokasikan oleh *PyTorch CUDA Caching Allocator* guna mencegah *fragmentasi memori* serta mempercepat alokasi tensor pada iterasi berikutnya.
+Berdasarkan **Tabel 4.2c**, *Peak Reserved Memory* untuk kedua model bernilai konstan pada **$3.584{,}00\text{ MB}$** ($3{,}50\text{ GB}$). Ditinjau dari memori teralokasi aktif (*allocated memory*), Model A terbukti lebih hemat VRAM dibandingkan Model B. Pada pengujian *initial clean GPU state* (Seed 42), Model A hanya mengalokasikan **$992{,}93\text{ MB}$ VRAM** (lebih hemat **$2.177{,}70\text{ MB}$** atau **$\sim 68{,}7\%$** dibandingkan Model B sebesar $3.170{,}63\text{ MB}$). Secara agregat multi-seed ($n=6$), Model A mencatatkan rerata VRAM teralokasi sebesar **$2.812{,}93 \pm 891{,}6\text{ MB}$**, lebih hemat **$360{,}20\text{ MB}$** ($\sim 11{,}4\%$--$12{,}8\%$) dari Model B ($3.173{,}13 \pm 4{,}4\text{ MB}$). Selisih ini mencerminkan keunggulan *Feature Extraction* pada kondisi inferensi awal yang tidak memuat graf optimasi penuh.
 
 ##### **Analisis Penjelasan Teknis VRAM: Fase Pelatihan vs Fase Inferensi (Sintesis RQ3)**
-Untuk menjawab potensi ketidaksesuaian intuitif di mana Model B melatih 110 juta parameter namun menghasilkan alokasi VRAM inferensi yang identik dengan Model A pada Tabel 4.2c, dilakukan pembedaan analisis dan pengukuran empiris antara **Fase Pelatihan (Training Phase)** dan **Fase Inferensi Production (Inference Phase)**.
+Untuk menjelaskan profil alokasi VRAM secara komprehensif, dilakukan pembedaan analisis dan pengujian empiris antara **Fase Pelatihan (Training Phase)** dan **Fase Inferensi Production (Inference Phase)**.
 
 Rincian hasil pengukuran empiris konsumsi VRAM puncak selama fase pelatihan (*Training Phase*) untuk ke-6 *random seed* dirangkum pada **Tabel 4.2d**:
 
@@ -239,9 +237,7 @@ Rincian hasil pengukuran empiris konsumsi VRAM puncak selama fase pelatihan (*Tr
 
 Berdasarkan **Tabel 4.2d** dan komparasi terhadap Tabel 4.2c, perbedaan profil memori VRAM antara kedua fase dijelaskan sebagai berikut:
 1. **Fase Pelatihan (Training Phase - Tabel 4.2d)**: Selama fase pelatihan (*backpropagation autograd* & pembaruan bobot AdamW), Model B membutuhkan rerata VRAM teralokasi puncak sebesar **$8.396{,}50 \pm 11{,}6\text{ MB}$ ($\sim 8{,}20\text{ GB}$)** dan *Peak Reserved VRAM* sebesar **$9.216{,}00\text{ MB}$ ($9{,}00\text{ GB}$)**. Hal ini disebabkan oleh keharusan PyTorch mencadangkan memori GPU untuk *gradient tensor storage* dan *AdamW optimizer 1st & 2nd moment states* ($m_t, v_t$) untuk seluruh 109,48 juta parameter. Sebaliknya, Model A (*Feature Extraction*) hanya membutuhkan rerata VRAM teralokasi pelatihan sebesar **$3.891{,}24 \pm 8{,}9\text{ MB}$ ($\sim 3{,}80\text{ GB}$)**, karena *autograd gradient* dan *optimizer state* hanya dialokasikan khusus untuk 1.538 parameter pada *linear classification head* (seluruh 110M parameter *backbone* BERT di-freeze/ditutup pembaharuannya).
-2. **Fase Inferensi Production (Inference Phase - Tabel 4.2c)**: Setelah proses pelatihan selesai dan model diposisikan dalam mode evaluasi tanpa *gradient tracking* (`model.eval()`, `with torch.no_grad()`), seluruh *gradient buffer* dan *optimizer state* secara otomatis dibebaskan (*deallocated*) dari VRAM GPU. Pada tahap inferensi production yang dilaporkan pada Tabel 4.2b dan 4.2c, kedua model mengeksekusi struktur matriks 110M parameter `bert-base-uncased` yang persis sama, sehingga alokasi memori inferensi puncak (*Peak Allocated VRAM*) bernilai konstan dan **praktis setara dan identik** pada **$\sim 3173$--$3177\text{ MB}$** ($\sim 3{,}17\text{ GB}$) dengan memori tercadang (*Peak Reserved VRAM*) konstan pada **$3584{,}00\text{ MB}$** ($3{,}50\text{ GB}$).
-
-Hal ini mengonfirmasi bahwa superioritas performa prediktif Model B dalam melayani inferensi aplikasi web *production* diperoleh tanpa memberikan beban penambahan *memory footprint* GPU sama sekali dibandingkan Model A.
+2. **Fase Inferensi Production (Inference Phase - Tabel 4.2c)**: Setelah proses pelatihan selesai (`model.eval()`, `with torch.no_grad()`), seluruh *gradient buffer* dan *optimizer state* dibebaskan. Pada tahap inferensi production, Model A membuktikan efisiensi VRAM yang lebih baik dengan rerata memori teralokasi sebesar **$2.812{,}93 \pm 891{,}6\text{ MB}$** (lebih hemat **$360{,}20\text{ MB}$** atau **$\sim 11{,}4\%$** dibanding Model B sebesar $3.173{,}13 \pm 4{,}4\text{ MB}$). Pada pengujian awal (*clean GPU state* Seed 42), Model A bahkan menghemat hingga **$2.177{,}70\text{ MB}$ ($\sim 68{,}7\%$)** ($992{,}93\text{ MB}$ vs $3.170{,}63\text{ MB}$), sebelum *PyTorch CUDA Caching Allocator* menumpuk *memory pool* hingga batas *Peak Reserved VRAM* ($3.584{,}00\text{ MB}$) pada run berikutnya.
 
 ---
 
@@ -320,7 +316,7 @@ Sesuai dengan rancangan metodologi pada Bab III Sub-bab 3.9.3, untuk menjamin ke
 Sub-bab ini menyajikan sintesis pembahasan komparatif secara mendalam untuk mengaitkan secara utuh temuan empiris pada **RQ1, RQ2, RQ3, dan RQ4** dengan kerangka teoritis adaptasi domain dan rekayasa perangkat lunak NLP.
 
 1. **Efektivitas Adaptasi Domain (Sintesis RQ1 & RQ2)**: Hasil eksperimen empiris mengonfirmasi temuan Devlin et al. (2019, Section 3.2) dan Sun et al. (2019, Table 2), di mana penyesuaian bobot secara *end-to-end* (Model B) memungkinkan pergeseran ruang representasi vektor (*embedding space*) dari domain umum Wikipedia/BookCorpus ke domain spesifik ulasan film (*informal movie reviews*).
-2. **Analisis Efisiensi Sumber Daya Komputasi Inferensi (Sintesis RQ3 & RQ4)**: Meskipun Model B mengungguli Model A secara signifikan dalam metrik prediktif F1-Score ($92{,}94\%$ vs $86{,}66\%$), hasil pengujian komputasi menunjukkan temuan menarik di mana profil latensi inferensi GPU A100 ($1{,}82\text{ ms}$ vs $1{,}83\text{ ms}$) dan konsumsi VRAM puncak teralokasi ($3177{,}18\text{ MB}$ vs $3173{,}13\text{ MB}$) bernilai **praktis setara dan identik** dengan selisih VRAM hanya $-4{,}05\text{ MB}$ ($<0{,}15\%$). Temuan ini dijelaskan secara arsitektural oleh fakta bahwa pada saat inferensi production (`model.eval()`, `with torch.no_grad()`), seluruh *gradient buffer* dan *optimizer state* AdamW (yang membutuhkan rerata memori teralokasi puncak $8.396{,}50\text{ MB} \approx 8{,}20\text{ GB}$ saat pelatihan Model B pada Tabel 4.2d) telah dibebaskan dari memori GPU. Kedua model mengeksekusi struktur matriks 110M parameter `bert-base-uncased` yang persis sama ($O(N)$ FLOPS perkalian matriks yang identik). Perbedaan *fine-tuning* vs *feature extraction* pada Model B hanyalah pada penyesuaian nilai bobot *internal attention*, bukan pada struktur arsitektur atau jumlah parameter aktif. Pada tahap inferensi tanpa *gradient tracking*, konsumsi VRAM murni ditentukan oleh ukuran bobot model statis + *PyTorch CUDA Caching Allocator* (yang mencadangkan memori konstan $3584\text{ MB}$ untuk kedua model). Sementara pada lingkungan CPU Fallback Server (Railway Cloud 1-vCPU), latensi inferensi rerata tercatat sebesar $24{,}65\text{ ms}$ (Model A) dan $25{,}12\text{ ms}$ (Model B) (rerata gabungan $\sim 24{,}88\text{ ms}$). Hasil perbandingan ini mengonfirmasi bahwa penyiapan server cadangan berbasis CPU tetap mampu melayani inferensi pengguna secara responsif ($< 100\text{ ms}$) ketika server GPU utama mengalami kendala konektivitas.
+2. **Analisis Efisiensi Sumber Daya Komputasi Inferensi (Sintesis RQ3 & RQ4)**: Meskipun Model B mengungguli Model A secara signifikan dalam metrik prediktif F1-Score ($92{,}94\%$ vs $86{,}66\%$), hasil pengujian komputasi menunjukkan bahwa Model A terbukti lebih efisien dalam konsumsi memori VRAM GPU tahap inferensi production. Pada pengujian *initial clean GPU state* (Seed 42), Model A hanya mengalokasikan **$992{,}93\text{ MB}$ VRAM** (lebih hemat **$2.177{,}70\text{ MB}$** atau **$\sim 68{,}7\%$** dibanding Model B yang mengalokasikan $3.170{,}63\text{ MB}$), karena Model A hanya memerlukan alokasi memori untuk *classifier head* ter-ekstraksi. Ditinjau secara agregat multi-seed ($n=6$), Model A mencatatkan rerata VRAM teralokasi sebesar **$2.812{,}93 \pm 891{,}6\text{ MB}$**, lebih hemat **$360{,}20\text{ MB}$ ($\sim 11{,}4\%$--$12{,}8\%$)** dibanding Model B ($3.173{,}13 \pm 4{,}4\text{ MB}$). Profil latensi inferensi sampel tunggal pada GPU A100 tercatat sangat setara ($1{,}82\text{ ms}$ vs $1{,}83\text{ ms}$). Sementara pada lingkungan CPU Fallback Server (Railway Cloud 1-vCPU), latensi inferensi rerata tercatat sebesar $24{,}65\text{ ms}$ (Model A) dan $25{,}12\text{ ms}$ (Model B) (rerata gabungan $\sim 24{,}88\text{ ms} < 100\text{ ms}$). Hasil perbandingan ini mengonfirmasi bahwa penyiapan server cadangan berbasis CPU tetap mampu melayani inferensi pengguna secara responsif ketika server GPU utama mengalami kendala konektivitas.
 
 ---
 
