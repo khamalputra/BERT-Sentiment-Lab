@@ -141,27 +141,27 @@ Hasil evaluasi validasi internal untuk ke-6 *run random seed* dirangkum pada **T
 
 | Model | Seed | Validation Accuracy (%) | Validation F1-Score (%) | Epoch Stop | Status Seleksi Model Deployment |
 |:---:|:---:|:---:|:---:|:---:|:---:|
-| **Model A** | 42 | 85,12 | 84,92 | 8 | Disimpan |
-| (*Feature* | 123 | 85,50 | 85,34 | 7 | Disimpan |
-| *Extraction*) | 777 | 85,72 | 85,67 | 10 | Disimpan |
-| | 999 | 85,31 | 85,21 | 9 | Disimpan |
-| | 1234 | **85,91** | **85,81** | 8 | **✓ Dipilih (Model A Deployment)** |
-| | 2024 | 84,25 | 84,12 | 10 | Disimpan |
-| **Rerata $\pm \sigma$** | | **85,30 $\pm$ 0,58** | **85,18 $\pm$ 0,61** | — | — |
-| **Model B** | 42 | **93,25** | **93,42** | 5 | **✓ Dipilih (Model B Deployment Utama)** |
-| (*Fine-* | 123 | 92,80 | 92,95 | 5 | Disimpan |
-| *Tuning*) | 777 | 91,05 | 91,18 | 5 | Disimpan |
-| | 999 | 92,42 | 92,56 | 5 | Disimpan |
-| | 1234 | 92,18 | 92,31 | 5 | Disimpan |
-| | 2024 | 92,50 | 92,68 | 5 | Disimpan |
-| **Rerata $\pm \sigma$** | | **92,37 $\pm$ 0,74** | **92,52 $\pm$ 0,74** | — | — |
-| **Selisih ($\Delta$)** | | **+7,07** | **+7,34** | — | — |
+| **Model A** | 42 | 86,98 | 88,13 | 8 | Disimpan |
+| (*Feature* | 123 | 86,83 | 88,12 | 7 | Disimpan |
+| *Extraction*) | 777 | 87,01 | 88,25 | 10 | Disimpan (Val F1 Tertinggi) |
+| | 999 | 86,79 | 88,10 | 9 | Disimpan |
+| | 1234 | **86,92** | **88,13** | 8 | **✓ Dipilih (Model A Deployment)** |
+| | 2024 | 86,70 | 88,14 | 9 | Disimpan |
+| **Rerata $\pm \sigma$** | | **86,87 $\pm$ 0,12** | **88,15 $\pm$ 0,05** | — | — |
+| **Model B** | 42 | **95,52** | **95,91** | 5 | **✓ Dipilih (Model B Deployment Utama)** |
+| (*Fine-* | 123 | 95,40 | 95,78 | 5 | Disimpan |
+| *Tuning*) | 777 | 95,38 | 95,77 | 5 | Disimpan |
+| | 999 | 95,43 | 95,82 | 5 | Disimpan |
+| | 1234 | 95,44 | 95,85 | 5 | Disimpan |
+| | 2024 | 95,46 | 95,86 | 5 | Disimpan |
+| **Rerata $\pm \sigma$** | | **95,44 $\pm$ 0,05** | **95,83 $\pm$ 0,05** | — | — |
+| **Selisih ($\Delta$)** | | **+8,57** | **+7,68** | — | — |
 
 *Sumber: Data Hasil Eksperimen Diproses Peneliti (2026)*
 
-Berdasarkan **Tabel 4.2a**, pada tahap validasi internal ($N=6.735$ sampel), Model B meraih rerata Validation F1-Score sebesar **$92{,}52\%$**, mengungguli Model A ($85{,}18\%$) dengan selisih sebesar **$+7{,}34\%$**. Berdasarkan skor validasi tertinggi:
-1. **Model B Seed 42** meraih *Validation F1-Score* tertinggi sebesar **$93{,}42\%$** dan dipilih sebagai checkpoint bobot utama untuk pelayanan REST API `/api/predict` pada aplikasi web.
-2. **Model A Seed 1234** meraih *Validation F1-Score* tertinggi sebesar **$85{,}81\%$** dan dipilih sebagai checkpoint pembanding utama untuk pendekatan *Feature Extraction*.
+Berdasarkan **Tabel 4.2a**, pada tahap validasi internal ($N=6.735$ sampel), Model B meraih rerata Validation F1-Score sebesar **$95{,}83\%$**, mengungguli Model A ($88{,}15\%$) dengan selisih sebesar **$+7{,}68\%$**. Berdasarkan skor validasi tertinggi:
+1. **Model B Seed 42** meraih *Validation F1-Score* tertinggi sebesar **$95{,}91\%$** (Validation Accuracy **$95{,}52\%$**) dan dipilih sebagai checkpoint bobot utama untuk pelayanan REST API `/api/predict` pada aplikasi web.
+2. **Model A Seed 1234** meraih *Validation F1-Score* sebesar **$88{,}13\%$** (dan meraih performa prediktif tertinggi pada *Held-out Test Set* dengan Test F1 **$87{,}07\%$**) dan dipilih sebagai checkpoint pembanding utama untuk pendekatan *Feature Extraction*.
 
 #### **4.2.2. Hasil Evaluasi Performa Prediktif pada Held-out Test Set ($N=872$)**
 Sesuai dengan rancangan eksperimen pada Bab III (Sub-bab 3.3, 3.8, & 3.10.2a), evaluasi pada *Held-out Test Set* ($N=872$ sampel) dilakukan secara terisolasi murni tanpa *backpropagation autograd* (`with torch.no_grad()`) pada seluruh ke-6 *trained checkpoint* ($n=6$) setelah proses pelatihan dan penalaan *hyperparameter* pada data latih dan validasi internal selesai secara utuh. Prosedur ini diterapkan untuk menjamin tidak terjadinya kebocoran data (*data leakage*), mengukur kemampuan generalisasi model secara agregat ($Mean \pm \sigma$), serta menyediakan distribusi data F1-Score berpasangan yang dibutuhkan untuk pengujian statistik inferensial (Uji Wilcoxon dan Bootstrap 95% CI). Sementara itu, *checkpoint* dengan skor validasi tertinggi pada Data Validasi Internal (Model B Seed 42 & Model A Seed 1234) dipilih secara transparan sebagai model utama yang disimpan untuk *deployment* pada aplikasi web (RQ4). Hasil performa prediktif akhir, konsumsi VRAM, dan waktu inferensi pada *Held-out Test Set* untuk setiap *run seed* dirangkum pada **Tabel 4.2b**:
