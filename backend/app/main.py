@@ -326,7 +326,8 @@ def get_benchmark_stats(db: Session = Depends(get_db)):
                     subject=log.category_name,
                     model_a_accuracy=log.model_a_accuracy,
                     model_b_accuracy=log.model_b_accuracy,
-                    sample_count=log.sample_count
+                    sample_count=log.sample_count,
+                    primary_error_type=getattr(log, 'primary_error_type', None)
                 ) for log in error_logs
             ]
 

@@ -58,5 +58,6 @@ class ErrorAnalysisLog(Base):
     model_a_accuracy = Column(Float, nullable=False)
     model_b_accuracy = Column(Float, nullable=False)
     sample_count = Column(Integer, nullable=False, default=0)
+    primary_error_type = Column(Text, nullable=True)
     created_at = Column(DateTime(timezone=True), server_default=func.now())
 

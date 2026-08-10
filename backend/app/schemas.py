@@ -70,6 +70,7 @@ class ErrorAnalysisCategory(BaseModel):
     model_a_accuracy: float
     model_b_accuracy: float
     sample_count: int
+    primary_error_type: Optional[str] = None
 
 # McNemar contingency matrix 2x2 details
 class McNemarMatrixDetails(BaseModel):
