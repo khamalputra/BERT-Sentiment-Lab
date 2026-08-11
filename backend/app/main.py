@@ -246,8 +246,9 @@ def get_benchmark_stats(db: Session = Depends(get_db)):
                     avg_latency_ms=0.0, peak_vram_mb=0.0
                 )
             
-            accs = [r.accuracy for r in runs]
-            f1s = [r.f1_score for r in runs]
+            # Normalize DB values to fraction [0, 1] so API contract is standard fraction (0.8566, 0.9323)
+            accs = [r.accuracy / 100.0 if r.accuracy > 1.0 else r.accuracy for r in runs]
+            f1s = [r.f1_score / 100.0 if r.f1_score > 1.0 else r.f1_score for r in runs]
             lats = [r.inference_time_ms for r in runs]
             vrams = [r.peak_vram_mb for r in runs]
             

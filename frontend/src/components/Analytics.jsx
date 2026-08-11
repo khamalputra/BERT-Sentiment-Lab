@@ -175,23 +175,35 @@ function Analytics({ theme, userRole = 'public' }) {
     )
   }
 
+  // Robust percentage normalizer
+  const toPct = (val) => {
+    if (val == null) return 0
+    const n = Number(val)
+    return n > 1 ? n : n * 100
+  }
+
   const { model_a, model_b } = stats.summary
   const testResults = stats.statistical_tests
 
-  const deltaAcc = ((model_b.accuracy_mean - model_a.accuracy_mean) * 100).toFixed(2)
-  const deltaF1 = ((model_b.f1_mean - model_a.f1_mean) * 100).toFixed(2)
+  const accA = toPct(model_a.accuracy_mean)
+  const accB = toPct(model_b.accuracy_mean)
+  const f1A = toPct(model_a.f1_mean)
+  const f1B = toPct(model_b.f1_mean)
+
+  const deltaAcc = (accB - accA).toFixed(2)
+  const deltaF1 = (f1B - f1A).toFixed(2)
 
   // Chart Data: Multi-seed Performance Metrics (%)
   const performanceChartData = [
     {
       metric: 'Accuracy (%)',
-      'Model A (Frozen)': Number((model_a.accuracy_mean * 100).toFixed(2)),
-      'Model B (Fine-Tuned)': Number((model_b.accuracy_mean * 100).toFixed(2)),
+      'Model A (Frozen)': Number(accA.toFixed(2)),
+      'Model B (Fine-Tuned)': Number(accB.toFixed(2)),
     },
     {
       metric: 'F1-Score (%)',
-      'Model A (Frozen)': Number((model_a.f1_mean * 100).toFixed(2)),
-      'Model B (Fine-Tuned)': Number((model_b.f1_mean * 100).toFixed(2)),
+      'Model A (Frozen)': Number(f1A.toFixed(2)),
+      'Model B (Fine-Tuned)': Number(f1B.toFixed(2)),
     }
   ]
 
@@ -263,8 +275,8 @@ function Analytics({ theme, userRole = 'public' }) {
             </span>
           </div>
           <div className="flex items-baseline space-x-2">
-            <span className="text-2xl font-black text-slate-100">{(model_b.f1_mean * 100).toFixed(2)}%</span>
-            <span className="text-[11px] text-slate-400">vs {(model_a.f1_mean * 100).toFixed(2)}%</span>
+            <span className="text-2xl font-black text-slate-100">{f1B.toFixed(2)}%</span>
+            <span className="text-[11px] text-slate-400">vs {f1A.toFixed(2)}%</span>
           </div>
           <p className="text-[10px] text-slate-400">Simpangan Baku: Model B ({model_b.f1_std.toFixed(4)}) vs Model A ({model_a.f1_std.toFixed(4)})</p>
         </div>
@@ -278,8 +290,8 @@ function Analytics({ theme, userRole = 'public' }) {
             </span>
           </div>
           <div className="flex items-baseline space-x-2">
-            <span className="text-2xl font-black text-slate-100">{(model_b.accuracy_mean * 100).toFixed(2)}%</span>
-            <span className="text-[11px] text-slate-400">vs {(model_a.accuracy_mean * 100).toFixed(2)}%</span>
+            <span className="text-2xl font-black text-slate-100">{accB.toFixed(2)}%</span>
+            <span className="text-[11px] text-slate-400">vs {accA.toFixed(2)}%</span>
           </div>
           <p className="text-[10px] text-slate-400">Simpangan Baku: Model B ({model_b.accuracy_std.toFixed(4)}) vs Model A ({model_a.accuracy_std.toFixed(4)})</p>
         </div>

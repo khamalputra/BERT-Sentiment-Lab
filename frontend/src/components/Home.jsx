@@ -29,11 +29,24 @@ export default function Home({ theme, benchmarkStats, onNavigate }) {
   }
   const mcnemarMatrix = benchmarkStats?.mcnemar_matrix || { chi2: 38.16 }
 
+  // Robust percentage normalizer (handles both 0.8566 and 85.66 gracefully)
+  const toPct = (val) => {
+    if (val == null) return 0
+    const n = Number(val)
+    return n > 1 ? n : n * 100
+  }
+
   const modelA = summary.model_a
   const modelB = summary.model_b
-  const deltaAcc = ((modelB.accuracy_mean - modelA.accuracy_mean) / modelA.accuracy_mean * 100).toFixed(2)
-  const ciLowerPercent = (statsTests.bootstrap_95_ci[0] * 100).toFixed(2)
-  const ciUpperPercent = (statsTests.bootstrap_95_ci[1] * 100).toFixed(2)
+
+  const accA = toPct(modelA.accuracy_mean)
+  const accB = toPct(modelB.accuracy_mean)
+  const f1A = toPct(modelA.f1_mean)
+  const f1B = toPct(modelB.f1_mean)
+
+  const deltaAcc = (accB - accA).toFixed(2)
+  const ciLowerPercent = toPct(statsTests.bootstrap_95_ci[0]).toFixed(2)
+  const ciUpperPercent = toPct(statsTests.bootstrap_95_ci[1]).toFixed(2)
 
   const containerVariants = {
     hidden: { opacity: 0 },
@@ -200,11 +213,11 @@ export default function Home({ theme, benchmarkStats, onNavigate }) {
             <div className={`grid grid-cols-3 gap-2 pt-4 mt-auto text-center border-t ${isLight ? 'border-sky-100' : 'border-slate-800/40'}`}>
               <div className={`p-2.5 rounded-xl border ${isLight ? 'bg-sky-50/60 border-sky-100' : 'bg-slate-900/50 border-transparent'}`}>
                 <div className={`text-[11px] font-medium ${isLight ? 'text-slate-600' : 'text-slate-400'}`}>Akurasi</div>
-                <div className={`text-xs font-extrabold ${isLight ? 'text-sky-700' : 'text-sky-400'}`}>{(modelA.accuracy_mean * 100).toFixed(2)}%</div>
+                <div className={`text-xs font-extrabold ${isLight ? 'text-sky-700' : 'text-sky-400'}`}>{accA.toFixed(2)}%</div>
               </div>
               <div className={`p-2.5 rounded-xl border ${isLight ? 'bg-sky-50/60 border-sky-100' : 'bg-slate-900/50 border-transparent'}`}>
                 <div className={`text-[11px] font-medium ${isLight ? 'text-slate-600' : 'text-slate-400'}`}><em>F1-score</em></div>
-                <div className={`text-xs font-extrabold ${isLight ? 'text-sky-700' : 'text-sky-400'}`}>{(modelA.f1_mean * 100).toFixed(2)}%</div>
+                <div className={`text-xs font-extrabold ${isLight ? 'text-sky-700' : 'text-sky-400'}`}>{f1A.toFixed(2)}%</div>
               </div>
               <div className={`p-2.5 rounded-xl border ${isLight ? 'bg-sky-50/60 border-sky-100' : 'bg-slate-900/50 border-transparent'}`}>
                 <div className={`text-[11px] font-medium ${isLight ? 'text-slate-600' : 'text-slate-400'}`}>Latensi</div>
@@ -254,11 +267,11 @@ export default function Home({ theme, benchmarkStats, onNavigate }) {
             <div className={`grid grid-cols-3 gap-2 pt-4 mt-auto text-center border-t ${isLight ? 'border-purple-100' : 'border-purple-900/30'}`}>
               <div className={`p-2.5 rounded-xl border ${isLight ? 'bg-purple-50/60 border-purple-100' : 'bg-slate-900/50 border-transparent'}`}>
                 <div className={`text-[11px] font-medium ${isLight ? 'text-slate-600' : 'text-slate-400'}`}>Akurasi</div>
-                <div className={`text-xs font-extrabold ${isLight ? 'text-purple-700' : 'text-purple-400'}`}>{(modelB.accuracy_mean * 100).toFixed(2)}%</div>
+                <div className={`text-xs font-extrabold ${isLight ? 'text-purple-700' : 'text-purple-400'}`}>{accB.toFixed(2)}%</div>
               </div>
               <div className={`p-2.5 rounded-xl border ${isLight ? 'bg-purple-50/60 border-purple-100' : 'bg-slate-900/50 border-transparent'}`}>
                 <div className={`text-[11px] font-medium ${isLight ? 'text-slate-600' : 'text-slate-400'}`}><em>F1-score</em></div>
-                <div className={`text-xs font-extrabold ${isLight ? 'text-purple-700' : 'text-purple-400'}`}>{(modelB.f1_mean * 100).toFixed(2)}%</div>
+                <div className={`text-xs font-extrabold ${isLight ? 'text-purple-700' : 'text-purple-400'}`}>{f1B.toFixed(2)}%</div>
               </div>
               <div className={`p-2.5 rounded-xl border ${isLight ? 'bg-purple-50/60 border-purple-100' : 'bg-slate-900/50 border-transparent'}`}>
                 <div className={`text-[11px] font-medium ${isLight ? 'text-slate-600' : 'text-slate-400'}`}>Latensi</div>
