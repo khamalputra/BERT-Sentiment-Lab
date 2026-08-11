@@ -15,19 +15,19 @@ export default function Home({ theme, benchmarkStats, onNavigate }) {
   const isLight = theme === 'light'
   const notebookSeeds = ['42', '123', '777', '999', '1234', '2024']
 
-  // Dynamic fallback values if benchmarkStats is not loaded yet
+  // Dynamic fallback values if benchmarkStats is not loaded yet (A100 Rerun Empirics)
   const summary = benchmarkStats?.summary || {
-    model_a: { accuracy_mean: 0.8603, f1_mean: 0.8666, avg_latency_ms: 1.82 },
-    model_b: { accuracy_mean: 0.9278, f1_mean: 0.9294, avg_latency_ms: 1.83 }
+    model_a: { accuracy_mean: 0.8566, f1_mean: 0.8644, avg_latency_ms: 2.85 },
+    model_b: { accuracy_mean: 0.9324, f1_mean: 0.9329, avg_latency_ms: 3.11 }
   }
   const statsTests = benchmarkStats?.statistical_tests || {
-    mcnemar_p_value: 5.04e-12,
+    mcnemar_p_value: 6.51e-10,
     wilcoxon_p_value: 0.03125,
-    bootstrap_95_ci: [0.0548, 0.0964],
-    cohens_d: 9.80,
+    bootstrap_95_ci: [0.0510, 0.0662],
+    cohens_d: 10.11,
     effect_size_interpretation: "Extremely Large Effect"
   }
-  const mcnemarMatrix = benchmarkStats?.mcnemar_matrix || { chi2: 47.67 }
+  const mcnemarMatrix = benchmarkStats?.mcnemar_matrix || { chi2: 38.16 }
 
   const modelA = summary.model_a
   const modelB = summary.model_b
