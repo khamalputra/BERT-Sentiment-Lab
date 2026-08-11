@@ -798,7 +798,7 @@ b. **Interpretasi Konservatif**
 c. ***Acknowledgement* Eksplisit**
  Keterbatasan ini diakui secara eksplisit dalam Bab V sebagai salah satu keterbatasan penelitian dan direkomendasikan untuk studi lanjutan dengan $n \ge 15$.
 d. **Analisis Sensitivitas *Jackknife Resampling***
- Untuk memverifikasi stabilitas kesimpulan *Wilcoxon Test* pada sampel $n=6$, diterapkan analisis sensitivitas berbasis *Jackknife resampling* (menghitung ulang uji signifikansi pada 6 kombinasi *subset* 5-of-6 seed). Jika seluruh *subset* menghasilkan $p < 0,05$, maka kesimpulan statistik dinyatakan *robust* dan tidak peka terhadap pencilan *seed* tunggal.
+ Untuk memverifikasi stabilitas kesimpulan *Wilcoxon Test* pada sampel $n=6$, diterapkan analisis sensitivitas berbasis *Jackknife resampling* (menghitung ulang uji signifikansi pada 6 kombinasi *subset* 5-of-6 seed). Pada sampel $n=5$, batas minimum teoritis $p$-value *Wilcoxon two-sided* adalah $p = 0,062500$ ($W=0.0$). Jika seluruh *subset* menghasilkan $p \le 0,062500$ (atau $W=0.0$), maka kesimpulan statistik dinyatakan *robust* dan tidak peka terhadap pencilan *seed* tunggal.
 
 ### **3.9.2. Evaluasi *Trade-off* Komputasi** 
 
