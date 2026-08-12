@@ -224,12 +224,12 @@ Rincian hasil pengukuran empiris konsumsi VRAM puncak selama fase pelatihan (*Tr
 | | 1234 | 3458,04 | 3598,00 | 1.538 | Head Only (~0,01 MB) |
 | | 2024 | 3459,04 | 3534,00 | 1.538 | Head Only (~0,01 MB) |
 | **Rerata $\pm \sigma$** | | **3093,98 $\pm$ 886,9** | **3372,67 $\pm$ 986,2** | **1.538** | — |
-| **Model B** | 42 | 5484,15 | 5678,00 | 109.483.778 | Full 110M Params (~880 MB $m_t, v_t$) |
-| (*Fine-* | 123 | 5487,32 | 5746,00 | 109.483.778 | Full 110M Params (~880 MB $m_t, v_t$) |
-| *Tuning*) | 777 | 5483,40 | 5662,00 | 109.483.778 | Full 110M Params (~880 MB $m_t, v_t$) |
-| | 999 | 5483,94 | 5644,00 | 109.483.778 | Full 110M Params (~880 MB $m_t, v_t$) |
-| | 1234 | 5478,27 | 5646,00 | 109.483.778 | Full 110M Params (~880 MB $m_t, v_t$) |
-| | 2024 | 5483,90 | 5654,00 | 109.483.778 | Full 110M Params (~880 MB $m_t, v_t$) |
+| **Model B** | 42 | 5484,15 | 5678,00 | 109.483.778 | Full 110M Params (~810{,}11 MB $m_t, v_t$) |
+| (*Fine-* | 123 | 5487,32 | 5746,00 | 109.483.778 | Full 110M Params (~810{,}11 MB $m_t, v_t$) |
+| *Tuning*) | 777 | 5483,40 | 5662,00 | 109.483.778 | Full 110M Params (~810{,}11 MB $m_t, v_t$) |
+| | 999 | 5483,94 | 5644,00 | 109.483.778 | Full 110M Params (~810{,}11 MB $m_t, v_t$) |
+| | 1234 | 5478,27 | 5646,00 | 109.483.778 | Full 110M Params (~810{,}11 MB $m_t, v_t$) |
+| | 2024 | 5483,90 | 5654,00 | 109.483.778 | Full 110M Params (~810{,}11 MB $m_t, v_t$) |
 | **Rerata $\pm \sigma$** | | **5483,50 $\pm$ 2,9** | **5671,67 $\pm$ 38,2** | **109.483.778** | — |
 | **Selisih ($\Delta$)** | | **+2389,52** | **+2299,00** | **+109.482.240** | — |
 
@@ -296,7 +296,7 @@ Untuk memahami karakteristik kegagalan prediktif masing-masing model, dilakukan 
 | Kategori Linguistik | Definisi Operasional Teks | Jumlah Sampel ($N$) | Akurasi Model A (%) | Akurasi Model B (%) | Peningkatan Model B ($\Delta$) |
 |---|---|:---:|:---:|:---:|:---:|
 | **1. Tanpa Negasi** | Tidak mengandung kata negasi eksplisit | 674 | 87,2 | **93,3** | $+6,1\%$ |
-| **2. Negasi Biner** | Mengandung 1 kata negasi (`not, n't, no`, dll.) | 173 | 80,3 | **93,6** | **$+13,3\%$** |
+| **2. Negasi Biner** | Mengandung 1 kata negasi (`not, n't, no`, dll.) | 173 | 10{,}11,3 | **93,6** | **$+13,3\%$** |
 | **3. Ironi/Sarkasme dan Negasi Majemuk** | Negasi $>1$ ATAU *contrastive marker* (`but, however`, dll.) | 149 | 79,2 | **89,9** | **$+10,7\%$** |
 | **4. Review Panjang** | Panjang token BERT $> 40$ token | 76 | 77,6 | **89,5** | **$+11,9\%$** |
 | **5. Ambiguitas Tinggi** | Skor AFINN (Nielsen, 2011) memuat kata positif $\ge +3$ DAN negatif $\le -3$ | 29 | 82,8 | **89,7** | **$+6,9\%$** |
@@ -310,7 +310,7 @@ Hasil pengujian pada **Tabel 4.4** mengungkapkan dua temuan utama terkait kegaga
 ##### **Analisis Validasi Silang Leksikon (AFINN vs VADER) dan Audit Manual**
 Sesuai dengan rancangan metodologi pada metodologi analisis kesalahan, untuk menjamin keandalan dan keabsahan (*reliability & validity*) kategorisasi otomatis fenomena linguistik (khususnya pada Kategori 5: Ambiguitas Tinggi / *Mixed Sentiment*), dilakukan dua pengujian komplementer:
 1. **Validasi Silang Leksikon AFINN vs VADER**: Evaluasi pengelompokan otomatis leksikon AFINN (Nielsen, 2011) divalidasi silang terhadap leksikon VADER (Hutto & Gilbert, 2014) (`compound score` $\in [-0{,}05, +0{,}05]$ dengan kata positif $\ge +2$ dan negatif $\le -2$). Hasil validasi silang antara leksikon AFINN dan VADER pada populasi Held-out Test Set ($N=872$) menunjukkan tingkat akurasi AFINN sebesar **$69{,}27\%$** dan VADER sebesar **$66{,}17\%$** dengan korelasi Pearson $r = \mathbf{0{,}7433}$. Pada 29 sampel Kategori 5 (Ambiguitas Tinggi), leksikon AFINN mendeteksi 29 sampel dan VADER mendeteksi 76 sampel (dengan irisian 14 sampel), menghasilkan tingkat kesepakatan (*agreement rate*) sebesar **$91{,}17\%$** dan statistik *inter-rater reliability* **Cohen's $\kappa = 0{,}2296$** (*Fair to Substantial Agreement*). Perbedaan moderat ($\kappa = 0{,}274$) antara leksikon AFINN dan VADER pada Kategori 5 terjadi secara alamiah karena AFINN menggunakan penjumlahan bobot kata linier tanpa memperhitungkan pergeseran valensi sintaksis, sementara VADER menggunakan aturan heuristik tata bahasa (seperti konjungsi kontrastif *'but'* atau *'however'*). Temuan ini secara eksplisit mengonfirmasi keterbatasan leksikon berbasis aturan (*rule-based lexicons*) dalam menangani teks berkonteks campuran, yang sekaligus memperkuat urgensi penggunaan model *deep learning* (BERT Model B) yang terbukti mampu mencapai akurasi $89{,}7\%$ pada kategori ambiguitas tinggi tersebut.
-2. **Audit Manual Sampel Acak (50 Sampel Gabungan)**: Audit kualitatif manual dieksekusi terhadap 50 sampel acak per kategori linguistik pada data pengujian. Hasil audit manual mengonfirmasi konsistensi performa Model B yang unggul secara stabil di seluruh kategori: Tanpa Negasi ($94{,}0\%$ vs $84{,}0\%$), Negasi Biner ($92{,}0\%$ vs $80{,}0\%$), Ironi/Sarkasme ($92{,}0\%$ vs $80{,}0\%$), Review Panjang ($86{,}0\%$ vs $80{,}0\%$), dan Ambiguitas Tinggi ($89{,}7\%$ vs $82{,}8\%$), membuktikan bahwa pengelompokan berbasis aturan dan prediksi Model B memiliki keandalan empiris yang sangat tinggi.
+2. **Audit Manual Sampel Acak (50 Sampel Gabungan)**: Audit kualitatif manual dieksekusi terhadap 50 sampel acak per kategori linguistik pada data pengujian. Hasil audit manual mengonfirmasi konsistensi performa Model B yang unggul secara stabil di seluruh kategori: Tanpa Negasi ($94{,}0\%$ vs $84{,}0\%$), Negasi Biner ($92{,}0\%$ vs $10{,}11{,}0\%$), Ironi/Sarkasme ($92{,}0\%$ vs $10{,}11{,}0\%$), Review Panjang ($86{,}0\%$ vs $10{,}11{,}0\%$), dan Ambiguitas Tinggi ($89{,}7\%$ vs $82{,}8\%$), membuktikan bahwa pengelompokan berbasis aturan dan prediksi Model B memiliki keandalan empiris yang sangat tinggi.
 
 ---
 
