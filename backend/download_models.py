@@ -7,10 +7,8 @@ import shutil
 try:
     import gdown
 except ImportError:
-    print("Package 'gdown' not found. Installing gdown...")
-    import subprocess
-    subprocess.check_call([sys.executable, "-m", "pip", "install", "gdown"])
-    import gdown
+    print("Package 'gdown' not pre-installed. Will use requests fallback for model download.")
+    gdown = None
 
 # Directory configurations
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
@@ -24,12 +22,15 @@ def download_from_gdrive(file_id: str, output_path: str):
     """Downloads a file from Google Drive using gdown."""
     print(f"Downloading File ID [{file_id}] to '{output_path}'...")
     url = f"https://drive.google.com/uc?id={file_id}"
-    try:
-        gdown.download(url, output_path, quiet=False)
-        if os.path.exists(output_path) and os.path.getsize(output_path) > 5000:
-            return
-    except Exception as e1:
-        print(f"gdown download attempt note: {e1}")
+    if gdown is not None:
+        try:
+            gdown.download(url, output_path, quiet=False)
+            if os.path.exists(output_path) and os.path.getsize(output_path) > 5000:
+                return
+        except Exception as e1:
+            print(f"gdown download attempt note: {e1}")
+    else:
+        print("gdown module unavailable, jumping directly to requests download fallback...")
 
     # Fallback using requests
     print("Executing requests Session fallback with confirm=t...")
