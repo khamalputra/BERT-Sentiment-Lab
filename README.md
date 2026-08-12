@@ -165,9 +165,12 @@ Menampilkan hasil uji statistik inferensial multi-seed, visualisasi Radar Chart 
 ![Dashboard Analitik](images/Benchmark.PNG)
 
 ### 4. Skema Warna Antarmuka (Theme Toggle Switcher)
+
 Aplikasi mendukung peralihan mode visual terang (*light mode*) dan mode visual gelap (*dark mode*) berstandar WCAG 2.1 AA untuk kenyamanan keterbacaan.
-![Theme Toggle Dark](images/Dark%20Mode.PNG)
-![Theme Toggle Light](images/light%20mode.PNG)
+
+| Mode Gelap (Dark Mode) | Mode Terang (Light Mode) |
+| :---: | :---: |
+| ![Theme Toggle Dark](images/Dark%20Mode.PNG) | ![Theme Toggle Light](images/light%20mode.PNG) |
 
 ---
 
