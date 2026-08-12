@@ -25,16 +25,16 @@ Platform ini dilengkapi dengan **Dashboard Analisis Inferensial** yang menginteg
 
 ## 📊 Hasil Statistik & Metrik Evaluasi Utama
 
-Berdasarkan pengujian eksperimental pada dataset validasi independen:
+Berdasarkan pengujian eksperimental pada Held-out Test Set ($N=872$) dari 6 *random seed*:
 
-| Metrik Evaluasi | Model A (Feature Extraction) | Model B (Fine-Tuned) | P-Value / Statisik Inferensial | Interpretasi Akademik |
+| Metrik Evaluasi | Model A (Feature Extraction) | Model B (Fine-Tuned) | P-Value / Statistik Inferensial | Interpretasi Akademik |
 | :--- | :---: | :---: | :---: | :--- |
-| **Akurasi Rata-rata ($\mu \pm \sigma$)** | $85.15\% \pm 0.93\%$ | **$91.78\% \pm 0.58\%$** | $p = 0.03125$ *(Wilcoxon)* | Peningkatan signifikan secara statistik ($p < 0.05$) |
-| **F1-Score Rata-rata ($\mu \pm \sigma$)** | $86.01\% \pm 0.47\%$ | **$92.14\% \pm 0.50\%$** | $p = 0.03125$ *(Wilcoxon)* | Konsistensi presisi & recall tinggi |
-| **Latency Inferensi Real-Time** | **$7.64\text{ ms}$** | $7.76\text{ ms}$ | $\Delta = +0.12\text{ ms}$ | Kecepatan inferensi hampir identik |
-| **Uji Disagreement McNemar** | — | — | **$p = 5.74 \times 10^{-10}$** ($\chi^2 = 38.41$) | Perbedaan prediksi signifikan ($p < 0.001$) |
-| **Bootstrap 95% Confidence Interval** | — | — | **$[+5.01\%, +9.27\%]$** | Rentang keunggulan F1-Score Model B |
-| **Ukuran Efek (Cohen's $d$)** | — | — | **$d = 12.72$** | *Extremely Large Effect Size* ($d > 2.0$) |
+| **Akurasi Rata-rata ($\mu \pm \sigma$)** | $85.66\% \pm 0.68\%$ | **$93.23\% \pm 0.77\%$** | $p = 0.03125$ *(Wilcoxon)* | Peningkatan signifikan secara statistik ($p < 0.05$) |
+| **F1-Score Rata-rata ($\mu \pm \sigma$)** | $86.45\% \pm 0.44\%$ | **$93.29\% \pm 0.82\%$** | $p = 0.03125$ *(Wilcoxon)* | Konsistensi presisi & recall tinggi |
+| **Latency Inferensi Real-Time** | **$7.64\text{ ms}$** | $7.76\text{ ms}$ | $\Delta = +0.12\text{ ms}$ | Kecepatan inferensi di web pipeline hampir identik |
+| **Uji Disagreement McNemar** | — | — | **$p = 6.51 \times 10^{-10}$** ($\chi^2 = 38.1635$) | Perbedaan prediksi signifikan ($p < 0.001$, Seed 42) |
+| **Bootstrap 95% Confidence Interval** | — | — | **$[+4.67\%, +8.85\%]$** | Rentang keunggulan F1-Score Model B (Sample-level) |
+| **Ukuran Efek (Cohen's $d$)** | — | — | **$d = 10.11$** | *Extremely Large Effect Size* ($d > 2.0$) |
 
 ---
 
@@ -111,6 +111,13 @@ BERT-Sentiment-Lab/
 ├── app.db                       # Database SQLite Log Riwayat
 ├── Experiment_Notebook.ipynb    # Notebook Eksperimen (6 Random Seeds)
 │
+├── images/                      # Screenshot Antarmuka Web App (Terbaru)
+│   ├── Beranda.PNG
+│   ├── Comparator.PNG
+│   ├── Benchmark.PNG
+│   ├── Dark Mode.PNG
+│   └── light mode.PNG
+│
 ├── backend/                     # Python FastAPI Backend Engine
 │   ├── requirements.txt
 │   └── app/
@@ -138,6 +145,29 @@ BERT-Sentiment-Lab/
             ├── Comparator.jsx   # Real-Time Dual Model Inferensi Panel
             └── Analytics.jsx    # Benchmark Inferensial Dashboard Panel
 ```
+
+---
+
+## 📷 Demo & Antarmuka Aplikasi Web (BERT Sentiment Lab)
+
+Berikut adalah visualisasi antarmuka dari aplikasi web *BERT Sentiment Lab* yang telah diimplementasikan:
+
+### 1. Halaman Beranda (Portal Riset & Perbandingan Dasar)
+Halaman utama menyajikan identitas akademik institusi (FIKTI UMSU), identitas peneliti, dan kartu ringkasan komparatif model.
+![Halaman Beranda](images/Beranda.PNG)
+
+### 2. Modul Komparator Inferensi Real-Time
+Memungkinkan pengujian kalimat secara berdampingan (*side-by-side*) dengan visualisasi skor probabilitas sentimen (%) dan latensi inferensi (ms) dari kedua model secara bersamaan.
+![Modul Komparator](images/Comparator.PNG)
+
+### 3. Dashboard Analitik & Benchmark Statistik
+Menampilkan hasil uji statistik inferensial multi-seed, visualisasi Radar Chart 5 kategori linguistik, dan matriks kontingensi McNemar 2x2.
+![Dashboard Analitik](images/Benchmark.PNG)
+
+### 4. Skema Warna Antarmuka (Theme Toggle Switcher)
+Aplikasi mendukung peralihan mode visual terang (*light mode*) dan mode visual gelap (*dark mode*) berstandar WCAG 2.1 AA untuk kenyamanan keterbacaan.
+![Theme Toggle Dark](images/Dark%20Mode.PNG)
+![Theme Toggle Light](images/light%20mode.PNG)
 
 ---
 
