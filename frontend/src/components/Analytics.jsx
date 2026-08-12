@@ -142,14 +142,14 @@ function Analytics({ theme, userRole = 'public' }) {
         status: "success",
         summary: {
           model_a: {
-            accuracy_mean: 0.8603, accuracy_std: 0.0069,
-            f1_mean: 0.8666, f1_std: 0.0043,
-            avg_latency_ms: 1.82, peak_vram_mb: 3177.18
+            accuracy_mean: 0.8566, accuracy_std: 0.0011,
+            f1_mean: 0.8645, f1_std: 0.0006,
+            avg_latency_ms: 2.85, peak_vram_mb: 1283.61
           },
           model_b: {
-            accuracy_mean: 0.9278, accuracy_std: 0.0071,
-            f1_mean: 0.9294, f1_std: 0.0079,
-            avg_latency_ms: 1.83, peak_vram_mb: 3173.10
+            accuracy_mean: 0.9323, accuracy_std: 0.0008,
+            f1_mean: 0.9329, f1_std: 0.0005,
+            avg_latency_ms: 3.11, peak_vram_mb: 3170.63
           }
         },
         statistical_tests: {
@@ -238,26 +238,26 @@ function Analytics({ theme, userRole = 'public' }) {
         fullMark: 100
       }))
     : [
-        { subject: 'Tanpa Negasi', 'Model A (Frozen)': 87.8, 'Model B (FT)': 94.4, fullMark: 100 },
-        { subject: 'Negasi Biner', 'Model A (Frozen)': 79.8, 'Model B (FT)': 93.1, fullMark: 100 },
-        { subject: 'Ironi / Sarkasme', 'Model A (Frozen)': 81.2, 'Model B (FT)': 91.3, fullMark: 100 },
-        { subject: 'Review Panjang', 'Model A (Frozen)': 78.0, 'Model B (FT)': 94.0, fullMark: 100 },
-        { subject: 'Ambiguitas Tinggi', 'Model A (Frozen)': 79.3, 'Model B (FT)': 89.7, fullMark: 100 },
+        { subject: 'Tanpa Negasi', 'Model A (Frozen)': 87.2, 'Model B (FT)': 93.3, fullMark: 100 },
+        { subject: 'Negasi Biner', 'Model A (Frozen)': 80.3, 'Model B (FT)': 93.6, fullMark: 100 },
+        { subject: 'Ironi/Sarkasme dan Negasi Majemuk', 'Model A (Frozen)': 79.2, 'Model B (FT)': 89.9, fullMark: 100 },
+        { subject: 'Review Panjang', 'Model A (Frozen)': 77.6, 'Model B (FT)': 89.5, fullMark: 100 },
+        { subject: 'Ambiguitas Tinggi', 'Model A (Frozen)': 82.8, 'Model B (FT)': 89.7, fullMark: 100 },
       ]
 
   // McNemar Contingency Matrix Data - Dynamic from API/Database
   const mcnemarMatrix = stats.mcnemar_matrix || {
-    both_correct: 735,
-    a_correct_b_wrong: 14,
-    b_correct_a_wrong: 83,
-    both_wrong: 40,
+    both_correct: 729,
+    a_correct_b_wrong: 20,
+    b_correct_a_wrong: 84,
+    both_wrong: 39,
     chi2: 38.1635
   }
 
   // Explanatory Tooltip Texts for Academic UX - Dynamic Templating
   const tooltips = {
     mcnemar: `Uji McNemar adalah uji statistik berpasangan non-parametrik pada tabel kontingensi 2x2 (N=872). Chi2 = ${mcnemarMatrix.chi2?.toFixed(2) || '38.16'}, p-value < 0.0001 membuktikan ketimpangan kesalahan Model A (${mcnemarMatrix.b_correct_a_wrong} salah) vs Model B (${mcnemarMatrix.a_correct_b_wrong} salah) sangat signifikan.`,
-    wilcoxon: `Uji Wilcoxon Signed-Rank adalah uji non-parametrik berpasangan pada 6 random seeds. Nilai statistik W = 21.0, p = ${testResults.wilcoxon_p_value} (< 0.05) membuktikan keunggulan F1-Score Model B terbukti stabil di seluruh seed.`,
+    wilcoxon: `Uji Wilcoxon Signed-Rank adalah uji non-parametrik berpasangan pada 6 random seeds. Nilai statistik W = 0.0, p = ${testResults.wilcoxon_p_value} (< 0.05) membuktikan keunggulan F1-Score Model B terbukti stabil di seluruh seed.`,
     bootstrap: `Bootstrap Confidence Interval (95%) dihitung dengan 10.000 kali resampling. Rentang [${(testResults.bootstrap_95_ci[0]*100).toFixed(2)}% s/d ${(testResults.bootstrap_95_ci[1]*100).toFixed(2)}%] bernilai positif dan tidak melewati 0.0, membuktikan peningkatan F1-Score nyata.`,
     cohen: `Cohen's d mengukur ukuran efek (Effect Size). Nilai d = ${testResults.cohens_d.toFixed(2)} mengindikasikan dampak yang luar biasa kuat (${testResults.effect_size_interpretation || 'Extremely Large Effect'}) dari metode Fine-Tuning dibanding Feature Extraction.`
   }

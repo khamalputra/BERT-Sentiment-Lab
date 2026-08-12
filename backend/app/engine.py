@@ -87,13 +87,13 @@ class ModelEngine:
                     "name": "BERT Feature Extraction (Frozen)",
                     "label": label_a,
                     "confidence": conf_a,
-                    "latency_ms": 1.82
+                    "latency_ms": 26.31
                 },
                 "model_b": {
                     "name": "BERT End-to-End Fine-Tuning",
                     "label": label_b,
                     "confidence": conf_b,
-                    "latency_ms": 1.83
+                    "latency_ms": 26.92
                 }
             }
 

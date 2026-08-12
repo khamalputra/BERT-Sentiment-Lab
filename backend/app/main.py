@@ -334,10 +334,10 @@ def get_benchmark_stats(db: Session = Depends(get_db)):
             ]
 
         mcnemar_matrix_details = McNemarMatrixDetails(
-            both_correct=getattr(stat_test, 'mcnemar_both_correct', 735) or 735,
-            a_correct_b_wrong=getattr(stat_test, 'mcnemar_a_correct_b_wrong', 14) or 14,
-            b_correct_a_wrong=getattr(stat_test, 'mcnemar_b_correct_a_wrong', 83) or 83,
-            both_wrong=getattr(stat_test, 'mcnemar_both_wrong', 40) or 40,
+            both_correct=getattr(stat_test, 'mcnemar_both_correct', 729) or 729,
+            a_correct_b_wrong=getattr(stat_test, 'mcnemar_a_correct_b_wrong', 20) or 20,
+            b_correct_a_wrong=getattr(stat_test, 'mcnemar_b_correct_a_wrong', 84) or 84,
+            both_wrong=getattr(stat_test, 'mcnemar_both_wrong', 39) or 39,
             chi2=getattr(stat_test, 'mcnemar_chi2', 38.1635) or 38.1635
         )
         

@@ -342,7 +342,7 @@ export default function Home({ theme, benchmarkStats, onNavigate }) {
           }`}>
             <div className={`text-xs font-medium ${isLight ? 'text-slate-600' : 'text-slate-400'}`}>Uji Kestabilan <em>McNemar</em></div>
             <div className="text-xl font-black text-purple-600 dark:text-purple-400"><span className="italic">p</span> = {statsTests.mcnemar_p_value.toExponential(2)}</div>
-            <div className={`text-[10px] ${isLight ? 'text-slate-500' : 'text-slate-400'}`}>Chi-Square χ² = {mcnemarMatrix.chi2?.toFixed(2) || '38.41'}</div>
+            <div className={`text-[10px] ${isLight ? 'text-slate-500' : 'text-slate-400'}`}>Chi-Square χ² = {mcnemarMatrix.chi2?.toFixed(2) || '38.16'}</div>
           </div>
 
           <div className={`p-4 rounded-2xl border text-center space-y-1 ${

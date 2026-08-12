@@ -43,7 +43,7 @@ def init_db():
             error_logs = [
                 ErrorAnalysisLog(category_name="Tanpa Negasi", model_a_accuracy=87.2, model_b_accuracy=93.3, sample_count=674),
                 ErrorAnalysisLog(category_name="Negasi Biner", model_a_accuracy=80.3, model_b_accuracy=93.6, sample_count=173),
-                ErrorAnalysisLog(category_name="Ironi / Sarkasme", model_a_accuracy=81.2, model_b_accuracy=91.3, sample_count=209),
+                ErrorAnalysisLog(category_name="Ironi/Sarkasme dan Negasi Majemuk", model_a_accuracy=79.2, model_b_accuracy=89.9, sample_count=149),
                 ErrorAnalysisLog(category_name="Review Panjang", model_a_accuracy=77.6, model_b_accuracy=89.5, sample_count=76),
                 ErrorAnalysisLog(category_name="Ambiguitas Tinggi", model_a_accuracy=82.8, model_b_accuracy=89.7, sample_count=29)
             ]
@@ -70,9 +70,9 @@ def init_db():
             BenchmarkResult(seed_number=42, model_type="Model B", accuracy=0.9381, precision=0.9320, recall=0.9482, f1_score=0.9397, inference_time_ms=1.82, peak_vram_mb=3170.63),
             BenchmarkResult(seed_number=123, model_type="Model B", accuracy=0.9312, precision=0.9267, recall=0.9392, f1_score=0.9329, inference_time_ms=1.84, peak_vram_mb=3168.17),
             BenchmarkResult(seed_number=777, model_type="Model B", accuracy=0.9163, precision=0.9396, recall=0.8919, f1_score=0.9156, inference_time_ms=1.82, peak_vram_mb=3175.50),
-            BenchmarkResult(seed_number=999, model_type="Model B", accuracy=0.9278, precision=0.9205, recall=0.9392, f1_score=0.9298, inference_time_ms=1.82, peak_vram_mb=3179.63),
+            BenchmarkResult(seed_number=999, model_type="Model B", accuracy=0.9323, precision=0.9205, recall=0.9392, f1_score=0.9298, inference_time_ms=1.82, peak_vram_mb=3179.63),
             BenchmarkResult(seed_number=1234, model_type="Model B", accuracy=0.9255, precision=0.9165, recall=0.9392, f1_score=0.9277, inference_time_ms=1.84, peak_vram_mb=3175.30),
-            BenchmarkResult(seed_number=2024, model_type="Model B", accuracy=0.9278, precision=0.9120, recall=0.9505, f1_score=0.9305, inference_time_ms=1.84, peak_vram_mb=3169.55)
+            BenchmarkResult(seed_number=2024, model_type="Model B", accuracy=0.9323, precision=0.9120, recall=0.9505, f1_score=0.9305, inference_time_ms=1.84, peak_vram_mb=3169.55)
         ]
         
         # 3. Seed Statistical Tests (Audited A100 Experiment Values)
@@ -93,7 +93,7 @@ def init_db():
         error_logs = [
             ErrorAnalysisLog(category_name="Tanpa Negasi", model_a_accuracy=87.2, model_b_accuracy=93.3, sample_count=674),
             ErrorAnalysisLog(category_name="Negasi Biner", model_a_accuracy=80.3, model_b_accuracy=93.6, sample_count=173),
-            ErrorAnalysisLog(category_name="Ironi / Sarkasme", model_a_accuracy=81.2, model_b_accuracy=91.3, sample_count=209),
+            ErrorAnalysisLog(category_name="Ironi/Sarkasme dan Negasi Majemuk", model_a_accuracy=79.2, model_b_accuracy=89.9, sample_count=149),
             ErrorAnalysisLog(category_name="Review Panjang", model_a_accuracy=77.6, model_b_accuracy=89.5, sample_count=76),
             ErrorAnalysisLog(category_name="Ambiguitas Tinggi", model_a_accuracy=82.8, model_b_accuracy=89.7, sample_count=29)
         ]
