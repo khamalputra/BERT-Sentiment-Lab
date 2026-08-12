@@ -46,46 +46,52 @@ class ModelEngine:
         
         if HAS_TORCH and os.path.exists(model_a_path) and os.path.exists(model_b_path):
             try:
-                print(f"Weights detected! Loading memory-optimized PyTorch models from {models_dir} on {self.device}...")
+                print(f"Weights detected! Loading memory-optimized PyTorch models sequentially from {models_dir} on {self.device}...")
                 self.tokenizer = BertTokenizerFast.from_pretrained("bert-base-uncased")
+                quant_fn = getattr(torch.ao.quantization, 'quantize_dynamic', getattr(torch.quantization, 'quantize_dynamic', None))
                 
                 with torch.no_grad():
-                    # Load Model A (Frozen BERT + custom classifier linear head weights)
+                    # 1. Load & Quantize Model A immediately to free FP32 memory
+                    print("Loading Model A (Feature Extraction)...")
                     bert_a_base = BertModel.from_pretrained("bert-base-uncased")
                     for param in bert_a_base.parameters():
                         param.requires_grad = False
                     
-                    self.model_a = FeatureExtractorClassifier(bert_a_base)
+                    model_a_raw = FeatureExtractorClassifier(bert_a_base)
                     try:
                         state_dict = torch.load(model_a_path, map_location="cpu", weights_only=False)
                     except TypeError:
                         state_dict = torch.load(model_a_path, map_location="cpu")
-                    self.model_a.classifier.load_state_dict(state_dict)
-                    self.model_a.to(self.device)
-                    self.model_a.eval()
+                    model_a_raw.classifier.load_state_dict(state_dict)
+                    model_a_raw.eval()
                     
-                    # Load Model B (Fine-Tuned BertForSequenceClassification model folder)
-                    self.model_b = BertForSequenceClassification.from_pretrained(model_b_path)
-                    self.model_b.to(self.device)
-                    self.model_b.eval()
+                    if self.device.type == "cpu" and quant_fn is not None:
+                        print("Quantizing Model A (qint8 8-bit)...")
+                        self.model_a = quant_fn(model_a_raw, {nn.Linear}, dtype=torch.qint8)
+                        del bert_a_base, model_a_raw
+                    else:
+                        self.model_a = model_a_raw.to(self.device)
+                    
+                    gc.collect()
 
-                    # Dynamic 8-bit quantization on CPU to compress memory footprint by 75%
-                    if self.device.type == "cpu":
-                        try:
-                            print("Applying PyTorch dynamic 8-bit quantization for CPU memory optimization...")
-                            quant_fn = getattr(torch.ao.quantization, 'quantize_dynamic', getattr(torch.quantization, 'quantize_dynamic', None))
-                            if quant_fn is not None:
-                                self.model_a = quant_fn(self.model_a, {nn.Linear}, dtype=torch.qint8)
-                                self.model_b = quant_fn(self.model_b, {nn.Linear}, dtype=torch.qint8)
-                                print("Successfully quantized Model A and Model B to 8-bit!")
-                        except Exception as q_err:
-                            print(f"Quantization note (skipped): {q_err}")
+                    # 2. Load & Quantize Model B immediately to free FP32 memory
+                    print("Loading Model B (Fine-Tuned BERT)...")
+                    model_b_raw = BertForSequenceClassification.from_pretrained(model_b_path)
+                    model_b_raw.eval()
+                    
+                    if self.device.type == "cpu" and quant_fn is not None:
+                        print("Quantizing Model B (qint8 8-bit)...")
+                        self.model_b = quant_fn(model_b_raw, {nn.Linear}, dtype=torch.qint8)
+                        del model_b_raw
+                    else:
+                        self.model_b = model_b_raw.to(self.device)
 
-                gc.collect()
+                    gc.collect()
+
                 self.has_real_models = True
                 print(f"Successfully loaded memory-optimized PyTorch models on {self.device}!")
             except Exception as e:
-                print(f"Memory/Load Guard: Could not load full PyTorch weights: {e}. Falling back to lightweight fast response mode.")
+                print(f"Memory/Load Guard Note: Could not load full PyTorch weights: {e}. Falling back to lightweight fast response mode.")
                 self.has_real_models = False
         else:
             print(f"Warning: Model weight files not found in {models_dir}.")
