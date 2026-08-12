@@ -34,39 +34,37 @@ const XAxisTwoLineTick = ({ x, y, payload, fill }) => {
 const RadarTwoLineTick = ({ payload, x, y, cx, cy, fill }) => {
   const label = payload?.value || ''
 
-  // Find best split point near the middle of the string
-  const mid = Math.floor(label.length / 2)
-  const splitChars = [' ', '/']
-  let bestIdx = -1
-  let bestDist = Infinity
-  for (let i = 0; i < label.length; i++) {
-    if (splitChars.includes(label[i])) {
-      const dist = Math.abs(i - mid)
-      if (dist < bestDist) { bestDist = dist; bestIdx = i }
-    }
-  }
+  let line1 = label
+  let line2 = ''
 
-  let line1, line2
-  if (bestIdx > -1 && label.length > 10) {
-    // Keep the split char with the second line only if it's '/'
-    const splitChar = label[bestIdx]
-    if (splitChar === '/') {
-      line1 = label.slice(0, bestIdx).trim()
-      line2 = label.slice(bestIdx).trim()   // keeps the '/'
-    } else {
-      line1 = label.slice(0, bestIdx).trim()
-      line2 = label.slice(bestIdx + 1).trim()
-    }
+  if (label.includes('Ironi/Sarkasme')) {
+    line1 = 'Ironi / Sarkasme'
+    line2 = '& Negasi Majemuk'
   } else {
-    line1 = label
-    line2 = ''
+    const mid = Math.floor(label.length / 2)
+    const splitChars = [' ', '/']
+    let bestIdx = -1
+    let bestDist = Infinity
+    for (let i = 0; i < label.length; i++) {
+      if (splitChars.includes(label[i])) {
+        const dist = Math.abs(i - mid)
+        if (dist < bestDist) { bestDist = dist; bestIdx = i }
+      }
+    }
+    if (bestIdx > -1 && label.length > 10) {
+      const splitChar = label[bestIdx]
+      if (splitChar === '/') {
+        line1 = label.slice(0, bestIdx).trim()
+        line2 = label.slice(bestIdx).trim()
+      } else {
+        line1 = label.slice(0, bestIdx).trim()
+        line2 = label.slice(bestIdx + 1).trim()
+      }
+    }
   }
 
-  // Determine text alignment based on angular position relative to center
   const dx = x - cx
   const textAnchor = Math.abs(dx) < 10 ? 'middle' : dx > 0 ? 'start' : 'end'
-
-  // Push label slightly away from chart edge
   const OFFSET = 4
   const lx = dx > 0 ? x + OFFSET : dx < 0 ? x - OFFSET : x
   const lineH = 13
@@ -229,21 +227,45 @@ function Analytics({ theme, userRole = 'public' }) {
     }
   ]
 
-  // Chart Data: Error Analysis on Negations (Linguistic) - Dynamic from API/Database
-  const linguisticData = (stats.error_analysis && stats.error_analysis.length > 0)
-    ? stats.error_analysis.map(item => ({
-        subject: item.subject,
-        'Model A (Frozen)': item.model_a_accuracy,
-        'Model B (FT)': item.model_b_accuracy,
-        fullMark: 100
-      }))
-    : [
-        { subject: 'Tanpa Negasi', 'Model A (Frozen)': 87.2, 'Model B (FT)': 93.3, fullMark: 100 },
-        { subject: 'Negasi Biner', 'Model A (Frozen)': 80.3, 'Model B (FT)': 93.6, fullMark: 100 },
-        { subject: 'Ironi/Sarkasme dan Negasi Majemuk', 'Model A (Frozen)': 79.2, 'Model B (FT)': 89.9, fullMark: 100 },
-        { subject: 'Review Panjang', 'Model A (Frozen)': 77.6, 'Model B (FT)': 89.5, fullMark: 100 },
-        { subject: 'Ambiguitas Tinggi', 'Model A (Frozen)': 82.8, 'Model B (FT)': 89.7, fullMark: 100 },
-      ]
+  // Operational definitions map matching Proposal Table 3.6 & Chapter IV Table 4.4
+  const categoryDefinitions = {
+    'Tanpa Negasi': 'Tidak mengandung kata negasi eksplisit',
+    'Negasi Biner': 'Mengandung 1 kata negasi (not, n't, no, dll.)',
+    'Ironi/Sarkasme dan Negasi Majemuk': 'Negasi > 1 ATAU contrastive marker (but, however, dll.)',
+    'Review Panjang': 'Panjang token BERT > 40 token',
+    'Ambiguitas Tinggi': 'Skor AFINN memuat kata positif >= +3 DAN negatif <= -3'
+  }
+
+  const defaultLinguisticRows = [
+    { subject: 'Tanpa Negasi', model_a_accuracy: 87.2, model_b_accuracy: 93.3, sample_count: 674 },
+    { subject: 'Negasi Biner', model_a_accuracy: 80.3, model_b_accuracy: 93.6, sample_count: 173 },
+    { subject: 'Ironi/Sarkasme dan Negasi Majemuk', model_a_accuracy: 79.2, model_b_accuracy: 89.9, sample_count: 149 },
+    { subject: 'Review Panjang', model_a_accuracy: 77.6, model_b_accuracy: 89.5, sample_count: 76 },
+    { subject: 'Ambiguitas Tinggi', model_a_accuracy: 82.8, model_b_accuracy: 89.7, sample_count: 29 }
+  ]
+
+  const rawLinguisticList = (stats.error_analysis && stats.error_analysis.length > 0)
+    ? stats.error_analysis
+    : defaultLinguisticRows
+
+  const linguisticData = rawLinguisticList.map(item => ({
+    subject: item.subject,
+    'Model A (Frozen)': item.model_a_accuracy,
+    'Model B (FT)': item.model_b_accuracy,
+    fullMark: 100
+  }))
+
+  const linguisticTableRows = rawLinguisticList.map(item => {
+    const delta = (item.model_b_accuracy - item.model_a_accuracy).toFixed(1)
+    return {
+      name: item.subject,
+      definition: categoryDefinitions[item.subject] || 'Kategori fenomena linguistik kompleks',
+      sample_count: item.sample_count,
+      model_a_accuracy: item.model_a_accuracy,
+      model_b_accuracy: item.model_b_accuracy,
+      delta: delta > 0 ? `+${delta}%` : `${delta}%`
+    }
+  })
 
   // McNemar Contingency Matrix Data - Dynamic from API/Database
   const mcnemarMatrix = stats.mcnemar_matrix || {
@@ -507,11 +529,13 @@ function Analytics({ theme, userRole = 'public' }) {
         {/* Chart B: Linguistic Radar Error Analysis */}
         <div className="glass-card p-6 flex flex-col justify-between">
           <div>
-            <h3 className="text-sm font-bold text-slate-200 mb-1 flex items-center space-x-2">
+            <h3 className={`text-sm font-bold mb-1 flex items-center space-x-2 ${isLight ? 'text-slate-900' : 'text-slate-200'}`}>
               <Compass className="text-umsu-gold" size={16} />
               <span>Analisis Kesalahan Linguistik Berdasarkan Kategori</span>
             </h3>
-            <p className="text-[11px] text-slate-400 mb-6">Persentase (%) akurasi deteksi sentimen berdasarkan struktur dan tata bahasa.</p>
+            <p className={`text-[11px] mb-6 ${isLight ? 'text-slate-600' : 'text-slate-400'}`}>
+              Persentase (%) akurasi deteksi sentimen berdasarkan struktur dan tata bahasa.
+            </p>
           </div>
 
           <div className="h-[280px] w-full flex items-center justify-center font-mono text-[10px]">
@@ -531,6 +555,75 @@ function Analytics({ theme, userRole = 'public' }) {
               </RadarChart>
             </ResponsiveContainer>
           </div>
+        </div>
+      </section>
+
+      {/* SECTION 3B: Table 4.4 Detailed Linguistic Error Breakdown */}
+      <section className={`glass-card p-6 space-y-4 transition-all ${isLight ? 'bg-white border-slate-200 shadow-sm' : ''}`}>
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 border-b pb-3 border-slate-700/40">
+          <div>
+            <h3 className={`text-sm font-bold flex items-center space-x-2 ${isLight ? 'text-slate-900' : 'text-slate-100'}`}>
+              <Compass className="text-umsu-gold" size={16} />
+              <span>Tabel 4.4. Hasil Analisis Kesalahan Linguistik Berdasarkan Kategori Teks</span>
+            </h3>
+            <p className={`text-[11px] mt-0.5 ${isLight ? 'text-slate-600' : 'text-slate-400'}`}>
+              Rincian akurasi dan peningkatan ($\Delta$) Model B pada 5 fenomena linguistik kompleks ($N=872$ Held-out Test Set).
+            </p>
+          </div>
+          <span className={`text-[10px] font-bold px-3 py-1 rounded-full border self-start sm:self-auto ${
+            isLight ? 'bg-amber-50 text-amber-900 border-amber-200' : 'bg-amber-500/10 text-amber-400 border-amber-500/20'
+          }`}>
+            Tabel 4.4 Skripsi
+          </span>
+        </div>
+
+        <div className="overflow-x-auto">
+          <table className="w-full text-left border-collapse text-xs">
+            <thead>
+              <tr className={`border-b text-[11px] font-bold ${
+                isLight ? 'bg-slate-100/90 text-slate-800 border-slate-300' : 'bg-slate-900/80 text-slate-300 border-slate-800'
+              }`}>
+                <th className="py-2.5 px-3">Kategori Linguistik</th>
+                <th className="py-2.5 px-3">Definisi Operasional Teks</th>
+                <th className="py-2.5 px-3 text-center">Sampel ($N$)</th>
+                <th className="py-2.5 px-3 text-center">Akurasi Model A</th>
+                <th className="py-2.5 px-3 text-center">Akurasi Model B</th>
+                <th className="py-2.5 px-3 text-center">Peningkatan ($\Delta$)</th>
+              </tr>
+            </thead>
+            <tbody className={`divide-y ${isLight ? 'divide-slate-200 text-slate-800' : 'divide-slate-800/60 text-slate-200'}`}>
+              {linguisticTableRows.map((row, idx) => (
+                <tr key={idx} className={`hover:bg-slate-500/5 transition-colors ${
+                  idx % 2 === 0 ? (isLight ? 'bg-white' : 'bg-slate-950/20') : (isLight ? 'bg-slate-50/50' : 'bg-slate-900/40')
+                }`}>
+                  <td className="py-2.5 px-3 font-semibold">
+                    {row.name}
+                  </td>
+                  <td className={`py-2.5 px-3 text-[11px] ${isLight ? 'text-slate-600' : 'text-slate-400'}`}>
+                    {row.definition}
+                  </td>
+                  <td className="py-2.5 px-3 text-center font-mono font-bold">
+                    {row.sample_count}
+                  </td>
+                  <td className={`py-2.5 px-3 text-center font-mono font-bold ${isLight ? 'text-sky-700' : 'text-sky-400'}`}>
+                    {row.model_a_accuracy.toFixed(1)}%
+                  </td>
+                  <td className={`py-2.5 px-3 text-center font-mono font-extrabold ${isLight ? 'text-purple-700' : 'text-purple-400'}`}>
+                    {row.model_b_accuracy.toFixed(1)}%
+                  </td>
+                  <td className="py-2.5 px-3 text-center">
+                    <span className={`inline-flex items-center px-2 py-0.5 rounded text-[11px] font-extrabold font-mono border ${
+                      isLight 
+                        ? 'bg-emerald-50 text-emerald-800 border-emerald-200' 
+                        : 'bg-emerald-500/10 text-emerald-400 border-emerald-500/20'
+                    }`}>
+                      {row.delta}
+                    </span>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
         </div>
       </section>
 
