@@ -3,4 +3,4 @@
 export const GPU_BACKEND_URL = 'https://irritably-tipper-january.ngrok-free.dev'
 
 // Secondary: Railway Production CPU Server (Automatic Failover Backup)
-export const CPU_BACKEND_URL = 'https://nurturing-creation-production-4414.up.railway.app'
+export const CPU_BACKEND_URL = 'https://bertsentimentlab.up.railway.app'

@@ -59,7 +59,7 @@ graph TD
     end
 
     subgraph ServerLayer [" ⚡ Server-Side Engine Layer (Railway Cloud) "]
-        BE["🐍 FastAPI Framework & Uvicorn ASGI Server<br/>(nurturing-creation-production-4414.up.railway.app)"]:::backend
+        BE["🐍 FastAPI Framework & Uvicorn ASGI Server<br/>(bertsentimentlab.up.railway.app)"]:::backend
         
         subgraph DeepLearningEngine [" 🧠 PyTorch BERT Inference Engine "]
             MA["🧊 Model A: BERT Feature Extraction<br/>(Frozen Transformer Encoder Backbone)"]:::model
