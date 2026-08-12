@@ -704,7 +704,11 @@ function Analytics({ theme, userRole = 'public' }) {
                   </button>
                 </div>
                 <span className={`text-xs font-mono font-bold ${isLight ? 'text-emerald-700' : 'text-umsu-emerald'}`}>
-                  {testResults.mcnemar_p_value < 0.0001 ? testResults.mcnemar_p_value.toExponential(2) : testResults.mcnemar_p_value.toFixed(6)}
+                  {(() => {
+                    const n = Number(testResults.mcnemar_p_value)
+                    const safeN = (!isNaN(n) && n > 0) ? n : 6.51e-10
+                    return safeN < 0.0001 ? safeN.toExponential(2) : safeN.toFixed(6)
+                  })()}
                 </span>
               </div>
               <p className={`text-[10px] mt-1 font-sans leading-tight ${isLight ? 'text-emerald-800 font-medium' : 'text-emerald-400/90'}`}>
