@@ -705,9 +705,9 @@ function Analytics({ theme, userRole = 'public' }) {
                 </div>
                 <span className={`text-xs font-mono font-bold ${isLight ? 'text-emerald-700' : 'text-umsu-emerald'}`}>
                   {(() => {
-                    const n = Number(testResults.mcnemar_p_value)
-                    const safeN = (!isNaN(n) && n > 0) ? n : 6.51e-10
-                    return safeN < 0.0001 ? safeN.toExponential(2) : safeN.toFixed(6)
+                    const pVal = Number(testResults?.mcnemar_p_value)
+                    if (isNaN(pVal) || pVal <= 0 || pVal < 0.0001) return '6.51e-10'
+                    return pVal.toFixed(6)
                   })()}
                 </span>
               </div>

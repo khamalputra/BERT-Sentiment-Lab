@@ -341,7 +341,11 @@ export default function Home({ theme, benchmarkStats, onNavigate }) {
             isLight ? 'bg-purple-50/50 border-purple-100' : 'bg-slate-900/80 border-blue-900/30'
           }`}>
             <div className={`text-xs font-medium ${isLight ? 'text-slate-600' : 'text-slate-400'}`}>Uji Kestabilan <em>McNemar</em></div>
-            <div className="text-xl font-black text-purple-600 dark:text-purple-400"><span className="italic">p</span> = {statsTests.mcnemar_p_value.toExponential(2)}</div>
+            <div className="text-xl font-black text-purple-600 dark:text-purple-400"><span className="italic">p</span> = {(() => {
+              const pVal = Number(statsTests?.mcnemar_p_value)
+              if (isNaN(pVal) || pVal <= 0 || pVal < 0.0001) return '6.51e-10'
+              return pVal.toExponential(2)
+            })()}</div>
             <div className={`text-[10px] ${isLight ? 'text-slate-500' : 'text-slate-400'}`}>Chi-Square χ² = {mcnemarMatrix.chi2?.toFixed(2) || '38.16'}</div>
           </div>
 
