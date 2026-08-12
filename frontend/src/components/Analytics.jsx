@@ -703,7 +703,9 @@ function Analytics({ theme, userRole = 'public' }) {
                     <HelpCircle size={12} />
                   </button>
                 </div>
-                <span className={`text-xs font-mono font-bold ${isLight ? 'text-emerald-700' : 'text-umsu-emerald'}`}>{testResults.mcnemar_p_value.toFixed(6)}</span>
+                <span className={`text-xs font-mono font-bold ${isLight ? 'text-emerald-700' : 'text-umsu-emerald'}`}>
+                  {testResults.mcnemar_p_value < 0.0001 ? testResults.mcnemar_p_value.toExponential(2) : testResults.mcnemar_p_value.toFixed(6)}
+                </span>
               </div>
               <p className={`text-[10px] mt-1 font-sans leading-tight ${isLight ? 'text-emerald-800 font-medium' : 'text-emerald-400/90'}`}>
                 ✓ <strong>Sangat Signifikan (<span className="italic">p</span> &lt; 0,0001)</strong>: Perbedaan kesalahan per-kalimat antara Model A & B terbukti nyata, bukan kebetulan.
