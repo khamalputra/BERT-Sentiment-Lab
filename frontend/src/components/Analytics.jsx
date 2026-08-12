@@ -196,14 +196,14 @@ function Analytics({ theme, userRole = 'public' }) {
   // Chart Data: Multi-seed Performance Metrics (%)
   const performanceChartData = [
     {
-      metric: 'Accuracy (%)',
-      'Model A (Frozen)': Number(accA.toFixed(2)),
-      'Model B (Fine-Tuned)': Number(accB.toFixed(2)),
+      name: 'Model A (Frozen)',
+      'Akurasi (%)': Number(accA.toFixed(2)),
+      'F1-Score (%)': Number(f1A.toFixed(2)),
     },
     {
-      metric: 'F1-Score (%)',
-      'Model A (Frozen)': Number(f1A.toFixed(2)),
-      'Model B (Fine-Tuned)': Number(f1B.toFixed(2)),
+      name: 'Model B (Fine-Tuned)',
+      'Akurasi (%)': Number(accB.toFixed(2)),
+      'F1-Score (%)': Number(f1B.toFixed(2)),
     }
   ]
 
@@ -445,8 +445,8 @@ function Analytics({ theme, userRole = 'public' }) {
                 <YAxis orientation="left" stroke="#3b82f6" domain={[60, 100]} label={{ value: 'Persentase (%)', angle: -90, position: 'insideLeft', offset: 10, fill: '#3b82f6' }} />
                 <RechartsTooltip contentStyle={{ backgroundColor: tooltipBg, borderColor: tooltipBorder, borderRadius: '12px', color: isLight ? '#0f172a' : '#f8fafc' }} />
                 <Legend wrapperStyle={{ paddingTop: 10 }} />
-                <Bar dataKey="F1-Score (%)" fill="#3b82f6" radius={[6, 6, 0, 0]} />
                 <Bar dataKey="Akurasi (%)" fill="#10b981" radius={[6, 6, 0, 0]} />
+                <Bar dataKey="F1-Score (%)" fill="#3b82f6" radius={[6, 6, 0, 0]} />
               </BarChart>
             </ResponsiveContainer>
           </div>
