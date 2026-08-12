@@ -1,33 +1,44 @@
-# Python virtual environment
+# Python Virtual Environment & Bytecode
 .venv/
 venv/
 ENV/
 env/
 __pycache__/
-*.pyc
-*.pyo
+*.py[cod]
+*$py.class
+.pytest_cache/
 
-# Node modules & build outputs
+# Node Modules & Frontend Build Artifacts
 node_modules/
 frontend/node_modules/
 frontend/dist/
 .DS_Store
 
-# Heavy PyTorch / HuggingFace Model Weights (>100MB)
+# Heavy Model Weights & Large Binary Archives (>100MB)
 backend/models/*.pt
+backend/models/*.bin
+backend/models/*.zip
 backend/models/**/*.safetensors
 backend/models/**/*.bin
+models/
 *.pt
 *.safetensors
 *.bin
 *.h5
+*.zip
+*.tar.gz
 
-# IDE & Editor files & scratch directory
+# Temporary Output Directories & Training Logs
+BERT_Experiment_Output/
+gdrive_output/
+runs/
+scratch/
+
+# Reference Guidelines & Draft Files
+Buku-Pedoman-Skripsi-FIKTI-2025-1.md
+
+# IDE & Editor Files
 .vscode/
 .idea/
 *.swp
-scratch/
-
-# Local documents kept off GitHub
-Proposal_Final_Revised.md
-gdrive_output/
+*.swo
