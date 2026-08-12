@@ -328,101 +328,153 @@ function Analytics({ theme, userRole = 'public' }) {
       </section>
 
       {/* SECTION 2: Executive Hardware Efficiency Panel */}
-      <section className="glass-card p-6 flex flex-col justify-between space-y-4">
+      <section className={`glass-card p-6 flex flex-col justify-between space-y-4 transition-all ${
+        isLight ? 'bg-white border-slate-200 shadow-sm' : ''
+      }`}>
         <div>
           <div className="flex items-start justify-between gap-3 mb-1">
-            <h3 className="text-sm font-bold text-slate-200 flex items-start space-x-2 flex-1 min-w-0 pr-2">
+            <h3 className={`text-sm font-bold flex items-start space-x-2 flex-1 min-w-0 pr-2 ${
+              isLight ? 'text-slate-900' : 'text-slate-200'
+            }`}>
               <Cpu className="text-umsu-gold flex-shrink-0 mt-0.5" size={16} />
               <span className="leading-snug">Profil Efisiensi Komputasi & Alokasi VRAM GPU</span>
             </h3>
-            <span className="text-[10px] font-bold px-2.5 py-0.5 rounded-full bg-blue-500/10 text-blue-400 border border-blue-500/20 whitespace-nowrap flex-shrink-0 mt-0.5">
+            <span className={`text-[10px] font-bold px-2.5 py-0.5 rounded-full border whitespace-nowrap flex-shrink-0 mt-0.5 ${
+              isLight 
+                ? 'bg-blue-50 text-blue-900 border-blue-200' 
+                : 'bg-blue-500/10 text-blue-400 border-blue-500/20'
+            }`}>
               Hardware Metrics
             </span>
           </div>
-          <p className="text-[11px] text-slate-400">Analisis perbandingan latensi inferensi (ms) dan konsumsi puncak alokasi memori GPU VRAM (MB).</p>
-        </div>
-
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 my-1">
-          {/* Metric 1: Latensi Inferensi */}
-          <div className="p-4 rounded-xl bg-slate-900/60 border border-slate-800 space-y-3">
-            <div className="flex justify-between items-center text-xs">
-              <span className="font-semibold text-slate-300 flex items-center space-x-1.5">
-                <Activity size={14} className="text-teal-400" />
-                <span>Latensi Inferensi Rerata (ms)</span>
-              </span>
-              <span className="text-[10px] font-bold text-teal-400 bg-teal-500/10 border border-teal-500/20 px-2 py-0.5 rounded">
-                +1.7% Overhead
-              </span>
-            </div>
-            
-            <div className="flex justify-between items-baseline">
-              <div>
-                <div className="text-[10px] text-slate-400">Model A (Frozen)</div>
-                <div className="text-xl font-black text-slate-200">{model_a.avg_latency_ms} ms</div>
-              </div>
-              <div className="text-right">
-                <div className="text-[10px] text-slate-400">Model B (Fine-Tuned)</div>
-                <div className="text-xl font-black text-teal-400">{model_b.avg_latency_ms} ms</div>
-              </div>
-            </div>
-
-            {/* Visualizer track */}
-            <div className="space-y-1">
-              <div className="flex justify-between text-[9px] text-slate-400 font-mono">
-                <span>Model A: {model_a.avg_latency_ms}ms</span>
-                <span>Model B: {model_b.avg_latency_ms}ms</span>
-              </div>
-              <div className="h-2 w-full bg-slate-800 rounded-full overflow-hidden flex">
-                <div className="h-full bg-slate-500 rounded-l-full" style={{ width: '49.5%' }} />
-                <div className="h-full bg-teal-400 rounded-r-full" style={{ width: '50.5%' }} />
-              </div>
-            </div>
-          </div>
-
-          {/* Metric 2: Peak VRAM GPU */}
-          <div className="p-4 rounded-xl bg-slate-900/60 border border-slate-800 space-y-3">
-            <div className="flex justify-between items-center text-xs">
-              <span className="font-semibold text-slate-300 flex items-center space-x-1.5">
-                <HardDrive size={14} className="text-amber-400" />
-                <span>Puncak Alokasi VRAM GPU (MB)</span>
-              </span>
-              <span className="text-[10px] font-bold text-amber-400 bg-amber-500/10 border border-amber-500/20 px-2 py-0.5 rounded">
-                +14.3% Consumed
-              </span>
-            </div>
-
-            <div className="flex justify-between items-baseline">
-              <div>
-                <div className="text-[10px] text-slate-400">Model A (Frozen)</div>
-                <div className="text-xl font-black text-slate-200">{model_a.peak_vram_mb.toFixed(0)} MB</div>
-              </div>
-              <div className="text-right">
-                <div className="text-[10px] text-slate-400">Model B (Fine-Tuned)</div>
-                <div className="text-xl font-black text-amber-400">{model_b.peak_vram_mb.toFixed(0)} MB</div>
-              </div>
-            </div>
-
-            {/* Visualizer track */}
-            <div className="space-y-1">
-              <div className="flex justify-between text-[9px] text-slate-400 font-mono">
-                <span>Model A: {model_a.peak_vram_mb.toFixed(0)}MB</span>
-                <span>Model B: {model_b.peak_vram_mb.toFixed(0)}MB</span>
-              </div>
-              <div className="h-2 w-full bg-slate-800 rounded-full overflow-hidden flex">
-                <div className="h-full bg-slate-500 rounded-l-full" style={{ width: '46.7%' }} />
-                <div className="h-full bg-amber-400 rounded-r-full" style={{ width: '53.3%' }} />
-              </div>
-            </div>
-          </div>
-        </div>
-
-        {/* Summary Footer */}
-        <div className="p-3 rounded-xl bg-blue-950/30 border border-blue-800/30 text-[11px] text-slate-300 flex items-start space-x-2">
-          <Shield size={16} className="text-blue-400 flex-shrink-0 mt-0.5" />
-          <p className="leading-relaxed">
-            <strong className="text-blue-300">Rasio Efisiensi Komputasi:</strong> Fine-tuning pada Model B menghasilkan lonjakan performa prediktif <em>F1-score</em> sebesar <strong className="text-emerald-400">+{deltaF1}%</strong> dengan hanya penambahan latensi komputasi minimal sebesar <strong className="text-teal-300">+0.13 ms (+1.7%)</strong> dan penambahan alokasi puncak VRAM GPU sebesar <strong className="text-amber-300">+290.7 MB (+14.3%)</strong>.
+          <p className={`text-[11px] ${isLight ? 'text-slate-600' : 'text-slate-400'}`}>
+            Analisis perbandingan latensi inferensi (ms) dan konsumsi puncak alokasi memori GPU VRAM (MB).
           </p>
         </div>
+
+        {(() => {
+          const latA = model_a.avg_latency_ms || 0
+          const latB = model_b.avg_latency_ms || 0
+          const diffLat = latB - latA
+          const pctLat = latA > 0 ? ((diffLat / latA) * 100).toFixed(1) : '0.0'
+          const totLat = latA + latB
+          const widthLatA = totLat > 0 ? (latA / totLat * 100).toFixed(1) : 50
+          const widthLatB = totLat > 0 ? (latB / totLat * 100).toFixed(1) : 50
+
+          const vramA = model_a.peak_vram_mb || 0
+          const vramB = model_b.peak_vram_mb || 0
+          const diffVram = vramB - vramA
+          const pctVram = vramA > 0 ? ((diffVram / vramA) * 100).toFixed(1) : '0.0'
+          const totVram = vramA + vramB
+          const widthVramA = totVram > 0 ? (vramA / totVram * 100).toFixed(1) : 50
+          const widthVramB = totVram > 0 ? (vramB / totVram * 100).toFixed(1) : 50
+
+          return (
+            <div className="space-y-4">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4 my-1">
+                {/* Metric 1: Latensi Inferensi */}
+                <div className={`p-4 rounded-xl border space-y-3 ${
+                  isLight ? 'bg-slate-50/80 border-slate-200' : 'bg-slate-900/60 border-slate-800'
+                }`}>
+                  <div className="flex justify-between items-center text-xs">
+                    <span className={`font-semibold flex items-center space-x-1.5 ${
+                      isLight ? 'text-slate-800' : 'text-slate-300'
+                    }`}>
+                      <Activity size={14} className={isLight ? "text-teal-600" : "text-teal-400"} />
+                      <span>Latensi Inferensi Rerata (ms)</span>
+                    </span>
+                    <span className={`text-[10px] font-bold px-2 py-0.5 rounded border ${
+                      isLight 
+                        ? 'bg-teal-50 text-teal-900 border-teal-200' 
+                        : 'text-teal-400 bg-teal-500/10 border-teal-500/20'
+                    }`}>
+                      +{pctLat}% Overhead
+                    </span>
+                  </div>
+                  
+                  <div className="flex justify-between items-baseline">
+                    <div>
+                      <div className={`text-[10px] ${isLight ? 'text-slate-600' : 'text-slate-400'}`}>Model A (Frozen)</div>
+                      <div className={`text-xl font-black ${isLight ? 'text-slate-900' : 'text-slate-200'}`}>{latA} ms</div>
+                    </div>
+                    <div className="text-right">
+                      <div className={`text-[10px] ${isLight ? 'text-slate-600' : 'text-slate-400'}`}>Model B (Fine-Tuned)</div>
+                      <div className={`text-xl font-black ${isLight ? 'text-teal-700' : 'text-teal-400'}`}>{latB} ms</div>
+                    </div>
+                  </div>
+
+                  {/* Visualizer track */}
+                  <div className="space-y-1">
+                    <div className={`flex justify-between text-[9px] font-mono ${isLight ? 'text-slate-500' : 'text-slate-400'}`}>
+                      <span>Model A: {latA}ms</span>
+                      <span>Model B: {latB}ms</span>
+                    </div>
+                    <div className={`h-2 w-full rounded-full overflow-hidden flex ${isLight ? 'bg-slate-200' : 'bg-slate-800'}`}>
+                      <div className="h-full bg-slate-400 rounded-l-full" style={{ width: `${widthLatA}%` }} />
+                      <div className="h-full bg-teal-500 rounded-r-full" style={{ width: `${widthLatB}%` }} />
+                    </div>
+                  </div>
+                </div>
+
+                {/* Metric 2: Peak VRAM GPU */}
+                <div className={`p-4 rounded-xl border space-y-3 ${
+                  isLight ? 'bg-slate-50/80 border-slate-200' : 'bg-slate-900/60 border-slate-800'
+                }`}>
+                  <div className="flex justify-between items-center text-xs">
+                    <span className={`font-semibold flex items-center space-x-1.5 ${
+                      isLight ? 'text-slate-800' : 'text-slate-300'
+                    }`}>
+                      <HardDrive size={14} className={isLight ? "text-amber-600" : "text-amber-400"} />
+                      <span>Puncak Alokasi VRAM GPU (MB)</span>
+                    </span>
+                    <span className={`text-[10px] font-bold px-2 py-0.5 rounded border ${
+                      isLight 
+                        ? 'bg-amber-50 text-amber-900 border-amber-200' 
+                        : 'text-amber-400 bg-amber-500/10 border-amber-500/20'
+                    }`}>
+                      +{pctVram}% Consumed
+                    </span>
+                  </div>
+
+                  <div className="flex justify-between items-baseline">
+                    <div>
+                      <div className={`text-[10px] ${isLight ? 'text-slate-600' : 'text-slate-400'}`}>Model A (Frozen)</div>
+                      <div className={`text-xl font-black ${isLight ? 'text-slate-900' : 'text-slate-200'}`}>{vramA.toFixed(0)} MB</div>
+                    </div>
+                    <div className="text-right">
+                      <div className={`text-[10px] ${isLight ? 'text-slate-600' : 'text-slate-400'}`}>Model B (Fine-Tuned)</div>
+                      <div className={`text-xl font-black ${isLight ? 'text-amber-700' : 'text-amber-400'}`}>{vramB.toFixed(0)} MB</div>
+                    </div>
+                  </div>
+
+                  {/* Visualizer track */}
+                  <div className="space-y-1">
+                    <div className={`flex justify-between text-[9px] font-mono ${isLight ? 'text-slate-500' : 'text-slate-400'}`}>
+                      <span>Model A: {vramA.toFixed(0)}MB</span>
+                      <span>Model B: {vramB.toFixed(0)}MB</span>
+                    </div>
+                    <div className={`h-2 w-full rounded-full overflow-hidden flex ${isLight ? 'bg-slate-200' : 'bg-slate-800'}`}>
+                      <div className="h-full bg-slate-400 rounded-l-full" style={{ width: `${widthVramA}%` }} />
+                      <div className="h-full bg-amber-500 rounded-r-full" style={{ width: `${widthVramB}%` }} />
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              {/* Summary Footer with Dynamic Metrics and High-Contrast Responsive Styling */}
+              <div className={`p-3.5 rounded-xl border text-[11px] flex items-start space-x-2.5 transition-all ${
+                isLight 
+                  ? 'bg-blue-50/90 border-blue-200 text-slate-800 shadow-sm' 
+                  : 'bg-blue-950/40 border-blue-800/40 text-slate-200'
+              }`}>
+                <Shield size={16} className={isLight ? "text-blue-700 flex-shrink-0 mt-0.5" : "text-blue-400 flex-shrink-0 mt-0.5"} />
+                <p className="leading-relaxed">
+                  <strong className={isLight ? "text-blue-900 font-extrabold" : "text-blue-300 font-bold"}>Rasio Efisiensi Komputasi:</strong> Fine-tuning pada Model B menghasilkan lonjakan performa prediktif <em>F1-score</em> sebesar <strong className={isLight ? "text-emerald-800 font-extrabold" : "text-emerald-400"}>+{deltaF1}%</strong> dengan penambahan latensi komputasi minimal sebesar <strong className={isLight ? "text-teal-800 font-extrabold" : "text-teal-300"}>+{diffLat.toFixed(2)} ms (+{pctLat}%)</strong> dan penambahan alokasi puncak VRAM GPU sebesar <strong className={isLight ? "text-amber-800 font-extrabold" : "text-amber-300"}>+{diffVram.toFixed(1)} MB (+{pctVram}%)</strong>.
+                </p>
+              </div>
+            </div>
+          )
+        })()}
       </section>
 
       {/* SECTION 3: Charts (Performance & Linguistic Error Radar) */}
